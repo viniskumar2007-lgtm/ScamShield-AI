@@ -1,0 +1,3293 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ScamShield AI</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #050816;
+            color: #f5f7ff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* =========================
+           BACKGROUND
+        ========================= */
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(
+                    circle at 20% 20%,
+                    rgba(0, 255, 200, 0.08),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 80% 10%,
+                    rgba(120, 80, 255, 0.10),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 50% 90%,
+                    rgba(0, 180, 255, 0.07),
+                    transparent 30%
+                );
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        nav {
+            width: 100%;
+            padding: 18px 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            background: rgba(5,8,22,0.82);
+            backdrop-filter: blur(15px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #00f5c8, #00aaff);
+            color: #00151a;
+            font-size: 20px;
+        }
+
+        nav a {
+            color: #cbd2e9;
+            text-decoration: none;
+            margin-left: 28px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        nav a:hover {
+            color: #00f5c8;
+        }
+
+        /* =========================
+           HERO
+        ========================= */
+
+        .hero {
+            padding: 90px 7% 60px;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 15px;
+            border: 1px solid rgba(0,245,200,0.3);
+            border-radius: 30px;
+            color: #00f5c8;
+            background: rgba(0,245,200,0.06);
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
+
+        .hero h1 {
+            font-size: clamp(42px, 7vw, 78px);
+            line-height: 1;
+            margin-bottom: 20px;
+            font-weight: 900;
+        }
+
+        .gradient-text {
+            background: linear-gradient(
+                90deg,
+                #00f5c8,
+                #00bfff,
+                #8b5cf6
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            max-width: 720px;
+            margin: auto;
+            color: #aab2ca;
+            font-size: 18px;
+            line-height: 1.7;
+        }
+
+        /* =========================
+           STATS
+        ========================= */
+
+        .stats {
+            width: 86%;
+            max-width: 1000px;
+            margin: 20px auto 60px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 25px;
+            border-radius: 18px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 800;
+            color: #00f5c8;
+            margin-bottom: 7px;
+        }
+
+        .stat-label {
+            color: #9ba4bf;
+            font-size: 13px;
+        }
+
+        /* =========================
+           CONTAINER
+        ========================= */
+
+        .container {
+            width: 86%;
+            max-width: 1150px;
+            margin: auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .section-title h2 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .section-title p {
+            color: #929ab4;
+        }
+
+        /* =========================
+           SCANNER GRID
+        ========================= */
+
+        .scanner-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .scanner-card {
+            background: rgba(255,255,255,0.035);
+            border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 22px;
+            padding: 28px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+        }
+
+        .scanner-card.full {
+            grid-column: 1 / -1;
+        }
+
+        .scanner-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 22px;
+        }
+
+        .scanner-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,245,200,0.1);
+            font-size: 23px;
+        }
+
+        .scanner-header h3 {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .scanner-header p {
+            color: #8f98b1;
+            font-size: 13px;
+        }
+
+        textarea,
+        input[type="text"] {
+            width: 100%;
+            border: 1px solid rgba(255,255,255,0.1);
+            outline: none;
+            background: rgba(0,0,0,0.25);
+            color: white;
+            border-radius: 14px;
+            padding: 16px;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        textarea {
+            min-height: 170px;
+            resize: vertical;
+        }
+
+        textarea:focus,
+        input[type="text"]:focus {
+            border-color: rgba(0,245,200,0.5);
+            box-shadow: 0 0 0 3px rgba(0,245,200,0.06);
+        }
+
+        .button-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+            border-radius: 12px;
+            padding: 13px 20px;
+            font-size: 14px;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+
+        .primary-btn {
+            background: linear-gradient(
+                135deg,
+                #00f5c8,
+                #00aaff
+            );
+            color: #00151a;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,245,200,0.2);
+        }
+
+        .secondary-btn {
+            background: rgba(255,255,255,0.06);
+            color: #dfe5f7;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .secondary-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .demo-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .demo-btn {
+            padding: 8px 12px;
+            font-size: 12px;
+            background: rgba(255,255,255,0.04);
+            color: #aeb7d1;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .demo-btn:hover {
+            color: #00f5c8;
+            border-color: rgba(0,245,200,0.3);
+        }
+
+        /* =========================
+           LOADING
+        ========================= */
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 25px;
+            color: #00f5c8;
+        }
+
+        .spinner {
+            width: 28px;
+            height: 28px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: #00f5c8;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* =========================
+           ERROR
+        ========================= */
+
+        .error-box {
+            display: none;
+            margin-top: 15px;
+            padding: 14px;
+            border-radius: 12px;
+            background: rgba(255,70,90,0.08);
+            border: 1px solid rgba(255,70,90,0.25);
+            color: #ff7c8a;
+            font-size: 14px;
+        }
+
+        /* =========================
+           RESULT
+        ========================= */
+
+        .result {
+            display: none;
+            margin-top: 25px;
+            padding: 25px;
+            border-radius: 18px;
+            background: rgba(0,0,0,0.22);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .result-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .risk-score {
+            font-size: 52px;
+            font-weight: 900;
+        }
+
+        .risk-label {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 800;
+            margin-top: 8px;
+        }
+
+        .risk-low {
+            color: #39e58c;
+            background: rgba(57,229,140,0.1);
+            border: 1px solid rgba(57,229,140,0.2);
+        }
+
+        .risk-medium {
+            color: #ffc857;
+            background: rgba(255,200,87,0.1);
+            border: 1px solid rgba(255,200,87,0.2);
+        }
+
+        .risk-high {
+            color: #ff6476;
+            background: rgba(255,100,118,0.1);
+            border: 1px solid rgba(255,100,118,0.2);
+        }
+
+        .result-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .info-box {
+            background: rgba(255,255,255,0.035);
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .info-label {
+            color: #858ea9;
+            font-size: 11px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .result-section {
+            margin-top: 25px;
+        }
+
+        .result-section h4 {
+            margin-bottom: 12px;
+            color: #00f5c8;
+        }
+
+        .result-section p {
+            color: #aeb7ce;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .reasons-list,
+        .actions-list {
+            list-style: none;
+        }
+
+        .reasons-list li,
+        .actions-list li {
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.035);
+            color: #cbd2e5;
+            font-size: 14px;
+        }
+
+        .reasons-list li::before {
+            content: "⚠️";
+            margin-right: 8px;
+        }
+
+        .actions-list li::before {
+            content: "🛡️";
+            margin-right: 8px;
+        }
+
+        /* =========================
+           SMART EXPLANATION
+        ========================= */
+
+        .smart-explanation {
+            display: none;
+            margin-top: 25px;
+            padding: 25px;
+            border-radius: 20px;
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(0,245,200,0.05),
+                    rgba(120,80,255,0.04)
+                );
+            border: 1px solid rgba(0,245,200,0.14);
+        }
+
+        .explanation-header {
+            margin-bottom: 20px;
+        }
+
+        .explanation-header h3 {
+            font-size: 21px;
+            margin-bottom: 6px;
+        }
+
+        .explanation-header p {
+            color: #8f98b2;
+            font-size: 13px;
+        }
+
+        .risk-breakdown {
+            display: grid;
+            gap: 12px;
+        }
+
+        .risk-signal {
+            padding: 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.07);
+            background: rgba(255,255,255,0.035);
+        }
+
+        .risk-signal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 7px;
+        }
+
+        .signal-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+        }
+
+        .signal-score {
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .signal-explanation {
+            color: #9ca6bf;
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        .risk-signal.low {
+            border-color: rgba(57,229,140,0.18);
+        }
+
+        .risk-signal.medium {
+            border-color: rgba(255,200,87,0.2);
+        }
+
+        .risk-signal.high {
+            border-color: rgba(255,100,118,0.2);
+        }
+
+        .severity-low {
+            color: #39e58c;
+        }
+
+        .severity-medium {
+            color: #ffc857;
+        }
+
+        .severity-high {
+            color: #ff6476;
+        }
+
+        .recommended-actions {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.07);
+        }
+
+        .actions-title {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .actions-title > span {
+            font-size: 24px;
+        }
+
+        .actions-title h3 {
+            margin-bottom: 4px;
+        }
+
+        .actions-title p {
+            color: #8992aa;
+            font-size: 13px;
+        }
+
+        #recommendedActions {
+            list-style: none;
+        }
+
+        #recommendedActions li {
+            padding: 10px 0;
+            color: #c9d0e2;
+            font-size: 14px;
+        }
+
+        #recommendedActions li::before {
+            content: "✓";
+            color: #00f5c8;
+            font-weight: 900;
+            margin-right: 10px;
+        }
+
+        /* =========================
+           SCREENSHOT
+        ========================= */
+
+        .upload-area {
+            border: 1px dashed rgba(255,255,255,0.18);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .upload-area:hover {
+            border-color: rgba(0,245,200,0.4);
+            background: rgba(0,245,200,0.03);
+        }
+
+        .upload-area input {
+            display: none;
+        }
+
+        .upload-icon {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        .upload-area h4 {
+            margin-bottom: 7px;
+        }
+
+        .upload-area p {
+            color: #8790aa;
+            font-size: 13px;
+        }
+
+        .file-name {
+            margin-top: 12px;
+            color: #00f5c8;
+            font-size: 13px;
+        }
+
+        .extracted-text {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 12px;
+            background: rgba(0,0,0,0.25);
+            color: #aeb7ca;
+            white-space: pre-wrap;
+            font-size: 13px;
+            line-height: 1.6;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        /* =========================
+           HISTORY
+        ========================= */
+
+        .history-section {
+            margin: 80px 0;
+        }
+
+        .history-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 17px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.035);
+            border: 1px solid rgba(255,255,255,0.07);
+        }
+
+        .history-message {
+            color: #cbd2e4;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .history-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .history-score {
+            color: #00f5c8;
+            font-weight: 800;
+        }
+
+        .empty-history {
+            text-align: center;
+            color: #737d98;
+            padding: 30px;
+        }
+
+        /* =========================
+           FEATURES
+        ========================= */
+
+        .features {
+            margin: 80px 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .feature-card {
+            padding: 24px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.035);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .feature-card-icon {
+            font-size: 27px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 9px;
+        }
+
+        .feature-card p {
+            color: #8f98b1;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            margin-top: 80px;
+            padding: 35px 7%;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            text-align: center;
+            color: #737c96;
+            font-size: 13px;
+        }
+
+        footer strong {
+            color: #00f5c8;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 850px) {
+
+            nav {
+                padding: 15px 5%;
+            }
+
+            nav div:last-child {
+                display: none;
+            }
+
+            .hero {
+                padding: 65px 5% 45px;
+            }
+
+            .stats {
+                width: 90%;
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                width: 90%;
+            }
+
+            .scanner-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .scanner-card.full {
+                grid-column: auto;
+            }
+
+            .result-info {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 550px) {
+
+            .hero h1 {
+                font-size: 44px;
+            }
+
+            .hero p {
+                font-size: 15px;
+            }
+
+            .scanner-card {
+                padding: 20px;
+            }
+
+            .risk-score {
+                font-size: 42px;
+            }
+
+            .history-item {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .history-meta {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- =========================
+     NAVBAR
+========================= -->
+
+<nav>
+
+    <div class="logo">
+        <div class="logo-icon">🛡️</div>
+        <span>ScamShield AI</span>
+    </div>
+
+    <div>
+        <a href="#scanner">Scanner</a>
+        <a href="#history">History</a>
+        <a href="#features">Features</a>
+    </div>
+
+</nav>
+
+
+<!-- =========================
+     HERO
+========================= -->
+
+<section class="hero">
+
+    <div class="hero-badge">
+        🛡️ AI + Rule-Based Scam Detection
+    </div>
+
+    <h1>
+        Detect Scams<br>
+        <span class="gradient-text">Before They Hurt.</span>
+    </h1>
+
+    <p>
+        ScamShield AI analyzes suspicious messages, URLs and screenshots
+        using intelligent risk detection techniques to help you identify
+        potential scams before taking action.
+    </p>
+
+</section>
+
+
+<!-- =========================
+     STATISTICS
+========================= -->
+
+<div class="stats">
+
+    <div class="stat-card">
+        <div class="stat-number" id="totalScans">
+            0
+        </div>
+
+        <div class="stat-label">
+            Total Scans
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-number" id="highRiskScans">
+            0
+        </div>
+
+        <div class="stat-label">
+            High Risk Detected
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-number" id="averageScore">
+            0
+        </div>
+
+        <div class="stat-label">
+            Average Risk Score
+        </div>
+    </div>
+
+</div>
+
+
+<!-- =========================
+     SCANNER
+========================= -->
+
+<section id="scanner" class="container">
+
+    <div class="section-title">
+
+        <h2>
+            <span class="gradient-text">
+                Scam Scanner
+            </span>
+        </h2>
+
+        <p>
+            Choose what you want ScamShield AI to analyze.
+        </p>
+
+    </div>
+
+
+    <div class="scanner-grid">
+
+
+        <!-- =====================
+             MESSAGE SCANNER
+        ====================== -->
+
+        <div class="scanner-card full">
+
+            <div class="scanner-header">
+
+                <div class="scanner-icon">
+                    💬
+                </div>
+
+                <div>
+                    <h3>Message Scanner</h3>
+
+                    <p>
+                        Analyze SMS, WhatsApp, email or social media messages.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <textarea
+                id="messageInput"
+                placeholder="Paste a suspicious message here..."
+            ></textarea>
+
+
+            <div class="demo-buttons">
+
+                <button
+                    class="demo-btn"
+                    onclick="loadDemo('urgent')"
+                >
+                    🚨 Urgent Bank Scam
+                </button>
+
+                <button
+                    class="demo-btn"
+                    onclick="loadDemo('prize')"
+                >
+                    🎁 Prize Scam
+                </button>
+
+                <button
+                    class="demo-btn"
+                    onclick="loadDemo('safe')"
+                >
+                    ✅ Normal Message
+                </button>
+
+            </div>
+
+
+            <div class="button-row">
+
+                <button
+                    class="primary-btn"
+                    onclick="analyzeMessage()"
+                >
+                    🔍 Analyze Message
+                </button>
+
+                <button
+                    class="secondary-btn"
+                    onclick="resetAnalyzer()"
+                >
+                    ↻ Reset
+                </button>
+
+            </div>
+
+
+            <div
+                id="messageLoading"
+                class="loading"
+            >
+                <div class="spinner"></div>
+                <div>Analyzing message...</div>
+            </div>
+
+
+            <div
+                id="messageError"
+                class="error-box"
+            ></div>
+
+
+            <!-- MESSAGE RESULT -->
+
+            <div
+                id="messageResult"
+                class="result"
+            ></div>
+
+
+            <!-- SMART EXPLANATION -->
+
+            <div
+                id="smartExplanation"
+                class="smart-explanation"
+            >
+
+                <div class="explanation-header">
+
+                    <h3>
+                        Why is this suspicious?
+                    </h3>
+
+                    <p>
+                        ScamShield detected these warning signals.
+                    </p>
+
+                </div>
+
+
+                <div
+                    id="riskBreakdown"
+                    class="risk-breakdown"
+                ></div>
+
+
+                <div class="recommended-actions">
+
+                    <div class="actions-title">
+
+                        <span>🛡️</span>
+
+                        <div>
+
+                            <h3>
+                                What you should do
+                            </h3>
+
+                            <p>
+                                Follow these safety recommendations.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <ul id="recommendedActions"></ul>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================
+             URL SCANNER
+        ====================== -->
+
+        <div class="scanner-card">
+
+            <div class="scanner-header">
+
+                <div class="scanner-icon">
+                    🔗
+                </div>
+
+                <div>
+
+                    <h3>URL Scanner</h3>
+
+                    <p>
+                        Check suspicious links.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <input
+                type="text"
+                id="urlInput"
+                placeholder="https://example.com/verify"
+            />
+
+
+            <div class="button-row">
+
+                <button
+                    class="primary-btn"
+                    onclick="analyzeURL()"
+                >
+                    🔗 Check URL
+                </button>
+
+                <button
+                    class="secondary-btn"
+                    onclick="clearURL()"
+                >
+                    Clear
+                </button>
+
+            </div>
+
+
+            <div
+                id="urlLoading"
+                class="loading"
+            >
+                <div class="spinner"></div>
+                <div>Analyzing URL...</div>
+            </div>
+
+
+            <div
+                id="urlError"
+                class="error-box"
+            ></div>
+
+
+            <div
+                id="urlResult"
+                class="result"
+            ></div>
+
+        </div>
+
+
+        <!-- =====================
+             SCREENSHOT SCANNER
+        ====================== -->
+
+        <div class="scanner-card">
+
+            <div class="scanner-header">
+
+                <div class="scanner-icon">
+                    📸
+                </div>
+
+                <div>
+
+                    <h3>Screenshot Scanner</h3>
+
+                    <p>
+                        Extract text from screenshots using OCR.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <label
+                class="upload-area"
+                for="imageInput"
+            >
+
+                <div class="upload-icon">
+                    📷
+                </div>
+
+                <h4>
+                    Upload Screenshot
+                </h4>
+
+                <p>
+                    PNG, JPG or JPEG
+                </p>
+
+                <input
+                    type="file"
+                    id="imageInput"
+                    accept=".png,.jpg,.jpeg,image/png,image/jpeg"
+                    onchange="handleImageSelect()"
+                />
+
+                <div
+                    id="fileName"
+                    class="file-name"
+                ></div>
+
+            </label>
+
+
+            <div class="button-row">
+
+                <button
+                    class="primary-btn"
+                    onclick="analyzeScreenshot()"
+                >
+                    📸 Analyze Screenshot
+                </button>
+
+                <button
+                    class="secondary-btn"
+                    onclick="clearScreenshot()"
+                >
+                    Clear
+                </button>
+
+            </div>
+
+
+            <div
+                id="screenshotLoading"
+                class="loading"
+            >
+                <div class="spinner"></div>
+                <div>
+                    Extracting and analyzing text...
+                </div>
+            </div>
+
+
+            <div
+                id="screenshotError"
+                class="error-box"
+            ></div>
+
+
+            <div
+                id="screenshotResult"
+                class="result"
+            ></div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     HISTORY
+========================= -->
+
+<section
+    id="history"
+    class="container history-section"
+>
+
+    <div class="section-title">
+
+        <h2>
+            Scan <span class="gradient-text">History</span>
+        </h2>
+
+        <p>
+            Your recent ScamShield analysis results.
+        </p>
+
+    </div>
+
+
+    <div
+        id="historyList"
+        class="history-list"
+    ></div>
+
+</section>
+
+
+<!-- =========================
+     FEATURES
+========================= -->
+
+<section
+    id="features"
+    class="container features"
+>
+
+    <div class="section-title">
+
+        <h2>
+            Built for <span class="gradient-text">Safety</span>
+        </h2>
+
+        <p>
+            Multiple detection layers work together.
+        </p>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+
+        <div class="feature-card">
+
+            <div class="feature-card-icon">
+                🤖
+            </div>
+
+            <h3>
+                AI Analysis
+            </h3>
+
+            <p>
+                Gemini AI can analyze suspicious language,
+                scam patterns and social engineering signals.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-card-icon">
+                ⚙️
+            </div>
+
+            <h3>
+                Rule Engine
+            </h3>
+
+            <p>
+                Rule-based detection checks urgency,
+                threats, OTP requests, suspicious URLs
+                and other scam indicators.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-card-icon">
+                🧠
+            </div>
+
+            <h3>
+                Hybrid Risk Score
+            </h3>
+
+            <p>
+                Multiple detection signals are combined
+                into an easy-to-understand risk score.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-card-icon">
+                🔗
+            </div>
+
+            <h3>
+                URL Analysis
+            </h3>
+
+            <p>
+                ScamShield checks suspicious URL characteristics,
+                domains, TLDs, shorteners and impersonation patterns.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-card-icon">
+                📷
+            </div>
+
+            <h3>
+                OCR Screenshot Detection
+            </h3>
+
+            <p>
+                Screenshots can be converted into text and analyzed
+                using the same scam detection engine.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-card-icon">
+                🛡️
+            </div>
+
+            <h3>
+                Safety Recommendations
+            </h3>
+
+            <p>
+                ScamShield explains detected signals and provides
+                practical actions to stay safe.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+    <p>
+        <strong>ScamShield AI</strong>
+        — Intelligent Scam Detection & Awareness
+    </p>
+
+    <p style="margin-top:8px;">
+        Built with FastAPI • Python • Rule Engine • OCR • Gemini AI
+    </p>
+
+</footer>
+
+
+<script>
+
+/* =====================================================
+   CONFIGURATION
+===================================================== */
+
+const API_BASE = "http://127.0.0.1:8000";
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const messageInput =
+    document.getElementById("messageInput");
+
+const messageResult =
+    document.getElementById("messageResult");
+
+const messageLoading =
+    document.getElementById("messageLoading");
+
+const messageError =
+    document.getElementById("messageError");
+
+const urlInput =
+    document.getElementById("urlInput");
+
+const urlResult =
+    document.getElementById("urlResult");
+
+const urlLoading =
+    document.getElementById("urlLoading");
+
+const urlError =
+    document.getElementById("urlError");
+
+const imageInput =
+    document.getElementById("imageInput");
+
+const screenshotResult =
+    document.getElementById("screenshotResult");
+
+const screenshotLoading =
+    document.getElementById("screenshotLoading");
+
+const screenshotError =
+    document.getElementById("screenshotError");
+
+const fileName =
+    document.getElementById("fileName");
+
+
+/* =====================================================
+   SAFE HTML
+===================================================== */
+
+function escapeHTML(value) {
+
+    if (value === null || value === undefined) {
+        return "";
+    }
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+/* =====================================================
+   RISK HELPERS
+===================================================== */
+
+function getRiskClass(level) {
+
+    const normalized =
+        String(level || "").toUpperCase();
+
+    if (normalized === "HIGH") {
+        return "risk-high";
+    }
+
+    if (normalized === "MEDIUM") {
+        return "risk-medium";
+    }
+
+    return "risk-low";
+}
+
+
+function getSeverityClass(severity) {
+
+    const normalized =
+        String(severity || "MEDIUM").toLowerCase();
+
+    if (normalized === "high") {
+        return "severity-high";
+    }
+
+    if (normalized === "low") {
+        return "severity-low";
+    }
+
+    return "severity-medium";
+}
+
+
+function getSignalIcon(severity) {
+
+    const normalized =
+        String(severity || "MEDIUM").toUpperCase();
+
+    if (normalized === "HIGH") {
+        return "🚨";
+    }
+
+    if (normalized === "MEDIUM") {
+        return "⚠️";
+    }
+
+    return "ℹ️";
+}
+
+
+/* =====================================================
+   ERROR HELPERS
+===================================================== */
+
+function showError(element, message) {
+
+    element.textContent = message;
+    element.style.display = "block";
+}
+
+
+function hideError(element) {
+
+    element.textContent = "";
+    element.style.display = "none";
+}
+
+
+/* =====================================================
+   LOADING HELPERS
+===================================================== */
+
+function showLoading(element) {
+    element.style.display = "block";
+}
+
+
+function hideLoading(element) {
+    element.style.display = "none";
+}
+
+
+/* =====================================================
+   DEMO MESSAGES
+===================================================== */
+
+function loadDemo(type) {
+
+    if (type === "urgent") {
+
+        messageInput.value =
+            "URGENT! Your bank account will be blocked today. " +
+            "Send your OTP immediately and click this link: " +
+            "http://example.com/verify";
+
+    }
+
+    else if (type === "prize") {
+
+        messageInput.value =
+            "Congratulations! You have won ₹50,000. " +
+            "Claim your prize immediately by clicking this link " +
+            "and providing your bank details.";
+
+    }
+
+    else if (type === "safe") {
+
+        messageInput.value =
+            "Hi! Your class meeting has been moved to 10 AM tomorrow. " +
+            "Please bring your notebook.";
+
+    }
+
+    messageInput.focus();
+}
+
+
+/* =====================================================
+   MESSAGE ANALYSIS
+===================================================== */
+
+async function analyzeMessage() {
+
+    const message =
+        messageInput.value.trim();
+
+    hideError(messageError);
+
+    if (!message) {
+
+        showError(
+            messageError,
+            "Please enter a message to analyze."
+        );
+
+        return;
+    }
+
+
+    showLoading(messageLoading);
+
+    messageResult.style.display = "none";
+
+    document.getElementById(
+        "smartExplanation"
+    ).style.display = "none";
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE}/api/analyze`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        message: message
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.detail ||
+                data.error ||
+                "Backend request failed."
+            );
+        }
+
+
+        if (!data.success) {
+
+            throw new Error(
+                data.error ||
+                "Message analysis failed."
+            );
+        }
+
+
+        const analysis =
+            data.final_analysis;
+
+
+        if (!analysis) {
+
+            throw new Error(
+                "No final analysis was returned by the backend."
+            );
+        }
+
+
+        displayResult(analysis);
+
+        updateStatistics(analysis);
+
+        saveAnalysisHistory(
+            message,
+            analysis
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Message analysis error:",
+            error
+        );
+
+        showError(
+            messageError,
+            error.message ||
+            "Unable to connect to ScamShield backend."
+        );
+
+    }
+
+    finally {
+
+        hideLoading(messageLoading);
+    }
+}
+
+
+/* =====================================================
+   DISPLAY MESSAGE RESULT
+===================================================== */
+
+function displayResult(result) {
+
+    const score =
+        Number(result.risk_score || 0);
+
+    const level =
+        result.risk_level || "LOW";
+
+    const confidence =
+        Number(result.confidence || 0);
+
+    const scamType =
+        result.scam_type || "Unknown";
+
+    const summary =
+        result.summary ||
+        "ScamShield analyzed the message using available detection signals.";
+
+    const reasons =
+        Array.isArray(result.reasons)
+            ? result.reasons
+            : [];
+
+    const actions =
+        Array.isArray(result.recommended_actions)
+            ? result.recommended_actions
+            : [];
+
+
+    const riskClass =
+        getRiskClass(level);
+
+
+    let reasonsHTML = "";
+
+    if (reasons.length > 0) {
+
+        reasonsHTML = reasons
+            .map(
+                reason =>
+                    `<li>${escapeHTML(reason)}</li>`
+            )
+            .join("");
+
+    }
+
+    else {
+
+        reasonsHTML =
+            "<li>No major warning signals were detected.</li>";
+    }
+
+
+    let actionsHTML = "";
+
+    if (actions.length > 0) {
+
+        actionsHTML = actions
+            .map(
+                action =>
+                    `<li>${escapeHTML(action)}</li>`
+            )
+            .join("");
+
+    }
+
+    else {
+
+        actionsHTML =
+            "<li>Stay cautious and verify the source before taking action.</li>";
+    }
+
+
+    messageResult.innerHTML = `
+
+        <div class="result-top">
+
+            <div>
+
+                <div class="risk-score">
+                    ${score}/100
+                </div>
+
+                <div class="risk-label ${riskClass}">
+                    ${escapeHTML(level)} RISK
+                </div>
+
+            </div>
+
+            <div style="max-width:500px;">
+
+                <h3 style="margin-bottom:8px;">
+                    ${escapeHTML(scamType)}
+                </h3>
+
+                <p style="
+                    color:#9ca6bf;
+                    line-height:1.6;
+                    font-size:14px;
+                ">
+                    ${escapeHTML(summary)}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="result-info">
+
+            <div class="info-box">
+
+                <div class="info-label">
+                    Final Risk Score
+                </div>
+
+                <div class="info-value">
+                    ${score}/100
+                </div>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <div class="info-label">
+                    Confidence
+                </div>
+
+                <div class="info-value">
+                    ${confidence}%
+                </div>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <div class="info-label">
+                    Detection Mode
+                </div>
+
+                <div class="info-value">
+                    ${escapeHTML(
+                        result.score_mode ||
+                        "RULE_BASED"
+                    )}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="result-section">
+
+            <h4>
+                ⚠️ Detected Reasons
+            </h4>
+
+            <ul class="reasons-list">
+                ${reasonsHTML}
+            </ul>
+
+        </div>
+
+
+        <div class="result-section">
+
+            <h4>
+                🛡️ Recommended Actions
+            </h4>
+
+            <ul class="actions-list">
+                ${actionsHTML}
+            </ul>
+
+        </div>
+
+    `;
+
+
+    messageResult.style.display = "block";
+
+
+    /*
+       IMPORTANT:
+       Show Smart Explanation immediately
+       after the main result is displayed.
+    */
+
+    displaySmartExplanation(result);
+
+
+    messageResult.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+    });
+}
+
+
+/* =====================================================
+   SMART EXPLANATION
+===================================================== */
+
+function displaySmartExplanation(finalAnalysis) {
+
+    const explanationBox =
+        document.getElementById(
+            "smartExplanation"
+        );
+
+    const breakdown =
+        document.getElementById(
+            "riskBreakdown"
+        );
+
+    const actions =
+        document.getElementById(
+            "recommendedActions"
+        );
+
+
+    if (!explanationBox ||
+        !breakdown ||
+        !actions) {
+
+        return;
+    }
+
+
+    breakdown.innerHTML = "";
+
+    actions.innerHTML = "";
+
+
+    const riskBreakdown =
+        Array.isArray(
+            finalAnalysis.risk_breakdown
+        )
+            ? finalAnalysis.risk_breakdown
+            : [];
+
+
+    const recommendedActions =
+        Array.isArray(
+            finalAnalysis.recommended_actions
+        )
+            ? finalAnalysis.recommended_actions
+            : [];
+
+
+    /*
+       Risk breakdown
+    */
+
+    if (riskBreakdown.length === 0) {
+
+        breakdown.innerHTML = `
+
+            <div class="risk-signal low">
+
+                <div class="risk-signal-header">
+
+                    <div class="signal-name">
+                        ℹ️
+                        <span>
+                            No major warning signals
+                        </span>
+                    </div>
+
+                    <span class="signal-score severity-low">
+                        LOW
+                    </span>
+
+                </div>
+
+                <div class="signal-explanation">
+                    ScamShield did not detect major
+                    suspicious patterns in this message.
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+    else {
+
+        riskBreakdown.forEach(signal => {
+
+            const severity =
+                String(
+                    signal.severity ||
+                    "MEDIUM"
+                ).toLowerCase();
+
+
+            const icon =
+                getSignalIcon(
+                    signal.severity
+                );
+
+
+            const severityClass =
+                getSeverityClass(
+                    signal.severity
+                );
+
+
+            const score =
+                Number(
+                    signal.score || 0
+                );
+
+
+            const signalName =
+                signal.signal ||
+                "Suspicious Signal";
+
+
+            const explanation =
+                signal.explanation ||
+                "A suspicious pattern was detected.";
+
+
+            const signalElement =
+                document.createElement("div");
+
+
+            signalElement.className =
+                `risk-signal ${severity}`;
+
+
+            signalElement.innerHTML = `
+
+                <div class="risk-signal-header">
+
+                    <div class="signal-name">
+
+                        <span>
+                            ${icon}
+                        </span>
+
+                        <span>
+                            ${escapeHTML(signalName)}
+                        </span>
+
+                    </div>
+
+                    <span
+                        class="signal-score ${severityClass}"
+                    >
+                        +${score} •
+                        ${escapeHTML(
+                            String(
+                                signal.severity ||
+                                "MEDIUM"
+                            ).toUpperCase()
+                        )}
+                    </span>
+
+                </div>
+
+
+                <div class="signal-explanation">
+
+                    ${escapeHTML(explanation)}
+
+                </div>
+
+            `;
+
+
+            breakdown.appendChild(
+                signalElement
+            );
+
+        });
+
+    }
+
+
+    /*
+       Recommended actions
+    */
+
+    if (recommendedActions.length === 0) {
+
+        actions.innerHTML = `
+            <li>
+                Verify the sender before taking any action.
+            </li>
+        `;
+
+    }
+
+    else {
+
+        recommendedActions.forEach(action => {
+
+            const li =
+                document.createElement("li");
+
+            li.textContent = action;
+
+            actions.appendChild(li);
+
+        });
+
+    }
+
+
+    explanationBox.style.display = "block";
+}
+
+
+/* =====================================================
+   RESET MESSAGE SCANNER
+===================================================== */
+
+function resetAnalyzer() {
+
+    messageInput.value = "";
+
+    messageResult.innerHTML = "";
+
+    messageResult.style.display = "none";
+
+
+    const explanationBox =
+        document.getElementById(
+            "smartExplanation"
+        );
+
+
+    if (explanationBox) {
+
+        explanationBox.style.display =
+            "none";
+    }
+
+
+    hideError(messageError);
+}
+
+
+/* =====================================================
+   URL ANALYSIS
+===================================================== */
+
+async function analyzeURL() {
+
+    const url =
+        urlInput.value.trim();
+
+    hideError(urlError);
+
+
+    if (!url) {
+
+        showError(
+            urlError,
+            "Please enter a URL."
+        );
+
+        return;
+    }
+
+
+    showLoading(urlLoading);
+
+    urlResult.style.display = "none";
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE}/api/analyze-url`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        url: url
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.detail ||
+                data.error ||
+                "URL analysis failed."
+            );
+        }
+
+
+        if (!data.success) {
+
+            throw new Error(
+                data.error ||
+                "URL analysis failed."
+            );
+        }
+
+
+        displayURLResult(
+            data.url_analysis
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "URL analysis error:",
+            error
+        );
+
+        showError(
+            urlError,
+            error.message ||
+            "Unable to analyze URL."
+        );
+
+    }
+
+    finally {
+
+        hideLoading(urlLoading);
+    }
+}
+
+
+/* =====================================================
+   DISPLAY URL RESULT
+===================================================== */
+
+function displayURLResult(data) {
+
+    if (!data) {
+
+        throw new Error(
+            "No URL analysis returned."
+        );
+    }
+
+
+    const score =
+        Number(
+            data.risk_score ||
+            data.url_risk_score ||
+            0
+        );
+
+
+    const level =
+        data.risk_level ||
+        (
+            score >= 70
+                ? "HIGH"
+                : score >= 40
+                    ? "MEDIUM"
+                    : "LOW"
+        );
+
+
+    const riskClass =
+        getRiskClass(level);
+
+
+    const suspicious =
+        data.is_suspicious;
+
+
+    let detailsHTML = "";
+
+
+    const checks = [
+        ["HTTPS", data.https],
+        ["IP Address", data.has_ip],
+        ["Suspicious Keywords", data.has_suspicious_keywords],
+        ["Suspicious TLD", data.has_suspicious_tld],
+        ["Long URL", data.is_long_url],
+        ["@ Symbol", data.has_at_symbol],
+        ["Multiple Subdomains", data.has_multiple_subdomains],
+        ["URL Shortener", data.is_url_shortener],
+        ["Non-standard Port", data.has_non_standard_port],
+        ["Encoded Characters", data.has_encoded_characters],
+        ["Multiple Hyphens", data.has_multiple_hyphens],
+        ["Brand Impersonation", data.possible_brand_impersonation]
+    ];
+
+
+    checks.forEach(([name, value]) => {
+
+        if (value === undefined ||
+            value === null) {
+
+            return;
+        }
+
+
+        detailsHTML += `
+
+            <div class="info-box">
+
+                <div class="info-label">
+                    ${escapeHTML(name)}
+                </div>
+
+                <div class="info-value">
+
+                    ${value ? "⚠️ Detected" : "✓ Clear"}
+
+                </div>
+
+            </div>
+
+        `;
+
+    });
+
+
+    const recommendation =
+        data.recommendation ||
+        data.message ||
+        (
+            suspicious
+                ? "Avoid opening this link until its source is verified."
+                : "The URL does not show major suspicious characteristics."
+        );
+
+
+    urlResult.innerHTML = `
+
+        <div class="result-top">
+
+            <div>
+
+                <div class="risk-score">
+                    ${score}/100
+                </div>
+
+                <div class="risk-label ${riskClass}">
+                    ${escapeHTML(level)} RISK
+                </div>
+
+            </div>
+
+
+            <div style="max-width:500px;">
+
+                <h3 style="margin-bottom:8px;">
+                    URL Analysis
+                </h3>
+
+                <p style="
+                    color:#9ca6bf;
+                    line-height:1.6;
+                    font-size:14px;
+                    word-break:break-word;
+                ">
+                    ${escapeHTML(
+                        data.url || ""
+                    )}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="result-section">
+
+            <h4>
+                🔎 URL Checks
+            </h4>
+
+            <div class="result-info">
+                ${detailsHTML}
+            </div>
+
+        </div>
+
+
+        <div class="result-section">
+
+            <h4>
+                🛡️ Recommendation
+            </h4>
+
+            <p>
+                ${escapeHTML(recommendation)}
+            </p>
+
+        </div>
+
+    `;
+
+
+    urlResult.style.display = "block";
+}
+
+
+/* =====================================================
+   CLEAR URL
+===================================================== */
+
+function clearURL() {
+
+    urlInput.value = "";
+
+    urlResult.innerHTML = "";
+
+    urlResult.style.display = "none";
+
+    hideError(urlError);
+}
+
+
+/* =====================================================
+   IMAGE SELECT
+===================================================== */
+
+function handleImageSelect() {
+
+    hideError(screenshotError);
+
+    const file =
+        imageInput.files[0];
+
+
+    if (!file) {
+
+        fileName.textContent = "";
+
+        return;
+    }
+
+
+    fileName.textContent =
+        `Selected: ${file.name}`;
+}
+
+
+/* =====================================================
+   SCREENSHOT ANALYSIS
+===================================================== */
+
+async function analyzeScreenshot() {
+
+    hideError(screenshotError);
+
+
+    const file =
+        imageInput.files[0];
+
+
+    if (!file) {
+
+        showError(
+            screenshotError,
+            "Please select a screenshot first."
+        );
+
+        return;
+    }
+
+
+    const allowedTypes = [
+        "image/png",
+        "image/jpeg"
+    ];
+
+
+    if (!allowedTypes.includes(file.type)) {
+
+        showError(
+            screenshotError,
+            "Only PNG and JPG/JPEG images are supported."
+        );
+
+        return;
+    }
+
+
+    const formData =
+        new FormData();
+
+
+    formData.append(
+        "file",
+        file
+    );
+
+
+    showLoading(screenshotLoading);
+
+    screenshotResult.style.display = "none";
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE}/api/analyze-image`,
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.detail ||
+                data.error ||
+                "Screenshot analysis failed."
+            );
+        }
+
+
+        if (!data.success) {
+
+            throw new Error(
+                data.error ||
+                "Screenshot analysis failed."
+            );
+        }
+
+
+        const analysis =
+            data.final_analysis;
+
+
+        if (!analysis) {
+
+            throw new Error(
+                "No final analysis returned."
+            );
+        }
+
+
+        displayScreenshotResult(
+            data,
+            analysis
+        );
+
+
+        updateStatistics(
+            analysis
+        );
+
+
+        saveAnalysisHistory(
+            data.extracted_text ||
+            file.name,
+            analysis
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Screenshot analysis error:",
+            error
+        );
+
+        showError(
+            screenshotError,
+            error.message ||
+            "Unable to analyze screenshot."
+        );
+
+    }
+
+    finally {
+
+        hideLoading(
+            screenshotLoading
+        );
+    }
+}
+
+
+/* =====================================================
+   DISPLAY SCREENSHOT RESULT
+===================================================== */
+
+function displayScreenshotResult(
+    data,
+    result
+) {
+
+    const score =
+        Number(
+            result.risk_score || 0
+        );
+
+
+    const level =
+        result.risk_level || "LOW";
+
+
+    const confidence =
+        Number(
+            result.confidence || 0
+        );
+
+
+    const scamType =
+        result.scam_type || "Unknown";
+
+
+    const riskClass =
+        getRiskClass(level);
+
+
+    const reasons =
+        Array.isArray(result.reasons)
+            ? result.reasons
+            : [];
+
+
+    let reasonsHTML = "";
+
+
+    if (reasons.length > 0) {
+
+        reasonsHTML =
+            reasons
+                .map(
+                    reason =>
+                        `<li>${escapeHTML(reason)}</li>`
+                )
+                .join("");
+
+    }
+
+    else {
+
+        reasonsHTML =
+            "<li>No major warning signals were detected.</li>";
+    }
+
+
+    screenshotResult.innerHTML = `
+
+        <div class="result-top">
+
+            <div>
+
+                <div class="risk-score">
+                    ${score}/100
+                </div>
+
+                <div class="risk-label ${riskClass}">
+                    ${escapeHTML(level)} RISK
+                </div>
+
+            </div>
+
+
+            <div style="max-width:500px;">
+
+                <h3 style="margin-bottom:8px;">
+                    ${escapeHTML(scamType)}
+                </h3>
+
+                <p style="
+                    color:#9ca6bf;
+                    line-height:1.6;
+                    font-size:14px;
+                ">
+                    Screenshot text was extracted using OCR
+                    and analyzed by ScamShield.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="result-info">
+
+            <div class="info-box">
+
+                <div class="info-label">
+                    Risk Score
+                </div>
+
+                <div class="info-value">
+                    ${score}/100
+                </div>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <div class="info-label">
+                    Confidence
+                </div>
+
+                <div class="info-value">
+                    ${confidence}%
+                </div>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <div class="info-label">
+                    Detection Mode
+                </div>
+
+                <div class="info-value">
+                    ${escapeHTML(
+                        result.score_mode ||
+                        "RULE_BASED"
+                    )}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="result-section">
+
+            <h4>
+                📝 Extracted Text
+            </h4>
+
+            <div class="extracted-text">
+                ${escapeHTML(
+                    data.extracted_text ||
+                    "No text extracted."
+                )}
+            </div>
+
+        </div>
+
+
+        <div class="result-section">
+
+            <h4>
+                ⚠️ Detected Reasons
+            </h4>
+
+            <ul class="reasons-list">
+                ${reasonsHTML}
+            </ul>
+
+        </div>
+
+    `;
+
+
+    screenshotResult.style.display =
+        "block";
+
+
+    /*
+       Screenshot also receives the same
+       Smart Explanation information.
+
+       Since the Smart Explanation component
+       is located below the message scanner,
+       move the same component temporarily
+       below the screenshot result.
+    */
+
+    const explanationBox =
+        document.getElementById(
+            "smartExplanation"
+        );
+
+
+    if (explanationBox) {
+
+        screenshotResult.appendChild(
+            explanationBox
+        );
+
+        displaySmartExplanation(
+            result
+        );
+
+    }
+
+
+    screenshotResult.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+    });
+}
+
+
+/* =====================================================
+   CLEAR SCREENSHOT
+===================================================== */
+
+function clearScreenshot() {
+
+    imageInput.value = "";
+
+    fileName.textContent = "";
+
+    screenshotResult.innerHTML = "";
+
+    screenshotResult.style.display =
+        "none";
+
+    hideError(screenshotError);
+
+
+    const explanationBox =
+        document.getElementById(
+            "smartExplanation"
+        );
+
+
+    if (explanationBox) {
+
+        explanationBox.style.display =
+            "none";
+    }
+}
+
+
+/* =====================================================
+   STATISTICS
+===================================================== */
+
+function getHistory() {
+
+    try {
+
+        return JSON.parse(
+            localStorage.getItem(
+                "scamshield_history"
+            ) || "[]"
+        );
+
+    }
+
+    catch {
+
+        return [];
+    }
+}
+
+
+function updateStatistics(analysis) {
+
+    const history =
+        getHistory();
+
+
+    /*
+       Include current scan because
+       history is saved immediately after
+       this function.
+    */
+
+    const scores =
+        history
+            .map(
+                item =>
+                    Number(item.score || 0)
+            );
+
+
+    scores.push(
+        Number(
+            analysis.risk_score || 0
+        )
+    );
+
+
+    const total =
+        scores.length;
+
+
+    const highRisk =
+        scores.filter(
+            score => score >= 70
+        ).length;
+
+
+    const average =
+        total
+            ? Math.round(
+                scores.reduce(
+                    (sum, score) =>
+                        sum + score,
+                    0
+                ) / total
+            )
+            : 0;
+
+
+    document.getElementById(
+        "totalScans"
+    ).textContent = total;
+
+
+    document.getElementById(
+        "highRiskScans"
+    ).textContent = highRisk;
+
+
+    document.getElementById(
+        "averageScore"
+    ).textContent = average;
+}
+
+
+/* =====================================================
+   SAVE HISTORY
+===================================================== */
+
+function saveAnalysisHistory(
+    text,
+    analysis
+) {
+
+    const history =
+        getHistory();
+
+
+    history.unshift({
+
+        text:
+            String(text || "")
+                .substring(0, 180),
+
+        score:
+            Number(
+                analysis.risk_score || 0
+            ),
+
+        level:
+            analysis.risk_level ||
+            "LOW",
+
+        scamType:
+            analysis.scam_type ||
+            "Unknown",
+
+        timestamp:
+            new Date().toISOString()
+
+    });
+
+
+    /*
+       Keep latest 20 scans.
+    */
+
+    const limitedHistory =
+        history.slice(0, 20);
+
+
+    localStorage.setItem(
+        "scamshield_history",
+        JSON.stringify(
+            limitedHistory
+        )
+    );
+
+
+    renderHistory();
+
+    updateStatistics(
+        analysis
+    );
+}
+
+
+/* =====================================================
+   RENDER HISTORY
+===================================================== */
+
+function renderHistory() {
+
+    const history =
+        getHistory();
+
+
+    const historyList =
+        document.getElementById(
+            "historyList"
+        );
+
+
+    if (!history.length) {
+
+        historyList.innerHTML = `
+
+            <div class="empty-history">
+
+                No scans yet.
+                Your analysis history will appear here.
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    historyList.innerHTML =
+        history
+            .map(item => {
+
+                const riskClass =
+                    getRiskClass(
+                        item.level
+                    );
+
+
+                const date =
+                    new Date(
+                        item.timestamp
+                    );
+
+
+                return `
+
+                    <div class="history-item">
+
+                        <div
+                            class="history-message"
+                        >
+                            ${escapeHTML(
+                                item.text
+                            )}
+                        </div>
+
+
+                        <div class="history-meta">
+
+                            <span>
+                                ${escapeHTML(
+                                    item.scamType
+                                )}
+                            </span>
+
+                            <span
+                                class="history-score"
+                            >
+                                ${item.score}/100
+                            </span>
+
+                            <span
+                                class="risk-label ${riskClass}"
+                                style="margin:0;"
+                            >
+                                ${escapeHTML(
+                                    item.level
+                                )}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            })
+            .join("");
+}
+
+
+/* =====================================================
+   INITIALIZATION
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        renderHistory();
+
+
+        /*
+           Calculate statistics from
+           existing history.
+        */
+
+        const history =
+            getHistory();
+
+
+        const scores =
+            history.map(
+                item =>
+                    Number(
+                        item.score || 0
+                    )
+            );
+
+
+        const total =
+            scores.length;
+
+
+        const highRisk =
+            scores.filter(
+                score => score >= 70
+            ).length;
+
+
+        const average =
+            total
+                ? Math.round(
+                    scores.reduce(
+                        (sum, score) =>
+                            sum + score,
+                        0
+                    ) / total
+                )
+                : 0;
+
+
+        document.getElementById(
+            "totalScans"
+        ).textContent = total;
+
+
+        document.getElementById(
+            "highRiskScans"
+        ).textContent = highRisk;
+
+
+        document.getElementById(
+            "averageScore"
+        ).textContent = average;
+
+    }
+);
+
+</script>
+
+</body>
+</html>
+```
