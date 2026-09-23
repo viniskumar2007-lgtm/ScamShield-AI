@@ -1,0 +1,5 @@
+[
+  {"id": "otp", "text": "URGENT: send your OTP immediately or your bank account will be blocked.", "expected_level": "HIGH"},
+  {"id": "safe", "text": "Your appointment is confirmed for tomorrow at 10:00.", "expected_level": "LOW"},
+  {"id": "url", "text": "Verify your account at http://secure-bank-verify-account.xyz/login", "expected_level": "HIGH"}
+]

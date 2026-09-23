@@ -1,4 +1,5 @@
 import re
+from .url_analyzer import extract_urls
 
 
 # Scam keywords and their risk points
@@ -13,7 +14,11 @@ SCAM_PATTERNS = {
             "within 10 minutes",
             "within 24 hours",
             "limited time",
-            "hurry"
+            "hurry",
+            "urgente",
+            "inmediatamente",
+            "तुरंत",
+            "अभी"
         ],
         "score": 15
     },
@@ -40,7 +45,11 @@ SCAM_PATTERNS = {
             "registration fee",
             "upi",
             "gift card",
-            "transfer money"
+            "transfer money",
+            "pago",
+            "pagamento",
+            "भुगतान",
+            "पैसे भेजें"
         ],
         "score": 25
     },
@@ -99,7 +108,9 @@ SCAM_PATTERNS = {
             "login details",
             "username",
             "account details",
-            "bank details"
+            "bank details",
+            "contraseña",
+            "पासवर्ड"
         ],
         "score": 25
     },
@@ -144,7 +155,7 @@ def calculate_rule_score(text):
     Analyze text using predefined scam detection rules.
     """
 
-    text_lower = text.lower()
+    text_lower = re.sub(r"\s+", " ", text.casefold()).strip()
 
     score = 0
     detected_patterns = []
@@ -156,7 +167,7 @@ def calculate_rule_score(text):
 
         for keyword in pattern_data["keywords"]:
 
-            if keyword in text_lower:
+            if re.search(r"(?<!\w)" + re.escape(keyword.casefold()) + r"(?!\w)", text_lower):
 
                 pattern_detected = True
 
@@ -173,7 +184,7 @@ def calculate_rule_score(text):
             })
 
     # Detect suspicious URLs
-    urls = detect_suspicious_urls(text)
+    urls = extract_urls(text)
 
     if urls:
 
