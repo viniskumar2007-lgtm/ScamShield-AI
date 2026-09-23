@@ -2570,9 +2570,30 @@ footer strong {
    API CONFIGURATION
 ====================================================== */
 
-const API_BASE =
-    window.SCAMSHIELD_API_BASE ||
-    "http://127.0.0.1:8000";
+function getApiBase() {
+    if (window.SCAMSHIELD_API_BASE) {
+        return window.SCAMSHIELD_API_BASE.replace(/\/+$/, "");
+    }
+
+    const currentUrl = new URL(window.location.href);
+    const codespacesHost = currentUrl.hostname.replace(
+        /-5500(?=\.app\.github\.dev$)/,
+        "-8000"
+    );
+
+    if (codespacesHost !== currentUrl.hostname) {
+        return `${currentUrl.protocol}//${codespacesHost}`;
+    }
+
+    if (window.location.protocol === "http:" ||
+        window.location.protocol === "https:") {
+        return `${currentUrl.protocol}//${currentUrl.hostname}:8000`;
+    }
+
+    return "http://127.0.0.1:8000";
+}
+
+const API_BASE = getApiBase();
 
 const API_URL = `${API_BASE}/api/analyze`;
 const URL_API = `${API_BASE}/api/analyze-url`;
