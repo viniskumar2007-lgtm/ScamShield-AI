@@ -2042,6 +2042,7 @@ footer strong {
         <textarea
             id="messageInput"
             placeholder="Paste a suspicious message here..."
+            maxlength="10000"
         ></textarea>
 
 
@@ -2569,8 +2570,13 @@ footer strong {
    API CONFIGURATION
 ====================================================== */
 
-const API_URL =
-    "http://127.0.0.1:8000/api/analyze";
+const API_BASE =
+    window.SCAMSHIELD_API_BASE ||
+    "http://127.0.0.1:8000";
+
+const API_URL = `${API_BASE}/api/analyze`;
+const URL_API = `${API_BASE}/api/analyze-url`;
+const IMAGE_API = `${API_BASE}/api/analyze-image`;
 
 
 /* ======================================================
@@ -2619,6 +2625,20 @@ async function analyzeMessage() {
 
         `;
 
+        return;
+    }
+
+    if (message.length > 10000) {
+        resultBox.innerHTML = `
+            <div class="result-card">
+                <div class="result-level" style="color:#f59e0b;">
+                    ⚠️ Message is too long
+                </div>
+                <p style="margin-top:10px;color:#94a3b8;font-size:14px;">
+                    Please keep messages to 10,000 characters or fewer.
+                </p>
+            </div>
+        `;
         return;
     }
 
@@ -3731,7 +3751,7 @@ async function scanURL() {
 
         const response =
             await fetch(
-                "http://127.0.0.1:8000/api/analyze-url",
+                URL_API,
                 {
                     method: "POST",
 
@@ -3752,6 +3772,7 @@ async function scanURL() {
         if (!response.ok) {
 
             throw new Error(
+                (data.error && data.error.message) ||
                 data.detail ||
                 "URL analysis failed."
             );
@@ -4116,7 +4137,7 @@ scanScreenshotBtn.addEventListener("click", async () => {
     try {
 
         const response = await fetch(
-            "http://127.0.0.1:8000/api/analyze-image",
+            IMAGE_API,
             {
                 method: "POST",
                 body: formData
@@ -4126,7 +4147,11 @@ scanScreenshotBtn.addEventListener("click", async () => {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.detail || "Screenshot analysis failed.");
+            throw new Error(
+                (data.error && data.error.message) ||
+                data.detail ||
+                "Screenshot analysis failed."
+            );
         }
 
         const result = data.final_analysis;

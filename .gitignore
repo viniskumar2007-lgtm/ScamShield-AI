@@ -6,5 +6,7 @@ backend/venv/
 
 __pycache__/
 *.pyc
+*.db
+.pytest_cache/
 
 .DS_Store

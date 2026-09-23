@@ -1,4 +1,5 @@
 import re
+import ipaddress
 from urllib.parse import urlparse
 
 
@@ -82,6 +83,23 @@ BRAND_KEYWORDS = [
     "paytm",
 ]
 
+OFFICIAL_BRAND_DOMAINS = {
+    "google": {"google.com"},
+    "microsoft": {"microsoft.com", "live.com", "office.com"},
+    "apple": {"apple.com"},
+    "amazon": {"amazon.com", "amazon.in"},
+    "paypal": {"paypal.com"},
+    "facebook": {"facebook.com", "fb.com"},
+    "instagram": {"instagram.com"},
+    "whatsapp": {"whatsapp.com"},
+    "sbi": {"sbi.co.in"},
+    "hdfc": {"hdfcbank.com"},
+    "icici": {"icicibank.com"},
+    "axis": {"axisbank.com"},
+    "phonepe": {"phonepe.com"},
+    "paytm": {"paytm.com"},
+}
+
 
 # ============================================================
 # HELPERS
@@ -121,12 +139,28 @@ def analyze_url(url):
     # Normalize URL
     # --------------------------------------------------------
 
+    if len(url) > 2048 or any(ord(c) < 32 for c in url):
+        return {"url": url[:2048], "domain": "", "score": 0, "risk_level": "LOW",
+                "is_suspicious": False, "indicators": [{"indicator": "Invalid URL", "status": "error", "score": 0}],
+                "recommendation": "Enter a valid URL."}
     if not url.startswith(("http://", "https://")):
         url = "http://" + url
 
     parsed = urlparse(url)
 
-    domain = parsed.hostname or ""
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        return {"url": url, "domain": "", "score": 0, "risk_level": "LOW",
+                "is_suspicious": False, "indicators": [{"indicator": "Invalid URL", "status": "error", "score": 0}],
+                "recommendation": "Enter a valid HTTP or HTTPS URL."}
+    try:
+        domain = parsed.hostname or ""
+        _ = parsed.port
+    except ValueError:
+        domain = ""
+    if not domain or any(char.isspace() for char in domain):
+        return {"url": url, "domain": "", "score": 0, "risk_level": "LOW",
+                "is_suspicious": False, "indicators": [{"indicator": "Invalid URL", "status": "error", "score": 0}],
+                "recommendation": "Enter a valid URL."}
     domain = domain.lower()
 
     score = 0
@@ -160,9 +194,11 @@ def analyze_url(url):
     # 2. IP ADDRESS CHECK
     # ========================================================
 
-    ip_pattern = r"^\d{1,3}(?:\.\d{1,3}){3}$"
-
-    if re.match(ip_pattern, domain):
+    try:
+        is_ip = ipaddress.ip_address(domain).version in (4, 6)
+    except ValueError:
+        is_ip = False
+    if is_ip:
 
         score += 25
 
@@ -207,10 +243,7 @@ def analyze_url(url):
     # 4. SUSPICIOUS TLD
     # ========================================================
 
-    tld_match = re.search(
-        r"\.([a-z]{2,})$",
-        domain
-    )
+    tld_match = re.search(r"\.([a-z]{2,})$", domain)
 
     if tld_match:
 
@@ -248,7 +281,6 @@ def analyze_url(url):
     # ========================================================
 
     if "@" in url:
-
         score += 15
 
         add_indicator(
@@ -350,7 +382,7 @@ def analyze_url(url):
 
     for brand in BRAND_KEYWORDS:
 
-        if brand in domain:
+        if re.search(r"(?<![a-z0-9])" + re.escape(brand) + r"(?![a-z0-9])", domain):
 
             matched_brands.append(brand)
 
@@ -360,7 +392,16 @@ def analyze_url(url):
         # We increase the score only when combined with
         # suspicious URL characteristics.
 
+        labels = domain.split(".")
+        registrable_domain = ".".join(labels[-2:]) if len(labels) >= 2 else domain
+        official_domain = any(
+            registrable_domain == allowed
+            for brand in matched_brands
+            for allowed in OFFICIAL_BRAND_DOMAINS.get(brand, set())
+        )
         suspicious_domain_signal = (
+            not official_domain
+            or
             parsed.scheme != "https"
             or any(
                 indicator["score"] > 0
@@ -456,3 +497,9 @@ def analyze_url(url):
 
         "recommendation": recommendation
     }
+
+
+def extract_urls(text):
+    """Return syntactically bounded URLs, trimming common punctuation."""
+    candidates = re.findall(r"(?i)(?:https?://|www\.)[^\s<>'\"]+", text or "")
+    return [u.rstrip(".,!?;:)[]}")[:2048] for u in candidates]

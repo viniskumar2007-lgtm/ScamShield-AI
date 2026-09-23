@@ -161,7 +161,11 @@ After analysis, ScamShield provides practical recommendations such as:
 
 ### 🕘 7. Scan History
 
-The frontend stores recent scans locally using browser `localStorage`.
+The backend also provides an optional SQLite-backed history foundation with configurable
+retention. History routes are disabled unless `TRUSTED_AUTH_PROXY=true` is configured.
+When enabled, a separately authenticated gateway must provide
+`X-Authenticated-User`; this project never treats a client-supplied identity
+header as authentication.
 
 History can include:
 
@@ -207,9 +211,11 @@ ScamShield-AI/
 │   ├── services/
 │   │   ├── ai_detector.py
 │   │   ├── rule_engine.py
-│   │   ├── hybrid_analyzer.py
+│   │   ├── risk_engine.py
 │   │   ├── url_analyzer.py
-│   │   └── ocr_service.py
+│   │   ├── ocr_service.py
+│   │   ├── history.py
+│   │   └── reputation.py
 │   │
 │   ├── requirements.txt
 │   └── .env
@@ -355,11 +361,11 @@ Final Result
 
 ScamShield combines AI analysis and rule-based analysis.
 
-The current system uses:
+The system uses the following weights:
 
 ```text
-AI Score   → 70%
-Rule Score → 30%
+AI Score   → 40% when AI is available
+Rule Score → 60% when AI is available
 ```
 
 Conceptually:
@@ -367,10 +373,15 @@ Conceptually:
 ```text
 Final Risk Score
 =
-(AI Score × 0.70)
+(AI Score × 0.40)
 +
-(Rule Score × 0.30)
+(Rule Score × 0.60)
 ```
+
+If the AI provider is unavailable, the response explicitly reports
+`score_mode: "RULE_FALLBACK"` and uses an 85% rule / 15% fallback weighting.
+This keeps the result bounded and makes the source of the score visible to
+callers.
 
 The resulting score is used to determine the final risk level.
 
@@ -494,6 +505,12 @@ Add your Gemini API key:
 GEMINI_API_KEY=your_api_key_here
 ```
 
+Additional deployment settings are documented in `backend/.env.example`,
+including `CORS_ORIGINS`, `MAX_MESSAGE_LENGTH`, `MAX_UPLOAD_BYTES`,
+`MAX_IMAGE_PIXELS`, `OCR_LANGUAGES`, `HISTORY_DB`, and
+`HISTORY_RETENTION_DAYS`. Keep CORS origins explicit in production; wildcard
+origins and browser-provided authentication are not supported.
+
 ⚠️ **Never upload your real API key to GitHub.**
 
 Make sure `.env` is included in `.gitignore`.
@@ -585,7 +602,7 @@ If the backend is deployed online, replace the local API address with the deploy
 | `main.py`            | FastAPI application       |
 | `ai_detector.py`     | AI-based scam analysis    |
 | `rule_engine.py`     | Rule-based detection      |
-| `hybrid_analyzer.py` | Combines analysis results |
+| `risk_engine.py` | Combines AI and rule scores |
 | `url_analyzer.py`    | URL security analysis     |
 | `ocr_service.py`     | Screenshot OCR            |
 | `index.html`         | Frontend application      |
@@ -617,7 +634,7 @@ Possible future features:
 
 * 📧 Email analysis
 * 📱 WhatsApp message import
-* 🌐 Browser extension
+* 🌐 Browser extension boundary (`/api/extension/*` is available now)
 * 🔍 Domain reputation lookup
 * 🗄️ Database-backed scan history
 * 👤 User accounts
