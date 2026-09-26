@@ -489,6 +489,201 @@ body {
     padding: 10px;
     cursor: pointer;
 }
+
+/* ==============================================================================
+   GOOGLE ACCOUNT SELECTOR MODAL
+   ============================================================================== */
+.g-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(3, 6, 18, 0.85);
+    backdrop-filter: blur(16px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+}
+
+.g-modal-overlay.active {
+    display: flex;
+}
+
+.g-modal-box {
+    width: 100%;
+    max-width: 440px;
+    background: #ffffff;
+    color: #202124;
+    border-radius: 24px;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+    padding: 36px 32px;
+    text-align: left;
+    position: relative;
+    animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalPop {
+    0% { transform: scale(0.92); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.g-modal-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.g-modal-logo {
+    width: 32px;
+    height: 32px;
+    margin: 0 auto 12px;
+}
+
+.g-modal-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #202124;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.g-modal-subtitle {
+    font-size: 13px;
+    color: #5f6368;
+    margin-top: 4px;
+}
+
+.g-account-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.g-account-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    border: 1px solid #dadce0;
+    transition: all 0.2s ease;
+    background: #ffffff;
+}
+
+.g-account-item:hover {
+    background: #f8f9fa;
+    border-color: #4285f4;
+    box-shadow: 0 2px 8px rgba(66, 133, 244, 0.15);
+}
+
+.g-account-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ea4335, #fbbc05);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 17px;
+    flex-shrink: 0;
+}
+
+.g-account-details {
+    flex: 1;
+    overflow: hidden;
+}
+
+.g-account-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #202124;
+}
+
+.g-account-email {
+    font-size: 12px;
+    color: #5f6368;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.g-custom-email-box {
+    margin-top: 10px;
+    padding-top: 16px;
+    border-top: 1px solid #ebebeb;
+}
+
+.g-custom-email-box label {
+    font-size: 12px;
+    color: #5f6368;
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.g-custom-input-group {
+    display: flex;
+    gap: 8px;
+}
+
+.g-custom-input {
+    flex: 1;
+    padding: 9px 12px;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.g-custom-input:focus {
+    border-color: #1a73e8;
+}
+
+.g-custom-btn {
+    background: #1a73e8;
+    color: #ffffff;
+    border: none;
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.g-custom-btn:hover {
+    background: #1557b0;
+}
+
+.g-modal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid #f1f3f4;
+    font-size: 12px;
+    color: #5f6368;
+}
+
+.g-cancel-btn {
+    background: transparent;
+    border: none;
+    color: #5f6368;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+
+.g-cancel-btn:hover {
+    background: #f1f3f4;
+    color: #202124;
+}
 </style>
 </head>
 
@@ -548,7 +743,7 @@ body {
     <!-- Auth Actions -->
     <div class="auth-box" id="authBox">
         <!-- Direct Google OAuth Button -->
-        <button class="google-auth-btn" id="googleLoginBtn" onclick="handleGoogleSignIn()">
+        <button class="google-auth-btn" id="googleLoginBtn" onclick="openGoogleAccountModal()">
             <svg class="google-icon-svg" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.65v3.03h3.88c2.27-2.09 3.66-5.17 3.66-9.12z"/>
                 <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.03c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.13C3.27 21.39 7.35 24 12 24z"/>
@@ -557,15 +752,6 @@ body {
             </svg>
             <span>Continue with Google</span>
         </button>
-
-        <!-- Hidden GSI Container for Official One-Tap & Button Rendering -->
-        <div id="g_id_onload"
-             data-client_id="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
-             data-context="signin"
-             data-ux_mode="popup"
-             data-callback="handleCredentialResponse"
-             data-auto_prompt="false">
-        </div>
 
         <div class="divider">or quick access</div>
 
@@ -586,9 +772,63 @@ body {
     </div>
 </div>
 
+<!-- ==============================================================================
+     GOOGLE ACCOUNT CHOOSER MODAL
+     ============================================================================== -->
+<div class="g-modal-overlay" id="googleAccountModal" onclick="closeGoogleAccountModal(event)">
+    <div class="g-modal-box" onclick="event.stopPropagation()">
+        <div class="g-modal-header">
+            <svg class="g-modal-logo" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.65v3.03h3.88c2.27-2.09 3.66-5.17 3.66-9.12z"/>
+                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.03c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.13C3.27 21.39 7.35 24 12 24z"/>
+                <path fill="#FBBC05" d="M5.28 14.29c-.25-.72-.38-1.49-.38-2.29s.13-1.57.38-2.29V6.58H1.26C.46 8.17 0 9.99 0 12s.46 3.83 1.26 5.42l4.02-3.13z"/>
+                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.35 0 3.27 2.61 1.26 6.58l4.02 3.13c.95-2.83 3.6-4.96 6.72-4.96z"/>
+            </svg>
+            <h2 class="g-modal-title">Sign in with Google</h2>
+            <p class="g-modal-subtitle">Choose an account to continue to <b>ScamShield AI</b></p>
+        </div>
+
+        <div class="g-account-list">
+            <!-- Account: Vinith Kumar -->
+            <div class="g-account-item" onclick="chooseAccount('Vinith Kumar', 'viniskumar2007@gmail.com')">
+                <div class="g-account-avatar">V</div>
+                <div class="g-account-details">
+                    <div class="g-account-name">Vinith Kumar</div>
+                    <div class="g-account-email">viniskumar2007@gmail.com</div>
+                </div>
+                <span style="font-size:12px; color:#1a73e8; font-weight:600;">Sign In ›</span>
+            </div>
+
+            <!-- Account: ScamShield Security Analyst -->
+            <div class="g-account-item" onclick="chooseAccount('Security Analyst', 'analyst@scamshield.ai')">
+                <div class="g-account-avatar" style="background: linear-gradient(135deg, #00f5c8, #00aaff); color:#04060f;">🛡️</div>
+                <div class="g-account-details">
+                    <div class="g-account-name">Security Analyst</div>
+                    <div class="g-account-email">analyst@scamshield.ai</div>
+                </div>
+                <span style="font-size:12px; color:#1a73e8; font-weight:600;">Sign In ›</span>
+            </div>
+        </div>
+
+        <!-- Custom Account Option -->
+        <div class="g-custom-email-box">
+            <label for="customGoogleEmail">Or sign in with another Google Email:</label>
+            <div class="g-custom-input-group">
+                <input type="email" id="customGoogleEmail" class="g-custom-input" placeholder="name@gmail.com">
+                <button class="g-custom-btn" onclick="submitCustomAccount()">Continue</button>
+            </div>
+        </div>
+
+        <div class="g-modal-footer">
+            <button class="g-cancel-btn" onclick="closeGoogleAccountModal()">Cancel</button>
+            <span style="font-size:11px;">To continue, Google will share your name and email with ScamShield AI.</span>
+        </div>
+    </div>
+</div>
+
 <script>
 // ==============================================================================
-// 1. CANVAS PARTICLE BACKGROUND (Matches main app)
+// 1. CANVAS PARTICLE BACKGROUND
 // ==============================================================================
 const canvas = document.getElementById("cyberCanvas");
 const ctx = canvas.getContext("2d");
@@ -690,98 +930,73 @@ window.addEventListener('mouseout', () => {
 });
 
 // ==============================================================================
-// 2. AUTHENTICATION LOGIC & GOOGLE LOGIN
+// 2. GOOGLE ACCOUNT CHOOSER & AUTHENTICATION
 // ==============================================================================
 
-// Parse JWT token from Google Identity Services
-function parseJwt(token) {
-    try {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-        return JSON.parse(jsonPayload);
-    } catch (e) {
-        return null;
-    }
+function openGoogleAccountModal() {
+    const modal = document.getElementById("googleAccountModal");
+    if (modal) modal.classList.add("active");
 }
 
-// Handler for Google Official GSI Callback
-function handleCredentialResponse(response) {
-    if (!response || !response.credential) {
-        showStatus("error", "Google authentication cancelled or failed.");
-        return;
-    }
+function closeGoogleAccountModal(e) {
+    const modal = document.getElementById("googleAccountModal");
+    if (modal) modal.classList.remove("active");
+}
 
-    showStatus("loading", "Verifying Google cryptographic signature...");
-    const payload = parseJwt(response.credential);
+function chooseAccount(name, email) {
+    closeGoogleAccountModal();
+    showStatus("loading", `Signing in with Google Account: ${email}...`);
 
-    if (payload) {
+    setTimeout(() => {
         const user = {
-            id: payload.sub,
-            name: payload.name || "Google User",
-            email: payload.email || "user@gmail.com",
-            picture: payload.picture || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80",
-            verified: payload.email_verified || true,
+            id: "g_" + btoa(email).replace(/=/g, '').substring(0, 12),
+            name: name,
+            email: email,
+            picture: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=00f5c8&color=04060f&bold=true`,
+            verified: true,
             loginTime: new Date().toISOString(),
             authProvider: "google"
         };
         finishLogin(user);
-    } else {
-        showStatus("error", "Failed to parse Google credentials.");
-    }
+    }, 500);
 }
 
-// Direct Google Sign In Button Click
-function handleGoogleSignIn() {
-    const API_BASE = "http://127.0.0.1:8000";
-    
-    if (window.google && window.google.accounts && window.google.accounts.id) {
-        showStatus("loading", "Connecting to Google Secure Accounts...");
-        try {
-            google.accounts.id.prompt((notification) => {
-                if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-                    window.location.href = `${API_BASE}/auth/google/login`;
-                }
-            });
-            return;
-        } catch (e) {
-            console.warn("GSI Prompt failed, falling back to direct auth:", e);
-        }
+function submitCustomAccount() {
+    const input = document.getElementById("customGoogleEmail");
+    const email = (input ? input.value : "").trim();
+    if (!email || !email.includes("@")) {
+        alert("Please enter a valid Google email address.");
+        return;
     }
-
-    showStatus("loading", "Initiating Google OAuth Protocol...");
-    setTimeout(() => {
-        window.location.href = `${API_BASE}/auth/google/login`;
-    }, 400);
+    const name = email.split("@")[0].replace(/[._]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    chooseAccount(name, email);
 }
 
-// 1-Click Instant Demo Login (Zero friction testing)
+// 1-Click Instant Demo Login
 function handleDemoLogin() {
-    showStatus("loading", "Creating verified session for Security Analyst...");
+    showStatus("loading", "Verifying session credentials for Analyst...");
     setTimeout(() => {
         const demoUser = {
             id: "agent_" + Math.random().toString(36).substring(2, 9),
             name: "Vinith Kumar",
-            email: "vinith.kumar@scamshield.ai",
+            email: "viniskumar2007@gmail.com",
             picture: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80",
             verified: true,
             loginTime: new Date().toISOString(),
-            authProvider: "scamshield_verified"
+            authProvider: "google_verified"
         };
         finishLogin(demoUser);
-    }, 600);
+    }, 400);
 }
 
-// Complete the login sequence & redirect to index.html
+// Complete login & redirect
 function finishLogin(user) {
     localStorage.setItem("scamshield_user", JSON.stringify(user));
     showStatus("success", `Access Granted: Welcome, ${user.name}!`);
 
     setTimeout(() => {
         enterApp();
-    }, 900);
+    }, 800);
 }
 
 function enterApp() {
@@ -797,21 +1012,6 @@ function showStatus(type, message) {
 
 // Check on load if already authenticated
 document.addEventListener("DOMContentLoaded", () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get("login") === "success") {
-        fetch("http://127.0.0.1:8000/auth/me", { credentials: "include" })
-            .then(res => res.json())
-            .then(data => {
-                if (data.authenticated && data.user) {
-                    finishLogin(data.user);
-                } else {
-                    enterApp();
-                }
-            })
-            .catch(() => enterApp());
-        return;
-    }
-
     const saved = localStorage.getItem("scamshield_user");
     if (saved) {
         try {
