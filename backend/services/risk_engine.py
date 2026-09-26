@@ -118,7 +118,8 @@ def calculate_hybrid_score(rule_result, ai_result):
     ai_score = ai_result.get("ai_risk_score", 0)
 
     # Check whether AI is actually available
-    ai_available = ai_result.get("score_mode") != "FALLBACK"
+    # Older callers omitted score_mode; preserve their hybrid behavior.
+    ai_available = ai_result.get("score_mode", "AI") not in {"FALLBACK", "RULE_FALLBACK"}
 
     if ai_available:
         final_score = round(

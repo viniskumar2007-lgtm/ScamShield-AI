@@ -5,6 +5,7 @@ import re
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
+from pydantic import BaseModel, ConfigDict, Field
 
 
 # ============================================================
@@ -47,7 +48,8 @@ def create_result(
     confidence,
     summary,
     reasons,
-    recommended_actions
+    recommended_actions,
+    score_mode="AI"
 ):
     return {
         "ai_risk_score": int(max(0, min(100, score))),
@@ -56,7 +58,8 @@ def create_result(
         "confidence": int(max(0, min(100, confidence))),
         "summary": summary,
         "reasons": reasons[:5],
-        "recommended_actions": recommended_actions[:5]
+        "recommended_actions": recommended_actions[:5],
+        "score_mode": score_mode
     }
 
 
@@ -241,7 +244,7 @@ def analyze_with_rules(message):
     # 6. URL DETECTION
     # --------------------------------------------------------
 
-    url_pattern = r"(https?://\S+|www\.\S+|\b[a-zA-Z0-9-]+\.(com|net|org|info|xyz|top|site|online|click)\b)"
+    url_pattern = r"(?:https?://\S+|www\.\S+|\b[a-zA-Z0-9-]+\.(?:com|net|org|info|xyz|top|site|online|click)\b)"
 
     urls = re.findall(url_pattern, text)
 
@@ -479,7 +482,8 @@ def analyze_with_rules(message):
         confidence=confidence,
         summary=summary,
         reasons=reasons,
-        recommended_actions=recommended_actions
+        recommended_actions=recommended_actions,
+        score_mode="FALLBACK"
     )
 
 
@@ -539,33 +543,29 @@ Rules:
         text = re.sub(r"\s*```$", "", text)
         text = text.strip()
 
-    result = json.loads(text)
+    class AIResponse(BaseModel):
+        model_config = ConfigDict(extra="ignore")
+        ai_risk_score: int = Field(ge=0, le=100)
+        ai_risk_level: str
+        scam_type: str = Field(max_length=200)
+        confidence: int = Field(ge=0, le=100)
+        summary: str = Field(max_length=2000)
+        reasons: list[str] = Field(default_factory=list, max_length=5)
+        recommended_actions: list[str] = Field(default_factory=list, max_length=5)
 
-    # Make sure the expected fields exist
-    required_fields = [
-        "ai_risk_score",
-        "ai_risk_level",
-        "scam_type",
-        "confidence",
-        "summary",
-        "reasons",
-        "recommended_actions"
-    ]
-
-    for field in required_fields:
-        if field not in result:
-            raise ValueError(
-                f"Gemini response missing field: {field}"
-            )
+    result = AIResponse.model_validate(json.loads(text))
+    if result.ai_risk_level not in {"LOW", "MEDIUM", "HIGH"}:
+        raise ValueError("Gemini response has an invalid risk level")
 
     return create_result(
-        score=result["ai_risk_score"],
-        level=result["ai_risk_level"],
-        scam_type=result["scam_type"],
-        confidence=result["confidence"],
-        summary=result["summary"],
-        reasons=result["reasons"],
-        recommended_actions=result["recommended_actions"]
+        score=result.ai_risk_score,
+        level=result.ai_risk_level,
+        scam_type=result.scam_type,
+        confidence=result.confidence,
+        summary=result.summary,
+        reasons=result.reasons,
+        recommended_actions=result.recommended_actions,
+        score_mode="AI"
     )
 
 
@@ -596,13 +596,13 @@ def analyze_with_ai(message):
 
     if client:
 
-        print("🤖 Sending request to Gemini...")
+        print("Sending request to Gemini...")
 
         try:
 
             result = analyze_with_gemini(message)
 
-            print("✅ Gemini response received")
+            print("Gemini response received")
 
             return result
 
@@ -621,7 +621,7 @@ def analyze_with_ai(message):
                 or "resource exhausted" in error_message
             ):
                 print(
-                    "⚠️ Gemini quota unavailable."
+                    "Gemini quota unavailable."
                 )
 
             # ------------------------------------------------
@@ -630,21 +630,21 @@ def analyze_with_ai(message):
 
             else:
                 print(
-                    "⚠️ Gemini unavailable."
+                    "Gemini unavailable."
                 )
 
             print(
-                "🔐 Switching to Security Rule Analysis..."
+                "Switching to Security Rule Analysis..."
             )
 
     else:
 
         print(
-            "⚠️ Gemini API key not configured."
+            "Gemini API key not configured."
         )
 
         print(
-            "🔐 Using Security Rule Analysis..."
+            "Using Security Rule Analysis..."
         )
 
     # --------------------------------------------------------
