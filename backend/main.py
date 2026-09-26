@@ -267,26 +267,28 @@ def builtin_url_analyzer(url_str: str) -> Dict[str, Any]:
 
 def builtin_hybrid_engine(text: str, ai_result: Optional[Dict[str, Any]] = None, rule_result: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     rule = rule_result or builtin_rule_engine(text)
-    if ai_result and isinstance(ai_result, dict) and "risk_score" in ai_result:
-        ai_score = float(ai_result.get("risk_score", rule["rule_score"]))
-        rule_score = float(rule["rule_score"])
+    has_ai_score = ai_result and isinstance(ai_result, dict) and ("risk_score" in ai_result or "ai_risk_score" in ai_result)
+    
+    if has_ai_score:
+        ai_score = float(ai_result.get("ai_risk_score", ai_result.get("risk_score", rule.get("rule_score", 0))))
+        rule_score = float(rule.get("rule_score", 0))
         final_score = int(round((ai_score * 0.60) + (rule_score * 0.40)))
         score_mode = "HYBRID_AI_RULE_ENGINE"
         confidence = int(ai_result.get("confidence", 92))
-        scam_type = ai_result.get("scam_type", rule["scam_type"])
-        summary = ai_result.get("summary", rule["summary"])
+        scam_type = ai_result.get("scam_type", rule.get("scam_type", "Scam"))
+        summary = ai_result.get("summary", rule.get("summary", ""))
         reasons = list(dict.fromkeys(rule.get("reasons", []) + ai_result.get("reasons", [])))
         recommended_actions = list(dict.fromkeys(rule.get("recommended_actions", []) + ai_result.get("recommended_actions", [])))
         risk_breakdown = ai_result.get("risk_breakdown") or rule.get("risk_breakdown", [])
     else:
-        final_score = rule["rule_score"]
+        final_score = rule.get("rule_score", 0)
         score_mode = "HEURISTIC_RULE_ENGINE"
-        confidence = rule["confidence"]
-        scam_type = rule["scam_type"]
-        summary = rule["summary"]
-        reasons = rule["reasons"]
-        recommended_actions = rule["recommended_actions"]
-        risk_breakdown = rule["risk_breakdown"]
+        confidence = rule.get("confidence", 90)
+        scam_type = rule.get("scam_type", "Scam")
+        summary = rule.get("summary", "")
+        reasons = rule.get("reasons", [])
+        recommended_actions = rule.get("recommended_actions", [])
+        risk_breakdown = rule.get("risk_breakdown", [])
 
     final_score = min(max(final_score, 0), 100)
     risk_level = "HIGH" if final_score >= 70 else ("MEDIUM" if final_score >= 40 else "LOW")
@@ -582,7 +584,7 @@ async def analyze_message_endpoint(payload: MessageRequest, request: Request):
     final_analysis = None
     if SERVICES_AVAILABLE["risk_engine"] and ext_calculate_hybrid_score:
         try:
-            final_analysis = ext_calculate_hybrid_score(ai_analysis, rule_analysis)
+            final_analysis = ext_calculate_hybrid_score(rule_analysis, ai_analysis or {})
         except Exception as e:
             logger.warning(f"External risk_engine error: {e}")
     if not final_analysis:
@@ -660,7 +662,14 @@ async def analyze_image_endpoint(file: UploadFile = File(...), request: Request 
             except Exception as e:
                 logger.warning(f"AI detector on OCR text failed: {e}")
 
-        final_analysis = builtin_hybrid_engine(extracted_text, ai_result=ai_analysis, rule_result=rule_analysis)
+        final_analysis = None
+        if SERVICES_AVAILABLE["risk_engine"] and ext_calculate_hybrid_score:
+            try:
+                final_analysis = ext_calculate_hybrid_score(rule_analysis, ai_analysis or {})
+            except Exception as e:
+                logger.warning(f"External risk_engine OCR error: {e}")
+        if not final_analysis:
+            final_analysis = builtin_hybrid_engine(extracted_text, ai_result=ai_analysis, rule_result=rule_analysis)
         final_analysis["score_mode"] = "OCR_VISION_HYBRID"
         elapsed_ms = round((time.perf_counter() - start_time) * 1000, 2)
         return {
