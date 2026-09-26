@@ -314,107 +314,6 @@ nav {
     box-shadow: 0 0 25px rgba(0, 245, 200, 0.5);
     transform: translateY(-2px);
 }
-
-/* User Account in Navbar */
-.user-profile-btn {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(0, 245, 200, 0.35);
-    padding: 4px 12px 4px 5px;
-    border-radius: 25px;
-    cursor: pointer;
-    position: relative;
-    transition: all 0.25s ease;
-}
-.user-profile-btn:hover {
-    border-color: var(--primary-cyan);
-    background: rgba(0, 245, 200, 0.1);
-    box-shadow: 0 0 16px rgba(0, 245, 200, 0.25);
-}
-.user-avatar-img {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: 2px solid var(--primary-cyan);
-    object-fit: cover;
-}
-.user-name-text {
-    font-size: 13px;
-    font-weight: 700;
-    color: #ffffff;
-    max-width: 100px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.user-dropdown-menu {
-    position: absolute;
-    top: calc(100% + 12px);
-    right: 0;
-    width: 240px;
-    background: rgba(9, 14, 32, 0.95);
-    border: 1px solid rgba(0, 245, 200, 0.35);
-    border-radius: 14px;
-    padding: 16px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.7), 0 0 20px rgba(0,245,200,0.15);
-    backdrop-filter: blur(25px);
-    display: none;
-    flex-direction: column;
-    gap: 12px;
-    z-index: 1000;
-}
-.user-dropdown-menu.active {
-    display: flex;
-}
-.user-dropdown-header {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 10px;
-    text-align: left;
-}
-.user-dd-name {
-    font-weight: 700;
-    font-size: 14px;
-    color: #ffffff;
-}
-.user-dd-email {
-    font-size: 11px;
-    color: var(--text-secondary);
-    word-break: break-all;
-    margin-top: 2px;
-}
-.user-dd-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 10px;
-    color: var(--primary-cyan);
-    background: rgba(0, 245, 200, 0.1);
-    padding: 2px 8px;
-    border-radius: 10px;
-    margin-top: 6px;
-}
-.user-logout-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    padding: 8px 12px;
-    background: rgba(255, 51, 102, 0.12);
-    border: 1px solid rgba(255, 51, 102, 0.4);
-    color: #ff5577;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-.user-logout-btn:hover {
-    background: rgba(255, 51, 102, 0.25);
-    color: #ffffff;
-}
 .hero {
     padding: 100px 7% 65px;
     text-align: center;
@@ -1541,25 +1440,6 @@ footer strong { color: var(--primary-cyan); }
         <a href="#features">⚡ Features</a>
         <a href="#faq">❓ Safety Guide</a>
         <a href="#scanner" class="nav-cta-btn">🚀 Start Scan</a>
-
-        <!-- User Profile Pill & Dropdown -->
-        <div class="user-profile-container" id="userNavProfile" style="position:relative;">
-            <div class="user-profile-btn" onclick="toggleUserDropdown(event)" title="User Profile">
-                <img id="navUserAvatar" class="user-avatar-img" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80" alt="Avatar">
-                <span id="navUserName" class="user-name-text">Account</span>
-                <span style="font-size:10px; color:var(--primary-cyan);">▼</span>
-            </div>
-            <div class="user-dropdown-menu" id="userDropdownMenu">
-                <div class="user-dropdown-header">
-                    <div class="user-dd-name" id="menuUserName">User Name</div>
-                    <div class="user-dd-email" id="menuUserEmail">user@gmail.com</div>
-                    <div class="user-dd-badge"><span>●</span> Google Account Verified</div>
-                </div>
-                <button class="user-logout-btn" onclick="handleSignOut()">
-                    <span>🚪</span> Sign Out
-                </button>
-            </div>
-        </div>
     </div>
 </nav>
 
@@ -1968,65 +1848,6 @@ footer strong { color: var(--primary-cyan); }
 </div>
 
 <script>
-// ==============================================================================
-// AUTHENTICATION SECURITY GATE
-// ==============================================================================
-function getAuthenticatedUser() {
-    const raw = localStorage.getItem("scamshield_user");
-    if (!raw) {
-        window.location.replace("login.html");
-        return null;
-    }
-    try {
-        const u = JSON.parse(raw);
-        if (!u || !u.name) {
-            window.location.replace("login.html");
-            return null;
-        }
-        return u;
-    } catch (e) {
-        window.location.replace("login.html");
-        return null;
-    }
-}
-
-const currentUser = getAuthenticatedUser();
-
-function setupUserProfileUI() {
-    if (!currentUser) return;
-    const navAvatar = document.getElementById("navUserAvatar");
-    const navName = document.getElementById("navUserName");
-    const menuName = document.getElementById("menuUserName");
-    const menuEmail = document.getElementById("menuUserEmail");
-
-    if (navAvatar && currentUser.picture) navAvatar.src = currentUser.picture;
-    if (navName && currentUser.name) navName.textContent = currentUser.name.split(" ")[0];
-    if (menuName && currentUser.name) menuName.textContent = currentUser.name;
-    if (menuEmail && currentUser.email) menuEmail.textContent = currentUser.email;
-}
-
-function toggleUserDropdown(event) {
-    if (event) event.stopPropagation();
-    const menu = document.getElementById("userDropdownMenu");
-    if (menu) menu.classList.toggle("active");
-}
-
-window.addEventListener("click", () => {
-    const menu = document.getElementById("userDropdownMenu");
-    if (menu && menu.classList.contains("active")) {
-        menu.classList.remove("active");
-    }
-});
-
-function handleSignOut() {
-    localStorage.removeItem("scamshield_user");
-    fetch("http://127.0.0.1:8000/auth/logout", { method: "POST", credentials: "include" }).catch(() => {});
-    showToast("Signing out...", "🔒");
-    setTimeout(() => {
-        window.location.href = "login.html";
-    }, 400);
-}
-
 const API_BASE = "http://127.0.0.1:8000";
 let activeHistoryFilter = "ALL";
 let isBackendAvailable = null;
@@ -3342,7 +3163,6 @@ function reloadHistoryItem(text) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    setupUserProfileUI();
     checkBackendHealth();
     renderHistory();
 

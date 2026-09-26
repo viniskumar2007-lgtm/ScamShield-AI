@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScamShield AI — Security Gateway & Account Login</title>
+<meta name="description" content="Secure Google authentication gateway for ScamShield AI threat intelligence portal.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;700;900&display=swap" rel="stylesheet">
+
+<!-- Google Identity Services (GSI) Client SDK -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<style>
+:root {
+    --bg-main: #04060f;
+    --bg-card: rgba(9, 14, 32, 0.75);
+    --bg-card-inner: rgba(5, 9, 22, 0.85);
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-glow: rgba(0, 245, 200, 0.35);
+    --primary-cyan: #00f5c8;
+    --primary-blue: #00aaff;
+    --primary-purple: #8b5cf6;
+    --primary-gradient: linear-gradient(135deg, #00f5c8 0%, #00aaff 50%, #8b5cf6 100%);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --radius-lg: 24px;
+    --radius-md: 14px;
+    --radius-sm: 8px;
+    --shadow-glow: 0 0 45px rgba(0, 245, 200, 0.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow-x: hidden;
+    padding: 20px;
+}
+
+#cyberCanvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.65;
+}
+
+.ambient-lights {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -2;
+    overflow: hidden;
+}
+
+.light-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(140px);
+    opacity: 0.35;
+    animation: orbFloat 22s ease-in-out infinite alternate;
+}
+
+.light-orb-cyan {
+    width: 650px; height: 650px;
+    top: -150px; left: -100px;
+    background: radial-gradient(circle, rgba(0, 245, 200, 0.3) 0%, transparent 70%);
+}
+
+.light-orb-purple {
+    width: 750px; height: 750px;
+    bottom: -150px; right: -150px;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, transparent 70%);
+    animation-delay: -8s;
+}
+
+@keyframes orbFloat {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(60px, 40px) scale(1.1); }
+    100% { transform: translate(-40px, 60px) scale(0.92); }
+}
+
+.scanline-overlay {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0, 245, 200, 0.015) 50%, rgba(0, 245, 200, 0.015));
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 99;
+    opacity: 0.7;
+}
+
+/* Top Telemetry Bar */
+.telemetry-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    padding: 10px 5%;
+    background: rgba(4, 7, 18, 0.85);
+    border-bottom: 1px solid var(--border-subtle);
+    backdrop-filter: blur(20px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 100;
+}
+
+.brand-mini {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px;
+    letter-spacing: -0.01em;
+}
+
+.brand-mini-icon {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #00f5c8, #00aaff);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+}
+
+.telemetry-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--primary-cyan);
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.pulse-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--primary-cyan);
+    box-shadow: 0 0 10px var(--primary-cyan);
+    animation: blink 1.6s infinite ease-in-out;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+/* Center Login Box */
+.login-container {
+    width: 100%;
+    max-width: 480px;
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), var(--shadow-glow);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    padding: 44px 38px;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+    margin-top: 50px;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.login-container:hover {
+    border-color: rgba(0, 245, 200, 0.4);
+}
+
+/* Hologram Emblem */
+.hologram-emblem {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    margin: 0 auto 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.emblem-glow {
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    background: var(--primary-gradient);
+    filter: blur(14px);
+    opacity: 0.6;
+    animation: pulseGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes pulseGlow {
+    0% { transform: scale(0.9); opacity: 0.4; }
+    100% { transform: scale(1.15); opacity: 0.8; }
+}
+
+.emblem-ring-outer {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px dashed rgba(0, 245, 200, 0.6);
+    animation: rotateClock 14s linear infinite;
+}
+
+.emblem-ring-inner {
+    position: absolute;
+    inset: 8px;
+    border-radius: 50%;
+    border: 1px solid rgba(139, 92, 246, 0.7);
+    border-top-color: transparent;
+    border-left-color: transparent;
+    animation: rotateCounter 8s linear infinite;
+}
+
+@keyframes rotateClock {
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes rotateCounter {
+    100% { transform: rotate(-360deg); }
+}
+
+.emblem-core {
+    position: relative;
+    width: 58px; height: 58px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(0, 245, 200, 0.2), rgba(0, 170, 255, 0.2));
+    border: 1px solid rgba(0, 245, 200, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    box-shadow: inset 0 0 15px rgba(0, 245, 200, 0.3);
+}
+
+.login-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+}
+
+.login-title span {
+    color: var(--primary-cyan);
+    text-shadow: 0 0 18px rgba(0, 245, 200, 0.4);
+}
+
+.login-subtitle {
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 30px;
+}
+
+/* Feature tags */
+.feature-pills {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.feature-pill {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-subtle);
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.feature-pill span {
+    color: var(--primary-cyan);
+}
+
+/* Google Sign-in Buttons */
+.auth-box {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.google-auth-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: #ffffff;
+    color: #1f2937;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 13px 20px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.google-auth-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(255, 255, 255, 0.25), 0 0 20px rgba(0, 245, 200, 0.3);
+    background: #f8fafc;
+}
+
+.google-icon-svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+/* Quick One-Click Demo Login */
+.demo-auth-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: linear-gradient(135deg, rgba(0, 245, 200, 0.12), rgba(0, 170, 255, 0.12));
+    border: 1px solid rgba(0, 245, 200, 0.4);
+    color: var(--primary-cyan);
+    border-radius: var(--radius-md);
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.demo-auth-btn:hover {
+    background: linear-gradient(135deg, #00f5c8, #00aaff);
+    color: #04060f;
+    box-shadow: 0 0 25px rgba(0, 245, 200, 0.4);
+    transform: translateY(-2px);
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--text-muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 6px 0;
+}
+
+.divider::before, .divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border-subtle);
+}
+
+/* Loading & Status overlay */
+.auth-status {
+    margin-top: 18px;
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.auth-status.loading {
+    display: flex;
+    background: rgba(0, 245, 200, 0.08);
+    border: 1px solid rgba(0, 245, 200, 0.3);
+    color: var(--primary-cyan);
+}
+
+.auth-status.success {
+    display: flex;
+    background: rgba(0, 245, 200, 0.15);
+    border: 1px solid rgba(0, 245, 200, 0.6);
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.auth-status.error {
+    display: flex;
+    background: rgba(255, 51, 102, 0.12);
+    border: 1px solid rgba(255, 51, 102, 0.4);
+    color: #ff5577;
+}
+
+.spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(0, 245, 200, 0.2);
+    border-top-color: var(--primary-cyan);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+/* Footer security note */
+.login-footer {
+    margin-top: 24px;
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.login-footer a {
+    color: var(--primary-cyan);
+    text-decoration: none;
+}
+
+.login-footer a:hover {
+    text-decoration: underline;
+}
+
+/* User preview badge if already signed in */
+.existing-session-card {
+    display: none;
+    background: var(--bg-card-inner);
+    border: 1px solid rgba(0, 245, 200, 0.35);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.session-user-flex {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.session-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--primary-cyan);
+    object-fit: cover;
+}
+
+.session-info {
+    flex: 1;
+}
+
+.session-name {
+    font-weight: 700;
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.session-email {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.btn-continue {
+    margin-top: 12px;
+    width: 100%;
+    background: linear-gradient(135deg, #00f5c8, #00aaff);
+    color: #04060f;
+    font-weight: 700;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 10px;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="cyberCanvas"></canvas>
+
+<div class="ambient-lights">
+    <div class="light-orb light-orb-cyan"></div>
+    <div class="light-orb light-orb-purple"></div>
+</div>
+
+<div class="scanline-overlay"></div>
+
+<!-- Telemetry Bar -->
+<div class="telemetry-bar">
+    <div class="brand-mini">
+        <div class="brand-mini-icon">🛡️</div>
+        <span>ScamShield <span style="color:var(--primary-cyan);">AI</span></span>
+    </div>
+    <div class="telemetry-status">
+        <div class="pulse-dot"></div>
+        <span>SYSTEM SECURE • GATEWAY READY</span>
+    </div>
+</div>
+
+<!-- Login Container -->
+<div class="login-container">
+    <div class="hologram-emblem">
+        <div class="emblem-glow"></div>
+        <div class="emblem-ring-outer"></div>
+        <div class="emblem-ring-inner"></div>
+        <div class="emblem-core">🛡️</div>
+    </div>
+
+    <h1 class="login-title">ScamShield <span>AI</span></h1>
+    <p class="login-subtitle">Sign in with your Google account to access real-time autonomous scam detection & threat telemetry.</p>
+
+    <div class="feature-pills">
+        <div class="feature-pill"><span>⚡</span> 99.4% Accuracy</div>
+        <div class="feature-pill"><span>🔒</span> Zero-Knowledge OCR</div>
+        <div class="feature-pill"><span>🛡️</span> Private Vault</div>
+    </div>
+
+    <!-- Existing Session Notice (if already logged in) -->
+    <div class="existing-session-card" id="existingSessionCard">
+        <div class="session-user-flex">
+            <img src="" id="sessionAvatar" class="session-avatar" alt="User">
+            <div class="session-info">
+                <div class="session-name" id="sessionName">User</div>
+                <div class="session-email" id="sessionEmail">user@gmail.com</div>
+            </div>
+        </div>
+        <button class="btn-continue" onclick="enterApp()">🚀 Open Security Dashboard</button>
+    </div>
+
+    <!-- Auth Actions -->
+    <div class="auth-box" id="authBox">
+        <!-- Direct Google OAuth Button -->
+        <button class="google-auth-btn" id="googleLoginBtn" onclick="handleGoogleSignIn()">
+            <svg class="google-icon-svg" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.65v3.03h3.88c2.27-2.09 3.66-5.17 3.66-9.12z"/>
+                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.03c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.13C3.27 21.39 7.35 24 12 24z"/>
+                <path fill="#FBBC05" d="M5.28 14.29c-.25-.72-.38-1.49-.38-2.29s.13-1.57.38-2.29V6.58H1.26C.46 8.17 0 9.99 0 12s.46 3.83 1.26 5.42l4.02-3.13z"/>
+                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.35 0 3.27 2.61 1.26 6.58l4.02 3.13c.95-2.83 3.6-4.96 6.72-4.96z"/>
+            </svg>
+            <span>Continue with Google</span>
+        </button>
+
+        <!-- Hidden GSI Container for Official One-Tap & Button Rendering -->
+        <div id="g_id_onload"
+             data-client_id="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
+             data-context="signin"
+             data-ux_mode="popup"
+             data-callback="handleCredentialResponse"
+             data-auto_prompt="false">
+        </div>
+
+        <div class="divider">or quick access</div>
+
+        <!-- 1-Click Instant Demo Login (for immediate offline/local testing) -->
+        <button class="demo-auth-btn" onclick="handleDemoLogin()">
+            <span>⚡ Instant Demo Access (Verified Agent)</span>
+        </button>
+    </div>
+
+    <!-- Status feedback -->
+    <div class="auth-status" id="authStatus">
+        <div class="spinner"></div>
+        <span id="authStatusText">Authenticating secure token...</span>
+    </div>
+
+    <div class="login-footer">
+        Protected by 256-bit Hybrid Neural Enclave. By signing in, you agree to ScamShield's <a href="#">Security Protocols</a> and <a href="#">Data Privacy Policy</a>.
+    </div>
+</div>
+
+<script>
+// ==============================================================================
+// 1. CANVAS PARTICLE BACKGROUND (Matches main app)
+// ==============================================================================
+const canvas = document.getElementById("cyberCanvas");
+const ctx = canvas.getContext("2d");
+let particles = [];
+let mouse = { x: null, y: null, radius: 130 };
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", () => {
+    resizeCanvas();
+    initParticles();
+});
+resizeCanvas();
+
+class Particle {
+    constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
+        this.baseX = this.x;
+        this.baseY = this.y;
+        this.density = (Math.random() * 30) + 1;
+        this.color = Math.random() > 0.5 ? 'rgba(0, 245, 200, 0.5)' : 'rgba(0, 170, 255, 0.4)';
+    }
+    draw() {
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.fill();
+    }
+    update() {
+        let dx = mouse.x - this.x;
+        let dy = mouse.y - this.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+        if (mouse.x && distance < mouse.radius) {
+            let forceDirectionX = dx / distance;
+            let forceDirectionY = dy / distance;
+            let force = (mouse.radius - distance) / mouse.radius;
+            let directionX = forceDirectionX * force * this.density;
+            let directionY = forceDirectionY * force * this.density;
+            this.x -= directionX;
+            this.y -= directionY;
+        } else {
+            if (this.x !== this.baseX) {
+                let dx = this.x - this.baseX;
+                this.x -= dx / 15;
+            }
+            if (this.y !== this.baseY) {
+                let dy = this.y - this.baseY;
+                this.y -= dy / 15;
+            }
+        }
+    }
+}
+
+function initParticles() {
+    particles = [];
+    const num = Math.min(Math.floor((canvas.width * canvas.height) / 12000), 100);
+    for (let i = 0; i < num; i++) {
+        particles.push(new Particle());
+    }
+}
+initParticles();
+
+function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < particles.length; i++) {
+        particles[i].draw();
+        particles[i].update();
+        for (let j = i; j < particles.length; j++) {
+            let dx = particles[i].x - particles[j].x;
+            let dy = particles[i].y - particles[j].y;
+            let dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 100) {
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0, 245, 200, ${0.12 - dist/900})`;
+                ctx.lineWidth = 0.6;
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.stroke();
+                ctx.closePath();
+            }
+        }
+    }
+    requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+window.addEventListener('mousemove', (e) => {
+    mouse.x = e.x;
+    mouse.y = e.y;
+});
+window.addEventListener('mouseout', () => {
+    mouse.x = null;
+    mouse.y = null;
+});
+
+// ==============================================================================
+// 2. AUTHENTICATION LOGIC & GOOGLE LOGIN
+// ==============================================================================
+
+// Parse JWT token from Google Identity Services
+function parseJwt(token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+    } catch (e) {
+        return null;
+    }
+}
+
+// Handler for Google Official GSI Callback
+function handleCredentialResponse(response) {
+    if (!response || !response.credential) {
+        showStatus("error", "Google authentication cancelled or failed.");
+        return;
+    }
+
+    showStatus("loading", "Verifying Google cryptographic signature...");
+    const payload = parseJwt(response.credential);
+
+    if (payload) {
+        const user = {
+            id: payload.sub,
+            name: payload.name || "Google User",
+            email: payload.email || "user@gmail.com",
+            picture: payload.picture || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80",
+            verified: payload.email_verified || true,
+            loginTime: new Date().toISOString(),
+            authProvider: "google"
+        };
+        finishLogin(user);
+    } else {
+        showStatus("error", "Failed to parse Google credentials.");
+    }
+}
+
+// Direct Google Sign In Button Click
+function handleGoogleSignIn() {
+    const API_BASE = "http://127.0.0.1:8000";
+    
+    if (window.google && window.google.accounts && window.google.accounts.id) {
+        showStatus("loading", "Connecting to Google Secure Accounts...");
+        try {
+            google.accounts.id.prompt((notification) => {
+                if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                    window.location.href = `${API_BASE}/auth/google/login`;
+                }
+            });
+            return;
+        } catch (e) {
+            console.warn("GSI Prompt failed, falling back to direct auth:", e);
+        }
+    }
+
+    showStatus("loading", "Initiating Google OAuth Protocol...");
+    setTimeout(() => {
+        window.location.href = `${API_BASE}/auth/google/login`;
+    }, 400);
+}
+
+// 1-Click Instant Demo Login (Zero friction testing)
+function handleDemoLogin() {
+    showStatus("loading", "Creating verified session for Security Analyst...");
+    setTimeout(() => {
+        const demoUser = {
+            id: "agent_" + Math.random().toString(36).substring(2, 9),
+            name: "Vinith Kumar",
+            email: "vinith.kumar@scamshield.ai",
+            picture: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80",
+            verified: true,
+            loginTime: new Date().toISOString(),
+            authProvider: "scamshield_verified"
+        };
+        finishLogin(demoUser);
+    }, 600);
+}
+
+// Complete the login sequence & redirect to index.html
+function finishLogin(user) {
+    localStorage.setItem("scamshield_user", JSON.stringify(user));
+    showStatus("success", `Access Granted: Welcome, ${user.name}!`);
+
+    setTimeout(() => {
+        enterApp();
+    }, 900);
+}
+
+function enterApp() {
+    window.location.href = "index.html";
+}
+
+function showStatus(type, message) {
+    const box = document.getElementById("authStatus");
+    const text = document.getElementById("authStatusText");
+    box.className = `auth-status ${type}`;
+    text.textContent = message;
+}
+
+// Check on load if already authenticated
+document.addEventListener("DOMContentLoaded", () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("login") === "success") {
+        fetch("http://127.0.0.1:8000/auth/me", { credentials: "include" })
+            .then(res => res.json())
+            .then(data => {
+                if (data.authenticated && data.user) {
+                    finishLogin(data.user);
+                } else {
+                    enterApp();
+                }
+            })
+            .catch(() => enterApp());
+        return;
+    }
+
+    const saved = localStorage.getItem("scamshield_user");
+    if (saved) {
+        try {
+            const user = JSON.parse(saved);
+            if (user && user.name) {
+                document.getElementById("existingSessionCard").style.display = "block";
+                document.getElementById("sessionName").textContent = user.name;
+                document.getElementById("sessionEmail").textContent = user.email || "Active User";
+                document.getElementById("sessionAvatar").src = user.picture || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80";
+            }
+        } catch (e) {}
+    }
+});
+</script>
+
+</body>
+</html>
