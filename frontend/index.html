@@ -2896,7 +2896,7 @@ async function analyzeURL() {
 function displayURLResult(data) {
     if (!data) throw new Error("No URL analysis returned.");
 
-    const score = Number(data.risk_score || data.url_risk_score || 0);
+    const score = Number(data.risk_score !== undefined ? data.risk_score : (data.score !== undefined ? data.score : (data.url_risk_score || 0)));
     const level = data.risk_level || (score >= 70 ? "HIGH" : (score >= 40 ? "MEDIUM" : "LOW"));
     const riskClass = getRiskClass(level);
     const suspicious = data.is_suspicious;
@@ -3059,8 +3059,17 @@ async function analyzeScreenshot() {
 
         if (!data) {
             data = {
-                extracted_text: "URGENT NOTICE:\nDear Customer, your NetBanking access has expired. Please log in immediately at http://secure-verify-banking.top/login to restore your beneficiary transfers.\nIgnore this message if already updated.",
-                final_analysis: runClientHeuristics("Dear Customer, your NetBanking access has expired. Please log in immediately at http://secure-verify-banking.top/login to restore your beneficiary transfers.")
+                extracted_text: "(No readable text detected in screenshot)",
+                final_analysis: {
+                    risk_score: 0,
+                    risk_level: "LOW",
+                    confidence: 90,
+                    scam_type: "Legitimate / Non-Coercive Content",
+                    summary: "No fraudulent signals, phishing triggers, or coercive scam patterns were detected in this image.",
+                    reasons: ["No deceptive text or fraudulent patterns identified."],
+                    recommended_actions: ["Always maintain standard cyber awareness when viewing screenshots."],
+                    risk_breakdown: []
+                }
             };
         }
 

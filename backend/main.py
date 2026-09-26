@@ -301,6 +301,8 @@ def builtin_ocr_service(file_path: str) -> str:
     try:
         import pytesseract
         from PIL import Image
+        if os.path.exists(r"C:\Program Files\Tesseract-OCR\tesseract.exe"):
+            pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
         img = Image.open(file_path)
         extracted = pytesseract.image_to_string(img)
         if extracted.strip():
@@ -316,11 +318,7 @@ def builtin_ocr_service(file_path: str) -> str:
             return extracted
     except Exception as e:
         logger.debug(f"EasyOCR not available: {e}")
-    return (
-        "URGENT ALERT: Dear Customer, your NetBanking access has expired due to pending KYC update. "
-        "Please log in immediately at http://sbi-kyc-verification.info/update to verify your identity "
-        "and reactivate beneficiary transfers within 2 hours. Do not share your OTP with anyone."
-    )
+    return ""
 
 
 # ==============================================================================
@@ -616,6 +614,11 @@ async def analyze_url_endpoint(payload: UrlRequest, request: Request):
     if not url_analysis:
         url_analysis = builtin_url_analyzer(url)
 
+    if url_analysis:
+        score_val = url_analysis.get("score", url_analysis.get("risk_score", 0))
+        url_analysis["score"] = score_val
+        url_analysis["risk_score"] = score_val
+
     elapsed_ms = round((time.perf_counter() - start_time) * 1000, 2)
     return {"success": True, "url_analysis": url_analysis, "execution_time_ms": elapsed_ms}
 
@@ -639,12 +642,24 @@ async def analyze_image_endpoint(file: UploadFile = File(...), request: Request 
         extracted_text = ""
         if SERVICES_AVAILABLE["ocr_service"] and ext_extract_text_from_image:
             try:
-                extracted_text = ext_extract_text_from_image(temp_path)
+                ocr_res = ext_extract_text_from_image(temp_path)
+                if isinstance(ocr_res, dict):
+                    extracted_text = ocr_res.get("text", "")
+                elif isinstance(ocr_res, str):
+                    extracted_text = ocr_res
             except Exception as e:
                 logger.warning(f"External OCR failed: {e}")
-        if not extracted_text or not extracted_text.strip():
-            extracted_text = builtin_ocr_service(temp_path)
-        extracted_text = extracted_text.strip() or "(No readable text detected in image)"
+
+        if not extracted_text or not str(extracted_text).strip():
+            fallback_res = builtin_ocr_service(temp_path)
+            if isinstance(fallback_res, dict):
+                extracted_text = fallback_res.get("text", "")
+            elif isinstance(fallback_res, str):
+                extracted_text = fallback_res
+
+        extracted_text = str(extracted_text).strip()
+        if not extracted_text:
+            extracted_text = "(No readable text detected in image)"
 
         rule_analysis = None
         if SERVICES_AVAILABLE["rule_engine"] and ext_calculate_rule_score:
