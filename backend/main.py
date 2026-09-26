@@ -26,9 +26,14 @@ from urllib.parse import urlparse
 
 from fastapi import FastAPI, UploadFile, File, HTTPException, Request, status, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.middleware.sessions import SessionMiddleware
 from fastapi.responses import JSONResponse, FileResponse, RedirectResponse
 from pydantic import BaseModel, Field, field_validator
+
+try:
+    from starlette.middleware.sessions import SessionMiddleware
+    SESSION_MIDDLEWARE_AVAILABLE = True
+except ImportError:
+    SESSION_MIDDLEWARE_AVAILABLE = False
 
 # Google OAuth via Authlib
 try:
@@ -331,14 +336,18 @@ app = FastAPI(
 # ------------------------------------------------------------------------------
 # SESSION MIDDLEWARE (required for OAuth state + user session storage)
 # ------------------------------------------------------------------------------
-app.add_middleware(
-    SessionMiddleware,
-    secret_key=SECRET_KEY,
-    session_cookie="scamshield_session",
-    max_age=86400 * 7,   # 7-day session
-    same_site="lax",
-    https_only=False,
-)
+if SESSION_MIDDLEWARE_AVAILABLE:
+    app.add_middleware(
+        SessionMiddleware,
+        secret_key=SECRET_KEY,
+        session_cookie="scamshield_session",
+        max_age=86400 * 7,   # 7-day session
+        same_site="lax",
+        https_only=False,
+    )
+    logger.info("✓ SessionMiddleware enabled.")
+else:
+    logger.info("ℹ  SessionMiddleware optional: install itsdangerous for server sessions.")
 
 # ------------------------------------------------------------------------------
 # CORS MIDDLEWARE
@@ -377,7 +386,10 @@ else:
 # AUTH DEPENDENCY: get current user from session
 # ------------------------------------------------------------------------------
 def get_current_user(request: Request) -> Optional[Dict[str, Any]]:
-    return request.session.get("user")
+    try:
+        return request.session.get("user")
+    except Exception:
+        return None
 
 
 # ------------------------------------------------------------------------------
@@ -480,9 +492,12 @@ async def get_me(request: Request):
 @app.post("/auth/logout", summary="Logout Current User")
 @app.get("/auth/logout", summary="Logout Current User")
 async def logout(request: Request):
-    user = request.session.get("user", {})
-    request.session.clear()
-    logger.info(f"User logged out: {user.get('email', 'unknown')}")
+    try:
+        user = request.session.get("user", {})
+        request.session.clear()
+        logger.info(f"User logged out: {user.get('email', 'unknown')}")
+    except Exception:
+        pass
     return {"success": True, "message": "Logged out successfully."}
 
 
