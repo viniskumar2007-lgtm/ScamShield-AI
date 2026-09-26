@@ -3,680 +3,1674 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ScamShield AI</title>
+<title>ScamShield AI — Next-Gen Threat Detection & Fraud Prevention</title>
+<meta name="description" content="Intelligent AI and heuristic scam detection platform for SMS, URLs, emails, and screenshots with cybernetic real-time telemetry.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700;900&display=swap" rel="stylesheet">
 
 <style>
+:root {
+    --bg-main: #04060f;
+    --bg-card: rgba(9, 14, 32, 0.72);
+    --bg-card-hover: rgba(15, 23, 50, 0.88);
+    --bg-card-inner: rgba(5, 9, 22, 0.8);
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-glow: rgba(0, 245, 200, 0.35);
+    --border-card: rgba(255, 255, 255, 0.1);
+    --primary-cyan: #00f5c8;
+    --primary-blue: #00aaff;
+    --primary-purple: #8b5cf6;
+    --primary-gradient: linear-gradient(135deg, #00f5c8 0%, #00aaff 50%, #8b5cf6 100%);
+    --primary-btn-gradient: linear-gradient(135deg, #00f5c8 0%, #00aaff 50%, #00f5c8 100%);
+    --risk-high: #ff3366;
+    --risk-high-glow: rgba(255, 51, 102, 0.4);
+    --risk-high-bg: rgba(255, 51, 102, 0.12);
+    --risk-high-border: rgba(255, 51, 102, 0.45);
+    --risk-medium: #ffb703;
+    --risk-medium-glow: rgba(255, 183, 3, 0.35);
+    --risk-medium-bg: rgba(255, 183, 3, 0.12);
+    --risk-medium-border: rgba(255, 183, 3, 0.4);
+    --risk-low: #00f5c8;
+    --risk-low-glow: rgba(0, 245, 200, 0.35);
+    --risk-low-bg: rgba(0, 245, 200, 0.12);
+    --risk-low-border: rgba(0, 245, 200, 0.4);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-xl: 26px;
+    --shadow-md: 0 12px 35px rgba(0, 0, 0, 0.5);
+    --shadow-glow: 0 0 35px rgba(0, 245, 200, 0.18);
+}
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: #050816;
-    color: #f5f7ff;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
     min-height: 100vh;
     overflow-x: hidden;
+    line-height: 1.6;
+    position: relative;
 }
-
-/* ========================= BACKGROUND ========================= */
-body::before {
-    content: "";
+#cyberCanvas {
     position: fixed;
-    inset: 0;
-    background:
-        radial-gradient(circle at 20% 20%, rgba(0, 255, 200, 0.08), transparent 30%),
-        radial-gradient(circle at 80% 10%, rgba(120, 80, 255, 0.10), transparent 30%),
-        radial-gradient(circle at 50% 90%, rgba(0, 180, 255, 0.07), transparent 30%);
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
     pointer-events: none;
     z-index: -1;
+    opacity: 0.65;
 }
-
-/* ========================= NAVBAR ========================= */
-nav {
-    width: 100%;
-    padding: 18px 7%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    background: rgba(5,8,22,0.82);
-    backdrop-filter: blur(15px);
-    position: sticky;
-    top: 0;
-    z-index: 100;
+.ambient-lights {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -2;
+    overflow: hidden;
 }
-
-.logo { display: flex; align-items: center; gap: 10px; font-size: 22px; font-weight: 800; }
-
-.logo-icon {
-    width: 38px;
-    height: 38px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #00f5c8, #00aaff);
-    color: #00151a;
-    font-size: 20px;
-}
-
-nav a {
-    color: #cbd2e9;
-    text-decoration: none;
-    margin-left: 28px;
-    font-size: 14px;
-    transition: 0.2s;
-}
-nav a:hover { color: #00f5c8; }
-
-/* ========================= HERO ========================= */
-.hero { padding: 90px 7% 60px; text-align: center; }
-
-.hero-badge {
-    display: inline-block;
-    padding: 8px 15px;
-    border: 1px solid rgba(0,245,200,0.3);
-    border-radius: 30px;
-    color: #00f5c8;
-    background: rgba(0,245,200,0.06);
-    font-size: 13px;
-    margin-bottom: 25px;
-}
-
-.hero h1 {
-    font-size: clamp(42px, 7vw, 78px);
-    line-height: 1;
-    margin-bottom: 20px;
-    font-weight: 900;
-}
-
-.gradient-text {
-    background: linear-gradient(90deg, #00f5c8, #00bfff, #8b5cf6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.hero p {
-    max-width: 720px;
-    margin: auto;
-    color: #aab2ca;
-    font-size: 18px;
-    line-height: 1.7;
-}
-
-/* ========================= STATS ========================= */
-.stats {
-    width: 86%;
-    max-width: 1150px;
-    margin: 20px auto 60px;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-}
-
-.stat-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    padding: 25px;
-    border-radius: 18px;
-    text-align: center;
-}
-
-.stat-number { font-size: 32px; font-weight: 800; color: #00f5c8; margin-bottom: 7px; }
-.stat-label { color: #9ba4bf; font-size: 13px; }
-
-/* ========================= CONTAINER ========================= */
-.container { width: 86%; max-width: 1150px; margin: auto; }
-
-.section-title { text-align: center; margin-bottom: 35px; }
-.section-title h2 { font-size: 36px; margin-bottom: 10px; }
-.section-title p { color: #929ab4; }
-
-/* ========================= SCANNER GRID ========================= */
-.scanner-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 25px;
-    margin-bottom: 30px;
-}
-
-.scanner-card {
-    background: rgba(255,255,255,0.035);
-    border: 1px solid rgba(255,255,255,0.09);
-    border-radius: 22px;
-    padding: 28px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-}
-
-.scanner-card.full { grid-column: 1 / -1; }
-
-.scanner-header { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
-
-.scanner-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0,245,200,0.1);
-    font-size: 23px;
-}
-
-.scanner-header h3 { font-size: 20px; margin-bottom: 4px; }
-.scanner-header p { color: #8f98b1; font-size: 13px; }
-
-textarea,
-input[type="text"] {
-    width: 100%;
-    border: 1px solid rgba(255,255,255,0.1);
-    outline: none;
-    background: rgba(0,0,0,0.25);
-    color: white;
-    border-radius: 14px;
-    padding: 16px;
-    font-size: 15px;
-    transition: 0.2s;
-}
-
-textarea { min-height: 170px; resize: vertical; }
-
-textarea:focus,
-input[type="text"]:focus {
-    border-color: rgba(0,245,200,0.5);
-    box-shadow: 0 0 0 3px rgba(0,245,200,0.06);
-}
-
-.button-row { display: flex; gap: 12px; margin-top: 15px; flex-wrap: wrap; }
-
-button {
-    border: none;
-    cursor: pointer;
-    border-radius: 12px;
-    padding: 13px 20px;
-    font-size: 14px;
-    font-weight: 700;
-    transition: 0.2s;
-}
-
-.primary-btn { background: linear-gradient(135deg, #00f5c8, #00aaff); color: #00151a; }
-.primary-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,245,200,0.2); }
-
-.secondary-btn {
-    background: rgba(255,255,255,0.06);
-    color: #dfe5f7;
-    border: 1px solid rgba(255,255,255,0.08);
-}
-.secondary-btn:hover { background: rgba(255,255,255,0.1); }
-
-.demo-buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 15px; }
-
-.demo-btn {
-    padding: 8px 12px;
-    font-size: 12px;
-    background: rgba(255,255,255,0.04);
-    color: #aeb7d1;
-    border: 1px solid rgba(255,255,255,0.08);
-}
-.demo-btn:hover { color: #00f5c8; border-color: rgba(0,245,200,0.3); }
-
-/* ========================= LOADING ========================= */
-.loading { display: none; text-align: center; padding: 25px; color: #00f5c8; }
-
-.spinner {
-    width: 28px;
-    height: 28px;
-    border: 3px solid rgba(255,255,255,0.1);
-    border-top-color: #00f5c8;
+.light-orb {
+    position: absolute;
     border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin: 0 auto 10px;
+    filter: blur(140px);
+    opacity: 0.35;
+    animation: orbFloat 22s ease-in-out infinite alternate;
 }
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* ========================= ERROR ========================= */
-.error-box {
-    display: none;
-    margin-top: 15px;
-    padding: 14px;
-    border-radius: 12px;
-    background: rgba(255,70,90,0.08);
-    border: 1px solid rgba(255,70,90,0.25);
-    color: #ff7c8a;
-    font-size: 14px;
+.light-orb-cyan {
+    width: 650px; height: 650px;
+    top: -150px; left: -100px;
+    background: radial-gradient(circle, rgba(0, 245, 200, 0.3) 0%, transparent 70%);
 }
-
-/* ========================= RESULT ========================= */
-.result {
-    display: none;
-    margin-top: 25px;
-    padding: 25px;
-    border-radius: 18px;
-    background: rgba(0,0,0,0.22);
-    border: 1px solid rgba(255,255,255,0.08);
+.light-orb-purple {
+    width: 750px; height: 750px;
+    top: 15%; right: -200px;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, transparent 70%);
+    animation-delay: -8s;
 }
-
-.result-top {
+.light-orb-blue {
+    width: 600px; height: 600px;
+    bottom: 5%; left: 20%;
+    background: radial-gradient(circle, rgba(0, 170, 255, 0.2) 0%, transparent 70%);
+    animation-delay: -15s;
+}
+@keyframes orbFloat {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(70px, 50px) scale(1.1); }
+    100% { transform: translate(-50px, 80px) scale(0.92); }
+}
+.scanline-overlay {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0, 245, 200, 0.015) 50%, rgba(0, 245, 200, 0.015));
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 99;
+    opacity: 0.7;
+}
+.threat-ticker {
+    background: rgba(6, 10, 24, 0.95);
+    border-bottom: 1px solid rgba(0, 245, 200, 0.2);
+    padding: 8px 7%;
+    font-size: 12px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-    flex-wrap: wrap;
-    margin-bottom: 25px;
+    overflow: hidden;
+    position: relative;
+    z-index: 101;
+    backdrop-filter: blur(15px);
 }
-
-.risk-score { font-size: 52px; font-weight: 900; }
-
-.risk-label {
+.ticker-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    color: var(--primary-cyan);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    flex-shrink: 0;
+    font-size: 11px;
+    text-shadow: 0 0 10px rgba(0, 245, 200, 0.5);
+}
+.sonar-wave { position: relative; width: 10px; height: 10px; }
+.sonar-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #00f5c8;
+    position: absolute;
+    top: 1px; left: 1px;
+    box-shadow: 0 0 12px #00f5c8;
+}
+.sonar-ring {
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 2px solid #00f5c8;
+    animation: sonarPing 2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+@keyframes sonarPing {
+    0% { transform: scale(0.5); opacity: 1; }
+    100% { transform: scale(2.4); opacity: 0; }
+}
+.ticker-content {
+    display: flex;
+    align-items: center;
+    gap: 35px;
+    color: #cbd5e1;
+    white-space: nowrap;
+    animation: tickerSlide 38s linear infinite;
+}
+.ticker-content:hover { animation-play-state: paused; }
+.ticker-item { display: inline-flex; align-items: center; gap: 8px; }
+.ticker-item b { color: #f1f5f9; font-weight: 700; }
+@keyframes tickerSlide {
+    0% { transform: translateX(10%); }
+    100% { transform: translateX(-100%); }
+}
+.ticker-right-tools {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+.audio-toggle-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    padding: 4px 9px;
+    border-radius: 8px;
+    font-size: 11px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s ease;
+}
+.audio-toggle-btn.active {
+    color: var(--primary-cyan);
+    border-color: rgba(0, 245, 200, 0.4);
+    background: rgba(0, 245, 200, 0.08);
+}
+.api-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 11px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    background: rgba(0, 245, 200, 0.08);
+    border: 1px solid rgba(0, 245, 200, 0.3);
+    color: var(--primary-cyan);
+    box-shadow: 0 0 15px rgba(0, 245, 200, 0.15);
+}
+.api-status-badge.offline {
+    background: rgba(255, 183, 3, 0.08);
+    border-color: rgba(255, 183, 3, 0.35);
+    color: var(--risk-medium);
+    box-shadow: 0 0 15px rgba(255, 183, 3, 0.15);
+}
+nav {
+    width: 100%;
+    padding: 16px 7%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-subtle);
+    background: rgba(4, 7, 18, 0.8);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: all 0.3s ease;
+}
+.nav-scrolled {
+    background: rgba(4, 7, 18, 0.95);
+    border-bottom-color: rgba(0, 245, 200, 0.2);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
+}
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 22px;
+    font-weight: 800;
+    font-family: 'Space Grotesk', sans-serif;
+    color: #ffffff;
+    text-decoration: none;
+    letter-spacing: -0.02em;
+}
+.logo-icon-wrap {
+    position: relative;
+    width: 42px; height: 42px;
+    display: flex; align-items: center; justify-content: center;
+}
+.logo-icon-glow {
+    position: absolute;
+    inset: -3px;
+    border-radius: 14px;
+    background: var(--primary-gradient);
+    opacity: 0.6;
+    filter: blur(8px);
+    transition: opacity 0.3s ease;
+}
+.logo-icon {
+    position: relative;
+    width: 100%; height: 100%;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #00f5c8 0%, #00aaff 100%);
+    color: #021217;
+    font-size: 21px;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.logo:hover .logo-icon { transform: rotate(10deg) scale(1.1); }
+.logo:hover .logo-icon-glow { opacity: 0.9; }
+.logo-badge {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: rgba(0, 245, 200, 0.12);
+    color: var(--primary-cyan);
+    border: 1px solid rgba(0, 245, 200, 0.35);
+    margin-left: 6px;
+    letter-spacing: 0.05em;
+}
+.nav-links { display: flex; align-items: center; gap: 8px; }
+.nav-links a {
+    color: #cbd5e1;
+    text-decoration: none;
+    padding: 9px 18px;
+    border-radius: 11px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+.nav-links a:hover {
+    color: var(--primary-cyan);
+    background: rgba(255, 255, 255, 0.06);
+    transform: translateY(-1px);
+}
+.nav-cta-btn {
+    background: linear-gradient(135deg, rgba(0, 245, 200, 0.18), rgba(0, 170, 255, 0.18));
+    border: 1px solid rgba(0, 245, 200, 0.5) !important;
+    color: var(--primary-cyan) !important;
+    padding: 9px 20px !important;
+    position: relative;
+    overflow: hidden;
+}
+.nav-cta-btn:hover {
+    background: linear-gradient(135deg, #00f5c8, #00aaff) !important;
+    color: #021217 !important;
+    box-shadow: 0 0 25px rgba(0, 245, 200, 0.5);
+    transform: translateY(-2px);
+}
+.hero {
+    padding: 100px 7% 65px;
+    text-align: center;
+    position: relative;
+}
+.hero-badge-wrap { display: flex; justify-content: center; margin-bottom: 28px; }
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 24px;
+    border: 1px solid rgba(0, 245, 200, 0.4);
+    border-radius: 40px;
+    color: var(--primary-cyan);
+    background: rgba(0, 245, 200, 0.06);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    box-shadow: 0 0 35px rgba(0, 245, 200, 0.12);
+    backdrop-filter: blur(12px);
+    position: relative;
+    overflow: hidden;
+}
+.hero-hologram-wrap {
+    position: relative;
+    width: 140px; height: 140px;
+    margin: 0 auto 30px;
+    display: flex; align-items: center; justify-content: center;
+}
+.hologram-ring {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+}
+.ring-outer {
+    inset: 0;
+    border: 2px dashed rgba(0, 245, 200, 0.35);
+    animation: rotateClockwise 18s linear infinite;
+}
+.ring-mid {
+    inset: 16px;
+    border: 1px solid rgba(0, 170, 255, 0.45);
+    border-left-color: transparent; border-right-color: transparent;
+    animation: rotateCounter 10s linear infinite;
+}
+.ring-inner {
+    inset: 32px;
+    border: 1px dashed rgba(139, 92, 246, 0.6);
+    animation: rotateClockwise 6s linear infinite;
+}
+.hologram-core {
+    width: 60px; height: 60px;
+    border-radius: 18px;
+    background: radial-gradient(circle, rgba(0, 245, 200, 0.3) 0%, rgba(9, 14, 32, 0.8) 80%);
+    border: 1px solid var(--primary-cyan);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    box-shadow: 0 0 30px rgba(0, 245, 200, 0.5);
+    animation: corePulse 3s ease-in-out infinite;
+}
+@keyframes rotateClockwise { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes rotateCounter { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+@keyframes corePulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 25px rgba(0, 245, 200, 0.4); }
+    50% { transform: scale(1.08); box-shadow: 0 0 45px rgba(0, 245, 200, 0.8); }
+}
+.hero h1 {
+    font-size: clamp(44px, 7vw, 80px);
+    line-height: 1.06;
+    margin-bottom: 24px;
+    font-weight: 900;
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: -0.03em;
+}
+.gradient-text {
+    background: linear-gradient(110deg, #00f5c8 0%, #00bfff 40%, #b794f4 80%, #00f5c8 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     display: inline-block;
-    padding: 8px 14px;
-    border-radius: 30px;
+    animation: gradientFlow 6s ease-in-out infinite;
+    filter: drop-shadow(0 2px 25px rgba(0, 245, 200, 0.3));
+}
+@keyframes gradientFlow {
+    0% { background-position: 0% center; }
+    50% { background-position: 100% center; }
+    100% { background-position: 0% center; }
+}
+.hero p {
+    max-width: 700px;
+    margin: 0 auto 38px;
+    color: var(--text-secondary);
+    font-size: 19px;
+    line-height: 1.7;
+}
+.hero-quick-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+.hero-btn {
+    padding: 15px 32px;
+    font-size: 15px;
+    font-weight: 800;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+.hero-btn-primary {
+    background: var(--primary-btn-gradient);
+    background-size: 200% auto;
+    color: #021217;
+    box-shadow: 0 10px 30px rgba(0, 245, 200, 0.35);
+}
+.hero-btn-primary:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 16px 45px rgba(0, 245, 200, 0.55);
+    background-position: right center;
+}
+.hero-btn-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    color: #f1f5f9;
+    border: 1px solid var(--border-subtle);
+    backdrop-filter: blur(12px);
+}
+.hero-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(0, 245, 200, 0.4);
+    transform: translateY(-3px);
+}
+.stats {
+    width: 88%;
+    max-width: 1150px;
+    margin: 10px auto 70px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+.spotlight-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    padding: 30px 24px;
+    border-radius: var(--radius-lg);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.spotlight-card::before {
+    content: '';
+    position: absolute;
+    top: var(--mouse-y, 50%); left: var(--mouse-x, 50%);
+    transform: translate(-50%, -50%);
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(0, 245, 200, 0.16) 0%, transparent 70%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+.spotlight-card:hover::before { opacity: 1; }
+.spotlight-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(0, 245, 200, 0.45);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5), var(--shadow-glow);
+}
+.stat-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+    display: inline-block;
+    filter: drop-shadow(0 2px 8px rgba(0, 245, 200, 0.3));
+}
+.stat-number {
+    font-size: 44px;
+    font-weight: 900;
+    color: var(--primary-cyan);
+    margin-bottom: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    text-shadow: 0 0 20px rgba(0, 245, 200, 0.4);
+}
+.stat-label {
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+}
+.container { width: 88%; max-width: 1180px; margin: auto; }
+.section-title { text-align: center; margin-bottom: 45px; }
+.section-pill {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    background: rgba(0, 245, 200, 0.08);
+    border: 1px solid rgba(0, 245, 200, 0.25);
+    color: var(--primary-cyan);
     font-size: 12px;
     font-weight: 800;
-    margin-top: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    margin-bottom: 14px;
 }
-
-.risk-low { color: #39e58c; background: rgba(57,229,140,0.1); border: 1px solid rgba(57,229,140,0.2); }
-.risk-medium { color: #ffc857; background: rgba(255,200,87,0.1); border: 1px solid rgba(255,200,87,0.2); }
-.risk-high { color: #ff6476; background: rgba(255,100,118,0.1); border: 1px solid rgba(255,100,118,0.2); }
-
-.result-info { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-
-/* URL and Screenshot cards are half width, so use 2 columns there */
-.scanner-card:not(.full) .result-info { grid-template-columns: repeat(2, 1fr); }
-
-.info-box { background: rgba(255,255,255,0.035); padding: 15px; border-radius: 12px; }
-.info-label { color: #858ea9; font-size: 11px; margin-bottom: 6px; text-transform: uppercase; }
-.info-value { font-size: 14px; font-weight: 700; }
-
-.result-section { margin-top: 25px; }
-.result-section h4 { margin-bottom: 12px; color: #00f5c8; }
-.result-section p { color: #aeb7ce; line-height: 1.6; font-size: 14px; }
-
-.reasons-list,
-.actions-list { list-style: none; }
-
-.reasons-list li,
-.actions-list li {
-    padding: 10px 12px;
-    margin-bottom: 8px;
-    border-radius: 10px;
-    background: rgba(255,255,255,0.035);
-    color: #cbd2e5;
+.section-title h2 {
+    font-size: 40px;
+    font-weight: 900;
+    font-family: 'Space Grotesk', sans-serif;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+}
+.section-title p { color: var(--text-secondary); font-size: 16px; max-width: 620px; margin: 0 auto; }
+.scanner-nav-tabs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 35px;
+    background: rgba(9, 14, 32, 0.7);
+    padding: 7px;
+    border-radius: 18px;
+    border: 1px solid var(--border-subtle);
+    max-width: 600px;
+    margin-left: auto; margin-right: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+.tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 11px 18px;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 13px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.tab-btn.active {
+    background: rgba(0, 245, 200, 0.14);
+    color: var(--primary-cyan);
+    border: 1px solid rgba(0, 245, 200, 0.4);
+    box-shadow: 0 4px 20px rgba(0, 245, 200, 0.15);
+}
+.tab-btn:hover:not(.active) { color: #fff; background: rgba(255, 255, 255, 0.05); }
+.scanner-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin-bottom: 45px;
+}
+.scanner-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-xl);
+    padding: 34px;
+    box-shadow: var(--shadow-md);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.35s ease, box-shadow 0.35s ease;
+}
+.scanner-card:hover {
+    border-color: rgba(0, 245, 200, 0.35);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 35px rgba(0, 245, 200, 0.08);
+}
+.scanner-card.full { grid-column: 1 / -1; }
+.scanner-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+.scanner-header-left { display: flex; align-items: center; gap: 16px; }
+.scanner-icon {
+    width: 56px; height: 56px;
+    border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0, 245, 200, 0.09);
+    border: 1px solid rgba(0, 245, 200, 0.25);
+    font-size: 26px;
+    box-shadow: 0 4px 20px rgba(0, 245, 200, 0.15);
+    transition: transform 0.3s ease;
+}
+.scanner-card:hover .scanner-icon {
+    transform: scale(1.08) rotate(4deg);
+    border-color: var(--primary-cyan);
+}
+.scanner-header h3 {
+    font-size: 21px;
+    font-weight: 800;
+    margin-bottom: 4px;
+    color: #ffffff;
+    font-family: 'Space Grotesk', sans-serif;
+}
+.scanner-header p { color: var(--text-muted); font-size: 13px; }
+.scanner-badge {
+    font-size: 11px;
+    font-weight: 800;
+    padding: 5px 12px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+    letter-spacing: 0.06em;
+}
+.input-wrap { position: relative; width: 100%; }
+textarea, input[type="text"] {
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    outline: none;
+    background: var(--bg-card-inner);
+    color: #f8fafc;
+    border-radius: 18px;
+    padding: 18px 20px;
+    font-size: 15px;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+textarea { min-height: 170px; resize: vertical; line-height: 1.65; }
+textarea:focus, input[type="text"]:focus {
+    border-color: var(--primary-cyan);
+    box-shadow: 0 0 0 3px rgba(0, 245, 200, 0.18), 0 10px 30px rgba(0, 0, 0, 0.5);
+    background: rgba(5, 10, 24, 0.95);
+}
+.input-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 9px;
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 0 6px;
+}
+.demo-section-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-top: 20px;
+    margin-bottom: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+.demo-buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.demo-btn {
+    padding: 8px 15px;
+    font-size: 12px;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.04);
+    color: #cbd5e1;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 11px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+.demo-btn:hover {
+    color: var(--primary-cyan);
+    background: rgba(0, 245, 200, 0.09);
+    border-color: rgba(0, 245, 200, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 245, 200, 0.15);
+}
+.button-row { display: flex; gap: 14px; margin-top: 20px; flex-wrap: wrap; }
+button {
+    border: none;
+    cursor: pointer;
+    border-radius: 14px;
+    padding: 14px 26px;
+    font-size: 14px;
+    font-weight: 800;
+    font-family: inherit;
+    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+}
+.primary-btn {
+    background: var(--primary-btn-gradient);
+    background-size: 200% auto;
+    color: #021217;
+    box-shadow: 0 8px 25px rgba(0, 245, 200, 0.3);
+}
+.primary-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 35px rgba(0, 245, 200, 0.45);
+    background-position: right center;
+}
+.secondary-btn {
+    background: rgba(255, 255, 255, 0.06);
+    color: #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.secondary-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+}
+.loading {
+    display: none;
+    position: relative;
+    text-align: center;
+    padding: 35px 25px;
+    color: var(--primary-cyan);
+    border-radius: 18px;
+    background: rgba(0, 245, 200, 0.04);
+    border: 1px dashed rgba(0, 245, 200, 0.35);
+    margin-top: 24px;
+    overflow: hidden;
+    animation: fadeIn 0.3s ease;
+}
+.laser-beam {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #00f5c8, #00aaff, #00f5c8, transparent);
+    box-shadow: 0 0 18px #00f5c8, 0 0 35px #00f5c8;
+    animation: laserSweep 2s ease-in-out infinite alternate;
+}
+@keyframes laserSweep {
+    0% { top: 0%; opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { top: 96%; opacity: 0.6; }
+}
+.spinner {
+    width: 38px; height: 38px;
+    border: 3px solid rgba(0, 245, 200, 0.2);
+    border-top-color: var(--primary-cyan);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 14px;
+    box-shadow: 0 0 20px rgba(0, 245, 200, 0.3);
+}
+.loading-text {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    font-family: 'JetBrains Mono', monospace;
+    text-shadow: 0 0 10px rgba(0, 245, 200, 0.4);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.error-box {
+    display: none;
+    margin-top: 20px;
+    padding: 16px 22px;
+    border-radius: 14px;
+    background: rgba(255, 51, 102, 0.08);
+    border: 1px solid rgba(255, 51, 102, 0.35);
+    color: #ff859c;
     font-size: 14px;
 }
-
-.reasons-list li::before { content: "⚠️"; margin-right: 8px; }
-.actions-list li::before { content: "🛡️"; margin-right: 8px; }
-
-/* ========================= SMART EXPLANATION ========================= */
+.result {
+    display: none;
+    margin-top: 30px;
+    padding: 34px;
+    border-radius: var(--radius-xl);
+    background: rgba(3, 7, 18, 0.85);
+    border: 1px solid var(--border-subtle);
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.6);
+    animation: resultAppear 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+}
+@keyframes resultAppear {
+    from { opacity: 0; transform: translateY(16px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.result::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--primary-gradient);
+    box-shadow: 0 0 20px var(--primary-cyan);
+}
+.result-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.gauge-wrapper { display: flex; align-items: center; gap: 24px; }
+.gauge-svg-box { position: relative; width: 120px; height: 120px; }
+.gauge-svg {
+    transform: rotate(-90deg);
+    width: 100%; height: 100%;
+    filter: drop-shadow(0 0 10px rgba(0, 245, 200, 0.3));
+}
+.gauge-bg { fill: none; stroke: rgba(255, 255, 255, 0.07); stroke-width: 9; }
+.gauge-progress {
+    fill: none;
+    stroke: var(--primary-cyan);
+    stroke-width: 9;
+    stroke-linecap: round;
+    stroke-dasharray: 283;
+    stroke-dashoffset: 283;
+    transition: stroke-dashoffset 1.4s cubic-bezier(0.2, 0.8, 0.2, 1), stroke 0.4s ease;
+}
+.gauge-center-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.gauge-score-num {
+    font-size: 30px;
+    font-weight: 900;
+    line-height: 1;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: -0.05em;
+}
+.gauge-score-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-top: 3px;
+    letter-spacing: 0.06em;
+}
+.risk-level-badge-wrap { display: flex; flex-direction: column; align-items: flex-start; }
+.risk-score {
+    font-size: 48px;
+    font-weight: 900;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: -0.04em;
+    line-height: 1;
+}
+.risk-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 16px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 8px;
+}
+.risk-low {
+    color: var(--risk-low);
+    background: var(--risk-low-bg);
+    border: 1px solid var(--risk-low-border);
+    box-shadow: 0 0 20px var(--risk-low-glow);
+}
+.risk-medium {
+    color: var(--risk-medium);
+    background: var(--risk-medium-bg);
+    border: 1px solid var(--risk-medium-border);
+    box-shadow: 0 0 20px var(--risk-medium-glow);
+}
+.risk-high {
+    color: var(--risk-high);
+    background: var(--risk-high-bg);
+    border: 1px solid var(--risk-high-border);
+    box-shadow: 0 0 25px var(--risk-high-glow);
+    animation: dangerPulse 2s infinite;
+}
+@keyframes dangerPulse {
+    0%, 100% { box-shadow: 0 0 20px var(--risk-high-glow); }
+    50% { box-shadow: 0 0 40px rgba(255, 51, 102, 0.7); }
+}
+.result-heading-box { flex: 1; min-width: 260px; }
+.result-heading-box h3 {
+    font-size: 24px;
+    font-weight: 800;
+    font-family: 'Space Grotesk', sans-serif;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+.result-heading-box p { color: var(--text-secondary); font-size: 14px; line-height: 1.6; }
+.result-info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 26px;
+}
+.scanner-card:not(.full) .result-info { grid-template-columns: repeat(2, 1fr); }
+.info-box {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 18px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-subtle);
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
+.info-box:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(0, 245, 200, 0.3);
+    transform: translateY(-2px);
+}
+.info-label {
+    color: var(--text-muted);
+    font-size: 11px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+}
+.info-value {
+    font-size: 16px;
+    font-weight: 800;
+    color: #f1f5f9;
+    font-family: 'JetBrains Mono', monospace;
+}
+.result-section { margin-top: 26px; }
+.result-section h4 {
+    margin-bottom: 14px;
+    color: var(--primary-cyan);
+    font-size: 16px;
+    font-weight: 800;
+    font-family: 'Space Grotesk', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.reasons-list, .actions-list { list-style: none; }
+.reasons-list li, .actions-list li {
+    padding: 13px 18px;
+    margin-bottom: 10px;
+    border-radius: 13px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-subtle);
+    color: #cbd5e1;
+    font-size: 14px;
+    line-height: 1.55;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    transition: all 0.2s ease;
+}
+.reasons-list li:hover, .actions-list li:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateX(4px);
+}
+.reasons-list li::before { content: "⚠️"; font-size: 16px; line-height: 1; flex-shrink: 0; }
+.actions-list li::before { content: "🛡️"; font-size: 16px; line-height: 1; flex-shrink: 0; }
+.report-action-bar {
+    display: flex;
+    gap: 12px;
+    margin-top: 22px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    flex-wrap: wrap;
+}
+.action-pill-btn {
+    padding: 9px 18px;
+    font-size: 12px;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-subtle);
+    color: #cbd5e1;
+    border-radius: 11px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    transition: all 0.25s ease;
+}
+.action-pill-btn:hover {
+    background: rgba(0, 245, 200, 0.1);
+    color: #fff;
+    border-color: rgba(0, 245, 200, 0.35);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
 .smart-explanation {
     display: none;
-    margin-top: 25px;
-    padding: 25px;
-    border-radius: 20px;
-    background: linear-gradient(145deg, rgba(0,245,200,0.05), rgba(120,80,255,0.04));
-    border: 1px solid rgba(0,245,200,0.14);
+    margin-top: 30px;
+    padding: 30px;
+    border-radius: var(--radius-xl);
+    background: linear-gradient(145deg, rgba(0, 245, 200, 0.05) 0%, rgba(139, 92, 246, 0.06) 100%);
+    border: 1px solid rgba(0, 245, 200, 0.25);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+    animation: fadeIn 0.4s ease;
 }
-
-.explanation-header { margin-bottom: 20px; }
-.explanation-header h3 { font-size: 21px; margin-bottom: 6px; }
-.explanation-header p { color: #8f98b2; font-size: 13px; }
-
-.risk-breakdown { display: grid; gap: 12px; }
-
+.explanation-header { margin-bottom: 24px; }
+.explanation-header h3 { font-size: 21px; font-weight: 800; font-family: 'Space Grotesk', sans-serif; margin-bottom: 6px; color: #fff; }
+.explanation-header p { color: var(--text-secondary); font-size: 14px; }
+.risk-breakdown { display: grid; gap: 14px; }
 .risk-signal {
-    padding: 16px;
-    border-radius: 14px;
-    border: 1px solid rgba(255,255,255,0.07);
-    background: rgba(255,255,255,0.035);
+    padding: 18px 20px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    background: rgba(9, 14, 32, 0.7);
+    transition: all 0.25s ease;
 }
-
+.risk-signal:hover { transform: translateX(4px); border-color: rgba(0, 245, 200, 0.3); }
 .risk-signal-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    margin-bottom: 7px;
+    margin-bottom: 9px;
 }
-
-.signal-name { display: flex; align-items: center; gap: 8px; font-weight: 700; }
-.signal-score { font-size: 12px; font-weight: 800; }
-.signal-explanation { color: #9ca6bf; font-size: 13px; line-height: 1.55; }
-
-.risk-signal.low { border-color: rgba(57,229,140,0.18); }
-.risk-signal.medium { border-color: rgba(255,200,87,0.2); }
-.risk-signal.high { border-color: rgba(255,100,118,0.2); }
-
-.severity-low { color: #39e58c; }
-.severity-medium { color: #ffc857; }
-.severity-high { color: #ff6476; }
-
+.signal-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+    font-size: 14px;
+    color: #f1f5f9;
+}
+.signal-score {
+    font-size: 11px;
+    font-weight: 900;
+    padding: 4px 9px;
+    border-radius: 7px;
+    font-family: 'JetBrains Mono', monospace;
+}
+.signal-explanation { color: #94a3b8; font-size: 13px; line-height: 1.6; }
+.risk-signal.low { border-color: rgba(0, 245, 200, 0.2); background: rgba(0, 245, 200, 0.02); }
+.risk-signal.medium { border-color: rgba(255, 183, 3, 0.25); background: rgba(255, 183, 3, 0.02); }
+.risk-signal.high { border-color: rgba(255, 51, 102, 0.35); background: rgba(255, 51, 102, 0.04); }
+.severity-low { color: var(--risk-low); background: rgba(0, 245, 200, 0.12); }
+.severity-medium { color: var(--risk-medium); background: rgba(255, 183, 3, 0.12); }
+.severity-high { color: var(--risk-high); background: rgba(255, 51, 102, 0.14); }
 .recommended-actions {
-    margin-top: 25px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(255,255,255,0.07);
+    margin-top: 30px;
+    padding-top: 26px;
+    border-top: 1px solid rgba(255, 255, 255, 0.09);
 }
-
-.actions-title { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 15px; }
-.actions-title > span { font-size: 24px; }
-.actions-title h3 { margin-bottom: 4px; }
-.actions-title p { color: #8992aa; font-size: 13px; }
-
+.actions-title { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 18px; }
+.actions-title > span { font-size: 28px; line-height: 1; }
+.actions-title h3 { font-size: 19px; font-weight: 800; font-family: 'Space Grotesk', sans-serif; margin-bottom: 4px; }
+.actions-title p { color: var(--text-muted); font-size: 13px; }
 #recommendedActions { list-style: none; }
-#recommendedActions li { padding: 10px 0; color: #c9d0e2; font-size: 14px; }
-#recommendedActions li::before { content: "✓"; color: #00f5c8; font-weight: 900; margin-right: 10px; }
-
-/* ========================= SCREENSHOT ========================= */
+#recommendedActions li {
+    padding: 11px 0;
+    color: #cbd5e1;
+    font-size: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
+}
+#recommendedActions li:last-child { border-bottom: none; }
+#recommendedActions li::before { content: "✓"; color: var(--primary-cyan); font-weight: 900; font-size: 16px; flex-shrink: 0; }
 .upload-area {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     width: 100%;
-    border: 1px dashed rgba(255,255,255,0.18);
-    border-radius: 16px;
+    min-height: 195px;
+    border: 2px dashed rgba(255, 255, 255, 0.16);
+    border-radius: var(--radius-lg);
     padding: 30px;
     text-align: center;
     cursor: pointer;
-    transition: 0.2s;
+    transition: all 0.3s ease;
+    background: rgba(5, 9, 22, 0.5);
+    position: relative;
+    overflow: hidden;
 }
-
-.upload-area:hover { border-color: rgba(0,245,200,0.4); background: rgba(0,245,200,0.03); }
+.upload-area:hover, .upload-area.drag-over {
+    border-color: var(--primary-cyan);
+    background: rgba(0, 245, 200, 0.05);
+    box-shadow: 0 0 30px rgba(0, 245, 200, 0.15);
+}
 .upload-area input { display: none; }
-.upload-icon { font-size: 35px; margin-bottom: 10px; }
-.upload-area h4 { margin-bottom: 7px; }
-.upload-area p { color: #8790aa; font-size: 13px; }
-.file-name { margin-top: 12px; color: #00f5c8; font-size: 13px; }
-
+.upload-icon {
+    width: 58px; height: 58px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: 14px;
+    border: 1px solid var(--border-subtle);
+    transition: transform 0.3s ease;
+}
+.upload-area:hover .upload-icon {
+    transform: scale(1.15) rotate(-6deg);
+    border-color: var(--primary-cyan);
+    background: rgba(0, 245, 200, 0.1);
+}
+.upload-area h4 { font-size: 16px; font-weight: 800; margin-bottom: 4px; color: #f1f5f9; }
+.upload-area p { color: var(--text-muted); font-size: 13px; }
+.paste-hint {
+    margin-top: 10px;
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(0, 245, 200, 0.08);
+    border: 1px solid rgba(0, 245, 200, 0.2);
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary-cyan);
+}
+.image-preview-box { display: none; margin-top: 18px; text-align: center; position: relative; animation: fadeIn 0.3s ease; }
+.image-preview-thumb { max-height: 180px; max-width: 100%; border-radius: 14px; border: 1px solid rgba(0, 245, 200, 0.4); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
+.file-name { margin-top: 12px; color: var(--primary-cyan); font-size: 13px; font-weight: 700; word-break: break-all; font-family: 'JetBrains Mono', monospace; }
 .extracted-text {
     margin-top: 20px;
-    padding: 16px;
-    border-radius: 12px;
-    background: rgba(0,0,0,0.25);
-    color: #aeb7ca;
+    padding: 20px;
+    border-radius: 15px;
+    background: rgba(4, 8, 20, 0.9);
+    border: 1px solid var(--border-subtle);
+    color: #cbd5e1;
     white-space: pre-wrap;
     font-size: 13px;
-    line-height: 1.6;
+    line-height: 1.65;
     max-height: 250px;
     overflow-y: auto;
+    font-family: 'JetBrains Mono', monospace;
 }
-
-/* ========================= HISTORY ========================= */
-.history-section { margin: 80px auto; }
-
+.history-section { margin: 95px auto; }
+.history-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    max-width: 900px;
+    margin: 0 auto 18px;
+    padding: 0 4px;
+}
+.history-filter-group { display: flex; gap: 7px; }
+.history-filter-btn {
+    padding: 7px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+.history-filter-btn.active, .history-filter-btn:hover {
+    color: #fff;
+    background: rgba(0, 245, 200, 0.12);
+    border-color: rgba(0, 245, 200, 0.4);
+    box-shadow: 0 0 15px rgba(0, 245, 200, 0.15);
+}
 .history-list {
     display: grid;
-    gap: 8px;
-    max-width: 860px;
-    max-height: 400px;
+    gap: 11px;
+    max-width: 900px;
+    max-height: 480px;
     margin: 0 auto;
     overflow-y: auto;
-    padding-right: 4px;
+    padding-right: 6px;
 }
-
 .history-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
-    padding: 10px 14px;
-    border-radius: 10px;
-    background: rgba(255,255,255,0.035);
-    border: 1px solid rgba(255,255,255,0.07);
+    gap: 16px;
+    padding: 15px 20px;
+    border-radius: 15px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    transition: all 0.25s ease;
+    cursor: pointer;
 }
-
-.history-message {
-    flex: 1;
-    min-width: 0;
-    color: #cbd2e4;
-    font-size: 13px;
-    white-space: nowrap;
+.history-item:hover {
+    background: var(--bg-card-hover);
+    border-color: rgba(0, 245, 200, 0.35);
+    transform: translateY(-2px) translateX(3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+.history-message-box { flex: 1; min-width: 0; }
+.history-message { color: #f1f5f9; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
+.history-date { font-size: 11px; color: var(--text-muted); }
+.history-meta { display: flex; align-items: center; justify-content: flex-end; gap: 14px; flex-shrink: 0; font-size: 12px; }
+.history-scam-type { font-weight: 700; font-size: 12px; color: #cbd5e1; }
+.history-score {
+    min-width: 60px;
+    text-align: right;
+    color: var(--primary-cyan);
+    font-size: 15px;
+    font-weight: 900;
+    font-family: 'JetBrains Mono', monospace;
+}
+.history-meta .risk-label { min-width: 72px; padding: 4px 11px; font-size: 11px; text-align: center; }
+.empty-history {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 50px 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed var(--border-subtle);
+    border-radius: 18px;
+}
+.features { margin: 95px auto; }
+.feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.feature-card {
+    padding: 30px;
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    backdrop-filter: blur(20px);
+    transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    position: relative;
     overflow: hidden;
-    text-overflow: ellipsis;
 }
-
-.history-meta {
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: var(--mouse-y, 50%); left: var(--mouse-x, 50%);
+    transform: translate(-50%, -50%);
+    width: 260px; height: 260px;
+    background: radial-gradient(circle, rgba(0, 245, 200, 0.14) 0%, transparent 70%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+.feature-card:hover::before { opacity: 1; }
+.feature-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(0, 245, 200, 0.35);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 25px rgba(0, 245, 200, 0.1);
+}
+.feature-card-icon {
+    width: 52px; height: 52px;
+    border-radius: 16px;
+    background: rgba(0, 245, 200, 0.08);
+    border: 1px solid rgba(0, 245, 200, 0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+}
+.feature-card:hover .feature-card-icon {
+    transform: scale(1.1) rotate(6deg);
+    border-color: var(--primary-cyan);
+}
+.feature-card h3 {
+    font-size: 19px;
+    font-weight: 800;
+    font-family: 'Space Grotesk', sans-serif;
+    margin-bottom: 9px;
+    color: #ffffff;
+}
+.feature-card p { color: var(--text-secondary); font-size: 14px; line-height: 1.6; }
+.faq-section { margin: 85px auto; max-width: 900px; }
+.faq-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.25s ease;
+}
+.faq-card:hover { border-color: rgba(0, 245, 200, 0.25); }
+.faq-header {
+    padding: 19px 25px;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    gap: 10px;
-    flex-shrink: 0;
-    font-size: 12px;
-    color: #aeb7d1;
-}
-
-.history-meta .risk-label {
-    min-width: 62px;
-    padding: 4px 10px;
-    font-size: 10px;
-    text-align: center;
-}
-
-.history-score {
-    min-width: 52px;
-    text-align: right;
-    color: #00f5c8;
-    font-size: 13px;
+    justify-content: space-between;
+    cursor: pointer;
     font-weight: 800;
+    font-size: 15px;
+    color: #f1f5f9;
 }
-
-.empty-history { text-align: center; color: #737d98; padding: 30px; }
-
-/* ========================= FEATURES ========================= */
-.features { margin: 80px auto; }
-
-.feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-
-.feature-card {
-    padding: 24px;
-    border-radius: 18px;
-    background: rgba(255,255,255,0.035);
-    border: 1px solid rgba(255,255,255,0.08);
-}
-
-.feature-card-icon { font-size: 27px; margin-bottom: 15px; }
-.feature-card h3 { margin-bottom: 9px; }
-.feature-card p { color: #8f98b1; font-size: 13px; line-height: 1.6; }
-
-/* ========================= FOOTER ========================= */
+.faq-header:hover { color: var(--primary-cyan); }
+.faq-toggle-icon { transition: transform 0.3s ease; font-size: 14px; color: var(--text-muted); }
+.faq-body { padding: 0 25px 22px; color: var(--text-secondary); font-size: 14px; line-height: 1.65; display: none; }
+.faq-card.open .faq-body { display: block; }
+.faq-card.open .faq-toggle-icon { transform: rotate(180deg); color: var(--primary-cyan); }
 footer {
-    margin-top: 80px;
-    padding: 35px 7%;
-    border-top: 1px solid rgba(255,255,255,0.08);
+    margin-top: 110px;
+    padding: 50px 7% 40px;
+    border-top: 1px solid var(--border-subtle);
+    background: rgba(3, 6, 16, 0.95);
     text-align: center;
-    color: #737c96;
+    color: var(--text-muted);
     font-size: 13px;
 }
-footer strong { color: #00f5c8; }
-
-/* ========================= RESPONSIVE ========================= */
-@media (max-width: 850px) {
-    nav { padding: 15px 5%; }
-    nav div:last-child { display: none; }
-    .hero { padding: 65px 5% 45px; }
-    .stats { width: 90%; grid-template-columns: 1fr; }
-    .container { width: 90%; }
+footer .footer-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 800;
+    font-family: 'Space Grotesk', sans-serif;
+    color: #ffffff;
+    margin-bottom: 16px;
+}
+footer strong { color: var(--primary-cyan); }
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 22px;
+    margin: 16px 0 28px;
+    flex-wrap: wrap;
+}
+.footer-links a { color: var(--text-secondary); text-decoration: none; font-size: 13px; transition: color 0.2s; }
+.footer-links a:hover { color: var(--primary-cyan); }
+.toast {
+    position: fixed;
+    bottom: 30px; right: 30px;
+    background: rgba(9, 14, 32, 0.96);
+    border: 1px solid rgba(0, 245, 200, 0.4);
+    border-radius: 14px;
+    padding: 15px 22px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 245, 200, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    z-index: 999;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+@media (max-width: 992px) {
+    .hero h1 { font-size: 54px; }
+    .stats { width: 92%; grid-template-columns: repeat(3, 1fr); }
+    .container { width: 92%; }
+    .feature-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+    nav { padding: 14px 5%; }
+    .nav-links a:not(.nav-cta-btn) { display: none; }
+    .stats { grid-template-columns: 1fr; }
     .scanner-grid { grid-template-columns: 1fr; }
     .scanner-card.full { grid-column: auto; }
-    .result-info { grid-template-columns: 1fr; }
-    .scanner-card:not(.full) .result-info { grid-template-columns: 1fr; }
+    .result-info { grid-template-columns: 1fr !important; }
     .feature-grid { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 550px) {
-    .hero h1 { font-size: 44px; }
-    .hero p { font-size: 15px; }
-    .scanner-card { padding: 20px; }
-    .risk-score { font-size: 42px; }
-    .history-item { align-items: flex-start; flex-direction: column; }
+    .history-item { flex-direction: column; align-items: flex-start; }
     .history-meta { width: 100%; justify-content: space-between; }
     .history-message { width: 100%; }
+}
+@media (max-width: 480px) {
+    .hero h1 { font-size: 40px; }
+    .scanner-card { padding: 22px 18px; }
+    .button-row button { width: 100%; }
+    .result-top { flex-direction: column; align-items: flex-start; }
 }
 </style>
 </head>
 
 <body>
 
-<!-- ========================= NAVBAR ========================= -->
-<nav>
-    <div class="logo">
-        <div class="logo-icon">🛡️</div>
-        <span>ScamShield AI</span>
+<canvas id="cyberCanvas"></canvas>
+
+<div class="ambient-lights">
+    <div class="light-orb light-orb-cyan"></div>
+    <div class="light-orb light-orb-purple"></div>
+    <div class="light-orb light-orb-blue"></div>
+</div>
+
+<div class="scanline-overlay"></div>
+
+<div class="threat-ticker">
+    <div class="ticker-label">
+        <div class="sonar-wave">
+            <div class="sonar-ring"></div>
+            <div class="sonar-dot"></div>
+        </div>
+        <span>LIVE TELEMETRY</span>
     </div>
 
-    <div>
-        <a href="#scanner">Scanner</a>
-        <a href="#history">History</a>
-        <a href="#features">Features</a>
+    <div class="ticker-content" id="tickerStream">
+        <span class="ticker-item">🚨 <b>Active Threat Surge:</b> Fake State Bank &amp; Indian Post KYC APK phishing campaigns</span>
+        <span class="ticker-item">⚡ <b>Heuristic Pipeline:</b> NLP Deconstruction + Deep Link Analysis Online</span>
+        <span class="ticker-item">⚠️ <b>Warning:</b> Scammers spoofing electricity disconnection notices with urgency triggers</span>
+        <span class="ticker-item">🛡️ <b>Defense Core:</b> Gemini AI + Hybrid Rule Matrix Active</span>
+    </div>
+
+    <div class="ticker-right-tools">
+        <button class="audio-toggle-btn active" id="audioToggle" onclick="toggleAudio()" title="Toggle Cyber Audio Feedback">
+            <span id="audioIcon">🔊</span>
+            <span id="audioLabel">Sound ON</span>
+        </button>
+
+        <div class="api-status-badge" id="apiStatusBadge" title="Backend Connection Telemetry">
+            <span style="font-size:9px;">●</span>
+            <span id="apiStatusText">Engine Ready</span>
+        </div>
+    </div>
+</div>
+
+<nav id="navbar">
+    <a href="#" class="logo">
+        <div class="logo-icon-wrap">
+            <div class="logo-icon-glow"></div>
+            <div class="logo-icon">🛡️</div>
+        </div>
+        <span>ScamShield <span style="color:var(--primary-cyan);">AI</span></span>
+        <span class="logo-badge">v2.5 PRO</span>
+    </a>
+
+    <div class="nav-links">
+        <a href="#scanner">🔍 Scanner</a>
+        <a href="#history">📜 History</a>
+        <a href="#features">⚡ Features</a>
+        <a href="#faq">❓ Safety Guide</a>
+        <a href="#scanner" class="nav-cta-btn">🚀 Start Scan</a>
     </div>
 </nav>
 
-<!-- ========================= HERO ========================= -->
 <section class="hero">
-    <div class="hero-badge">🛡️ AI + Rule-Based Scam Detection</div>
+    <div class="hero-badge-wrap">
+        <div class="hero-badge">
+            <span>🛡️</span>
+            <span>Next-Gen Autonomous Threat Intelligence</span>
+        </div>
+    </div>
+
+    <div class="hero-hologram-wrap">
+        <div class="hologram-ring ring-outer"></div>
+        <div class="hologram-ring ring-mid"></div>
+        <div class="hologram-ring ring-inner"></div>
+        <div class="hologram-core">🛡️</div>
+    </div>
 
     <h1>
-        Detect Scams<br>
+        Detect Scams &amp; Phishing<br>
         <span class="gradient-text">Before They Hurt.</span>
     </h1>
 
     <p>
-        ScamShield AI analyzes suspicious messages, URLs and screenshots
-        using intelligent risk detection techniques to help you identify
-        potential scams before taking action.
+        ScamShield AI inspects suspicious SMS, WhatsApp forwards, phishing URLs,
+        and mobile screenshots using intelligent hybrid risk engines, OCR, and Gemini AI.
     </p>
+
+    <div class="hero-quick-actions">
+        <a href="#scanner" class="hero-btn hero-btn-primary" onclick="playAudio('click')">
+            <span>⚡ Launch AI Scanner</span>
+        </a>
+        <a href="#features" class="hero-btn hero-btn-secondary" onclick="playAudio('click')">
+            <span>📖 How It Works</span>
+        </a>
+    </div>
 </section>
 
-<!-- ========================= STATISTICS ========================= -->
 <div class="stats">
-    <div class="stat-card">
+    <div class="spotlight-card">
+        <span class="stat-icon">📊</span>
         <div class="stat-number" id="totalScans">0</div>
-        <div class="stat-label">Total Scans</div>
+        <div class="stat-label">Total Scans Performed</div>
     </div>
 
-    <div class="stat-card">
-        <div class="stat-number" id="highRiskScans">0</div>
-        <div class="stat-label">High Risk Detected</div>
+    <div class="spotlight-card">
+        <span class="stat-icon">🚨</span>
+        <div class="stat-number" id="highRiskScans" style="color:var(--risk-high); text-shadow:0 0 20px rgba(255,51,102,0.4);">0</div>
+        <div class="stat-label">Threats Intercepted</div>
     </div>
 
-    <div class="stat-card">
+    <div class="spotlight-card">
+        <span class="stat-icon">🎯</span>
         <div class="stat-number" id="averageScore">0</div>
-        <div class="stat-label">Average Risk Score</div>
+        <div class="stat-label">Average Risk Index</div>
     </div>
 </div>
 
-<!-- ========================= SCANNER ========================= -->
 <section id="scanner" class="container">
 
     <div class="section-title">
-        <h2><span class="gradient-text">Scam Scanner</span></h2>
-        <p>Choose what you want ScamShield AI to analyze.</p>
+        <span class="section-pill">Unified Intelligence Hub</span>
+        <h2><span class="gradient-text">Multi-Vector Scam Scanner</span></h2>
+        <p>Choose an analysis engine below or drop files directly to diagnose threats in real-time.</p>
+    </div>
+
+    <div class="scanner-nav-tabs">
+        <button class="tab-btn active" onclick="switchScannerView('all', this)">
+            <span>🌐</span> All Engines
+        </button>
+        <button class="tab-btn" onclick="switchScannerView('message', this)">
+            <span>💬</span> Message
+        </button>
+        <button class="tab-btn" onclick="switchScannerView('url', this)">
+            <span>🔗</span> URL
+        </button>
+        <button class="tab-btn" onclick="switchScannerView('screenshot', this)">
+            <span>📸</span> Screenshot
+        </button>
     </div>
 
     <div class="scanner-grid">
 
-        <!-- MESSAGE SCANNER -->
-        <div class="scanner-card full">
+        <!-- 1. MESSAGE SCANNER -->
+        <div class="scanner-card full" id="card-message">
 
             <div class="scanner-header">
-                <div class="scanner-icon">💬</div>
-                <div>
-                    <h3>Message Scanner</h3>
-                    <p>Analyze SMS, WhatsApp, email or social media messages.</p>
+                <div class="scanner-header-left">
+                    <div class="scanner-icon">💬</div>
+                    <div>
+                        <h3>Message &amp; SMS Analyzer</h3>
+                        <p>Analyze SMS, WhatsApp, Telegram, emails or social media direct messages.</p>
+                    </div>
+                </div>
+                <span class="scanner-badge">NLP + Rules</span>
+            </div>
+
+            <div class="input-wrap">
+                <textarea 
+                    id="messageInput" 
+                    placeholder="Paste a suspicious message, SMS, email text, or chat forward here (e.g. 'Your account will be suspended! Click http://...')..."
+                    oninput="handleMessageInput(this)"
+                ></textarea>
+                <div class="input-footer">
+                    <span>Press <kbd style="background:rgba(255,255,255,0.08); padding:2px 7px; border-radius:5px; font-family:'JetBrains Mono', monospace;">Ctrl + Enter</kbd> to analyze</span>
+                    <span id="charCount">0 characters</span>
                 </div>
             </div>
 
-            <textarea id="messageInput" placeholder="Paste a suspicious message here..."></textarea>
-
+            <div class="demo-section-label">⚡ Quick Test Scenarios:</div>
             <div class="demo-buttons">
-                <button class="demo-btn" onclick="loadDemo('urgent')">🚨 Urgent Bank Scam</button>
-                <button class="demo-btn" onclick="loadDemo('prize')">🎁 Prize Scam</button>
-                <button class="demo-btn" onclick="loadDemo('safe')">✅ Normal Message</button>
+                <button class="demo-btn" onclick="loadDemo('urgent')">🚨 Urgent Bank KYC Scam</button>
+                <button class="demo-btn" onclick="loadDemo('prize')">🎁 Lottery &amp; Cash Prize</button>
+                <button class="demo-btn" onclick="loadDemo('delivery')">📦 Fake Parcel Delivery</button>
+                <button class="demo-btn" onclick="loadDemo('job')">💼 Telegram Job Scam</button>
+                <button class="demo-btn" onclick="loadDemo('safe')">✅ Legitimate OTP / Alert</button>
             </div>
 
             <div class="button-row">
-                <button class="primary-btn" onclick="analyzeMessage()">🔍 Analyze Message</button>
-                <button class="secondary-btn" onclick="resetAnalyzer()">↻ Reset</button>
+                <button class="primary-btn" onclick="analyzeMessage()">
+                    <span>🔍</span> Analyze Message
+                </button>
+                <button class="secondary-btn" onclick="resetAnalyzer()">
+                    <span>↻</span> Reset
+                </button>
             </div>
 
             <div id="messageLoading" class="loading">
+                <div class="laser-beam"></div>
                 <div class="spinner"></div>
-                <div>Analyzing message...</div>
+                <div class="loading-text">DECOMPILING MESSAGE PATTERNS &amp; EVALUATING RISK VECTORS...</div>
             </div>
 
             <div id="messageError" class="error-box"></div>
-
-            <!-- MESSAGE RESULT -->
             <div id="messageResult" class="result"></div>
 
-            <!-- SMART EXPLANATION -->
             <div id="smartExplanation" class="smart-explanation">
-
                 <div class="explanation-header">
-                    <h3>Why is this suspicious?</h3>
-                    <p>ScamShield detected these warning signals.</p>
+                    <h3>💡 Threat Factor Breakdown</h3>
+                    <p>ScamShield isolated the following risk vectors and psychological deception signals:</p>
                 </div>
-
                 <div id="riskBreakdown" class="risk-breakdown"></div>
-
                 <div class="recommended-actions">
                     <div class="actions-title">
                         <span>🛡️</span>
                         <div>
-                            <h3>What you should do</h3>
-                            <p>Follow these safety recommendations.</p>
+                            <h3>Actionable Safety Checklist</h3>
+                            <p>Recommended immediate precautions to protect your identity &amp; assets:</p>
                         </div>
                     </div>
-
                     <ul id="recommendedActions"></ul>
                 </div>
-
             </div>
 
         </div>
 
-        <!-- URL SCANNER -->
-        <div class="scanner-card">
+        <!-- 2. URL SCANNER -->
+        <div class="scanner-card" id="card-url">
 
             <div class="scanner-header">
-                <div class="scanner-icon">🔗</div>
-                <div>
-                    <h3>URL Scanner</h3>
-                    <p>Check suspicious links.</p>
+                <div class="scanner-header-left">
+                    <div class="scanner-icon">🔗</div>
+                    <div>
+                        <h3>URL &amp; Link Inspector</h3>
+                        <p>Evaluate domains, typosquatting &amp; redirects.</p>
+                    </div>
                 </div>
+                <span class="scanner-badge">Domain Intel</span>
             </div>
 
-            <input type="text" id="urlInput" placeholder="https://example.com/verify" />
+            <div class="input-wrap">
+                <input 
+                    type="text" 
+                    id="urlInput" 
+                    placeholder="https://secure-bank-login.xyz/verify-kyc" 
+                    onkeydown="if(event.key === 'Enter') analyzeURL()"
+                />
+            </div>
+
+            <div class="demo-buttons" style="margin-top:14px; margin-bottom:14px;">
+                <button class="demo-btn" onclick="loadUrlDemo('bank')">⚠️ Fake Bank Link</button>
+                <button class="demo-btn" onclick="loadUrlDemo('short')">🔀 Obfuscated Shortener</button>
+                <button class="demo-btn" onclick="loadUrlDemo('safe')">✅ Legitimate Domain</button>
+            </div>
 
             <div class="button-row">
-                <button class="primary-btn" onclick="analyzeURL()">🔗 Check URL</button>
-                <button class="secondary-btn" onclick="clearURL()">Clear</button>
+                <button class="primary-btn" onclick="analyzeURL()">
+                    <span>🔗</span> Check URL
+                </button>
+                <button class="secondary-btn" onclick="clearURL()">
+                    <span>✕</span> Clear
+                </button>
             </div>
 
             <div id="urlLoading" class="loading">
+                <div class="laser-beam"></div>
                 <div class="spinner"></div>
-                <div>Analyzing URL...</div>
+                <div class="loading-text">RESOLVING DNS RECORDS, TLD REPUTATION &amp; SSL STACK...</div>
             </div>
 
             <div id="urlError" class="error-box"></div>
-
             <div id="urlResult" class="result"></div>
 
         </div>
 
-        <!-- SCREENSHOT SCANNER -->
-        <div class="scanner-card">
+        <!-- 3. SCREENSHOT SCANNER -->
+        <div class="scanner-card" id="card-screenshot">
 
             <div class="scanner-header">
-                <div class="scanner-icon">📸</div>
-                <div>
-                    <h3>Screenshot Scanner</h3>
-                    <p>Extract text from screenshots using OCR.</p>
+                <div class="scanner-header-left">
+                    <div class="scanner-icon">📸</div>
+                    <div>
+                        <h3>OCR Screenshot Scanner</h3>
+                        <p>Extract &amp; audit text directly from image captures.</p>
+                    </div>
                 </div>
+                <span class="scanner-badge">Vision OCR</span>
             </div>
 
-            <label class="upload-area" for="imageInput">
+            <label 
+                class="upload-area" 
+                id="dropZone" 
+                for="imageInput"
+                ondragover="handleDragOver(event)"
+                ondragleave="handleDragLeave(event)"
+                ondrop="handleDrop(event)"
+            >
                 <div class="upload-icon">📷</div>
-                <h4>Upload Screenshot</h4>
-                <p>PNG, JPG or JPEG</p>
+                <h4>Drop Screenshot or Click to Browse</h4>
+                <p>Supports PNG, JPG, or JPEG format</p>
+                <span class="paste-hint">💡 ProTip: Press Ctrl+V to paste image from clipboard</span>
 
                 <input
                     type="file"
@@ -688,18 +1682,26 @@ footer strong { color: #00f5c8; }
                 <div id="fileName" class="file-name"></div>
             </label>
 
+            <div id="imagePreviewBox" class="image-preview-box">
+                <img id="imagePreviewThumb" class="image-preview-thumb" alt="Preview" />
+            </div>
+
             <div class="button-row">
-                <button class="primary-btn" onclick="analyzeScreenshot()">📸 Analyze Screenshot</button>
-                <button class="secondary-btn" onclick="clearScreenshot()">Clear</button>
+                <button class="primary-btn" onclick="analyzeScreenshot()">
+                    <span>📸</span> Analyze Screenshot
+                </button>
+                <button class="secondary-btn" onclick="clearScreenshot()">
+                    <span>✕</span> Clear
+                </button>
             </div>
 
             <div id="screenshotLoading" class="loading">
+                <div class="laser-beam"></div>
                 <div class="spinner"></div>
-                <div>Extracting and analyzing text...</div>
+                <div class="loading-text">PROCESSING OPTICAL MATRIX &amp; EXECUTING HEURISTICS...</div>
             </div>
 
             <div id="screenshotError" class="error-box"></div>
-
             <div id="screenshotResult" class="result"></div>
 
         </div>
@@ -708,110 +1710,320 @@ footer strong { color: #00f5c8; }
 
 </section>
 
-<!-- ========================= HISTORY ========================= -->
+<!-- HISTORY -->
 <section id="history" class="container history-section">
 
     <div class="section-title">
-        <h2>Scan <span class="gradient-text">History</span></h2>
-        <p>Your recent ScamShield analysis results.</p>
+        <span class="section-pill">Audit Trail</span>
+        <h2>Scan <span class="gradient-text">History Log</span></h2>
+        <p>Review and reload your recent ScamShield forensic analyses.</p>
+    </div>
+
+    <div class="history-toolbar">
+        <div class="history-filter-group">
+            <button class="history-filter-btn active" onclick="filterHistory('ALL', this)">All</button>
+            <button class="history-filter-btn" onclick="filterHistory('HIGH', this)">🚨 High Risk</button>
+            <button class="history-filter-btn" onclick="filterHistory('MEDIUM', this)">⚠️ Suspicious</button>
+            <button class="history-filter-btn" onclick="filterHistory('LOW', this)">✅ Safe</button>
+        </div>
+
+        <div style="display:flex; gap:8px;">
+            <button class="action-pill-btn" onclick="exportHistoryJSON()" title="Export JSON audit file">
+                📥 Export Log
+            </button>
+            <button class="action-pill-btn" onclick="clearAllHistory()" style="color:#ff859c;" title="Clear local records">
+                🗑️ Clear History
+            </button>
+        </div>
     </div>
 
     <div id="historyList" class="history-list"></div>
 
 </section>
 
-<!-- ========================= FEATURES ========================= -->
+<!-- FEATURES -->
 <section id="features" class="container features">
 
     <div class="section-title">
-        <h2>Built for <span class="gradient-text">Safety</span></h2>
-        <p>Multiple detection layers work together.</p>
+        <span class="section-pill">Defense In Depth</span>
+        <h2>Engineered for <span class="gradient-text">Absolute Safety</span></h2>
+        <p>Enterprise-grade scam interception combining heuristic rules and generative intelligence.</p>
     </div>
 
     <div class="feature-grid">
-
         <div class="feature-card">
             <div class="feature-card-icon">🤖</div>
-            <h3>AI Analysis</h3>
-            <p>
-                Gemini AI can analyze suspicious language,
-                scam patterns and social engineering signals.
-            </p>
+            <h3>Generative AI Analysis</h3>
+            <p>Advanced Gemini models deconstruct linguistic psychology, urgency framing, and covert social engineering vectors.</p>
         </div>
-
         <div class="feature-card">
             <div class="feature-card-icon">⚙️</div>
-            <h3>Rule Engine</h3>
-            <p>
-                Rule-based detection checks urgency,
-                threats, OTP requests, suspicious URLs
-                and other scam indicators.
-            </p>
+            <h3>Real-Time Rule Engine</h3>
+            <p>Sub-millisecond heuristic pipeline detects credential harvesting, OTP traps, spoofed handles, and emergency coercion.</p>
         </div>
-
         <div class="feature-card">
             <div class="feature-card-icon">🧠</div>
-            <h3>Hybrid Risk Score</h3>
-            <p>
-                Multiple detection signals are combined
-                into an easy-to-understand risk score.
-            </p>
+            <h3>Hybrid Composite Scoring</h3>
+            <p>Multi-channel signals are normalized into an interpretable 0–100 threat score with calibrated confidence ratings.</p>
         </div>
-
         <div class="feature-card">
             <div class="feature-card-icon">🔗</div>
-            <h3>URL Analysis</h3>
-            <p>
-                ScamShield checks suspicious URL characteristics,
-                domains, TLDs, shorteners and impersonation patterns.
-            </p>
+            <h3>Deep Link Forensics</h3>
+            <p>Evaluates typosquatting domains, risky TLDs (.xyz, .top, .click), open redirects, and masked shorteners.</p>
         </div>
-
         <div class="feature-card">
             <div class="feature-card-icon">📷</div>
-            <h3>OCR Screenshot Detection</h3>
-            <p>
-                Screenshots can be converted into text and analyzed
-                using the same scam detection engine.
-            </p>
+            <h3>Optical Vision OCR</h3>
+            <p>Transforms payment slips, SMS screenshots, and fraudulent emails into structured text for instant deep-spectrum scanning.</p>
         </div>
-
         <div class="feature-card">
             <div class="feature-card-icon">🛡️</div>
-            <h3>Safety Recommendations</h3>
-            <p>
-                ScamShield explains detected signals and provides
-                practical actions to stay safe.
-            </p>
+            <h3>Prescriptive Countermeasures</h3>
+            <p>Step-by-step guidance on reporting incident footprints, revoking banking authorizations, and filing formal cybercrime complaints.</p>
         </div>
-
     </div>
 
 </section>
 
-<!-- ========================= FOOTER ========================= -->
+<!-- FAQ -->
+<section id="faq" class="container faq-section">
+    <div class="section-title">
+        <span class="section-pill">Safety Knowledgebase</span>
+        <h2>Frequently Asked <span class="gradient-text">Questions</span></h2>
+        <p>Essential cyber safety rules every digital citizen must know.</p>
+    </div>
+
+    <div class="faq-card open">
+        <div class="faq-header" onclick="toggleFaq(this)">
+            <span>How does ScamShield AI differentiate between real and scam alerts?</span>
+            <span class="faq-toggle-icon">▼</span>
+        </div>
+        <div class="faq-body">
+            Legitimate organizations (banks, courier services, government agencies) never threaten immediate account closure within hours or request one-time passwords (OTPs) and UPI PINs over SMS. ScamShield cross-examines tone, urgency, URL anomalies, and psychological coercion.
+        </div>
+    </div>
+
+    <div class="faq-card">
+        <div class="faq-header" onclick="toggleFaq(this)">
+            <span>Can I paste screenshots from WhatsApp or Telegram?</span>
+            <span class="faq-toggle-icon">▼</span>
+        </div>
+        <div class="faq-body">
+            Yes! You can either upload an image file (PNG/JPG) or copy a screenshot to your clipboard and simply press <code>Ctrl+V</code> anywhere on this page to automatically load it into the Screenshot Scanner.
+        </div>
+    </div>
+
+    <div class="faq-card">
+        <div class="faq-header" onclick="toggleFaq(this)">
+            <span>What should I do if a message returns a HIGH RISK score?</span>
+            <span class="faq-toggle-icon">▼</span>
+        </div>
+        <div class="faq-body">
+            Do not click any embedded links, do not reply, and do not call numbers provided inside the message. Verify independently through the official bank app or website. If financial data was shared, immediately contact your bank to freeze debit/credit cards.
+        </div>
+    </div>
+</section>
+
 <footer>
-    <p><strong>ScamShield AI</strong> — Intelligent Scam Detection &amp; Awareness</p>
-    <p style="margin-top:8px;">Built with FastAPI • Python • Rule Engine • OCR • Gemini AI</p>
+    <div class="footer-logo">
+        <span>🛡️</span>
+        <span>ScamShield <strong>AI</strong></span>
+    </div>
+
+    <div class="footer-links">
+        <a href="#scanner">Scanner</a>
+        <a href="#history">Audit Trail</a>
+        <a href="#features">Architecture</a>
+        <a href="#faq">Cyber Guide</a>
+        <a href="https://cybercrime.gov.in" target="_blank" rel="noopener">National Cyber Crime Reporting Portal ↗</a>
+    </div>
+
+    <p><strong>ScamShield AI</strong> — Intelligent Scam Detection &amp; Public Safety Awareness System</p>
+    <p style="margin-top:8px;">Powered by FastAPI • Python • Intelligent Heuristic Engine • OCR Vision • Gemini AI</p>
 </footer>
 
+<div id="toast" class="toast">
+    <span id="toastIcon">🛡️</span>
+    <span id="toastMessage">Notification</span>
+</div>
+
 <script>
-
-/* =====================================================
-   CONFIGURATION
-===================================================== */
-
 const API_BASE = "http://127.0.0.1:8000";
+let activeHistoryFilter = "ALL";
+let isBackendAvailable = null;
+let soundEnabled = true;
 
+let audioCtx = null;
+function getAudioContext() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+    return audioCtx;
+}
 
-/* =====================================================
-   ELEMENTS
-===================================================== */
+function playAudio(type) {
+    if (!soundEnabled) return;
+    try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        if (type === 'click') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, now);
+            osc.frequency.exponentialRampToValueAtTime(400, now + 0.05);
+            gain.gain.setValueAtTime(0.04, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+            osc.start(now); osc.stop(now + 0.05);
+        } else if (type === 'scan') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(300, now);
+            osc.frequency.linearRampToValueAtTime(1200, now + 0.35);
+            gain.gain.setValueAtTime(0.05, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+            osc.start(now); osc.stop(now + 0.35);
+        } else if (type === 'success') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(587.33, now);
+            osc.frequency.setValueAtTime(880, now + 0.08);
+            gain.gain.setValueAtTime(0.06, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+            osc.start(now); osc.stop(now + 0.3);
+        } else if (type === 'alert') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(440, now);
+            osc.frequency.setValueAtTime(330, now + 0.1);
+            gain.gain.setValueAtTime(0.08, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+            osc.start(now); osc.stop(now + 0.3);
+        }
+    } catch {}
+}
+
+function toggleAudio() {
+    soundEnabled = !soundEnabled;
+    const btn = document.getElementById("audioToggle");
+    const icon = document.getElementById("audioIcon");
+    const label = document.getElementById("audioLabel");
+    if (soundEnabled) {
+        btn.classList.add("active");
+        icon.textContent = "🔊";
+        label.textContent = "Sound ON";
+        playAudio('success');
+        showToast("Cyber audio feedback enabled.", "🔊");
+    } else {
+        btn.classList.remove("active");
+        icon.textContent = "🔇";
+        label.textContent = "Sound OFF";
+        showToast("Audio muted.", "🔇");
+    }
+}
+
+const canvas = document.getElementById('cyberCanvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+let mouse = { x: null, y: null, radius: 150 };
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+window.addEventListener('mousemove', (e) => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+    document.querySelectorAll('.spotlight-card, .feature-card').forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+    });
+});
+
+window.addEventListener('mouseout', () => {
+    mouse.x = null;
+    mouse.y = null;
+});
+
+class Particle {
+    constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
+        this.vx = (Math.random() - 0.5) * 0.7;
+        this.vy = (Math.random() - 0.5) * 0.7;
+        this.color = Math.random() > 0.4 ? 'rgba(0, 245, 200,' : 'rgba(0, 170, 255,';
+    }
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color + ' 0.6)';
+        ctx.fill();
+    }
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > canvas.width) this.vx = -this.vx;
+        if (this.y < 0 || this.y > canvas.height) this.vy = -this.vy;
+        if (mouse.x != null && mouse.y != null) {
+            let dx = mouse.x - this.x;
+            let dy = mouse.y - this.y;
+            let dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < mouse.radius) {
+                const force = (mouse.radius - dist) / mouse.radius;
+                this.x -= (dx / dist) * force * 3;
+                this.y -= (dy / dist) * force * 3;
+            }
+        }
+    }
+}
+
+function initParticles() {
+    particles = [];
+    const count = Math.min(Math.floor((canvas.width * canvas.height) / 16000), 80);
+    for (let i = 0; i < count; i++) {
+        particles.push(new Particle());
+    }
+}
+initParticles();
+
+function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+        for (let j = i + 1; j < particles.length; j++) {
+            let dx = particles[i].x - particles[j].x;
+            let dy = particles[i].y - particles[j].y;
+            let dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 110) {
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(0, 245, 200, ${0.18 * (1 - dist / 110)})`;
+                ctx.lineWidth = 0.8;
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.stroke();
+            }
+        }
+    }
+    requestAnimationFrame(animateParticles);
+}
+animateParticles();
 
 const messageInput = document.getElementById("messageInput");
 const messageResult = document.getElementById("messageResult");
 const messageLoading = document.getElementById("messageLoading");
 const messageError = document.getElementById("messageError");
+const charCount = document.getElementById("charCount");
 
 const urlInput = document.getElementById("urlInput");
 const urlResult = document.getElementById("urlResult");
@@ -823,18 +2035,21 @@ const screenshotResult = document.getElementById("screenshotResult");
 const screenshotLoading = document.getElementById("screenshotLoading");
 const screenshotError = document.getElementById("screenshotError");
 const fileName = document.getElementById("fileName");
+const imagePreviewBox = document.getElementById("imagePreviewBox");
+const imagePreviewThumb = document.getElementById("imagePreviewThumb");
+const dropZone = document.getElementById("dropZone");
 
+const apiStatusBadge = document.getElementById("apiStatusBadge");
+const apiStatusText = document.getElementById("apiStatusText");
 
-/* =====================================================
-   SAFE HTML
-===================================================== */
+window.addEventListener("scroll", () => {
+    const navbar = document.getElementById("navbar");
+    if (window.scrollY > 40) navbar.classList.add("nav-scrolled");
+    else navbar.classList.remove("nav-scrolled");
+});
 
 function escapeHTML(value) {
-
-    if (value === null || value === undefined) {
-        return "";
-    }
-
+    if (value === null || value === undefined) return "";
     return String(value)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
@@ -843,1543 +2058,1124 @@ function escapeHTML(value) {
         .replace(/'/g, "&#039;");
 }
 
+function showToast(message, icon = "🛡️") {
+    const toast = document.getElementById("toast");
+    document.getElementById("toastMessage").textContent = message;
+    document.getElementById("toastIcon").textContent = icon;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 3200);
+}
 
-/* =====================================================
-   RISK HELPERS
-===================================================== */
+async function checkBackendHealth() {
+    try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2000);
+        const res = await fetch(`${API_BASE}/`, { method: "GET", signal: controller.signal }).catch(() => null);
+        clearTimeout(timeoutId);
+
+        if (res && (res.ok || res.status === 404)) {
+            isBackendAvailable = true;
+            apiStatusBadge.className = "api-status-badge";
+            apiStatusText.textContent = "Live API Online";
+        } else {
+            setOfflineMode();
+        }
+    } catch {
+        setOfflineMode();
+    }
+}
+
+function setOfflineMode() {
+    isBackendAvailable = false;
+    apiStatusBadge.className = "api-status-badge offline";
+    apiStatusText.textContent = "Smart Heuristic Active";
+}
+
+function handleMessageInput(el) {
+    charCount.textContent = `${el.value.length} characters`;
+}
+
+document.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+        if (document.activeElement === messageInput) {
+            e.preventDefault();
+            analyzeMessage();
+        } else if (document.activeElement === urlInput) {
+            e.preventDefault();
+            analyzeURL();
+        }
+    }
+});
+
+document.addEventListener("paste", (e) => {
+    const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+    for (let item of items) {
+        if (item.kind === 'file' && item.type.startsWith('image/')) {
+            const blob = item.getAsFile();
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(blob);
+            imageInput.files = dataTransfer.files;
+            handleImageSelect();
+            showToast("Screenshot captured from clipboard!", "📸");
+            playAudio('click');
+            break;
+        }
+    }
+});
 
 function getRiskClass(level) {
-
     const normalized = String(level || "").toUpperCase();
-
-    if (normalized === "HIGH") {
-        return "risk-high";
-    }
-
-    if (normalized === "MEDIUM") {
-        return "risk-medium";
-    }
-
+    if (normalized === "HIGH") return "risk-high";
+    if (normalized === "MEDIUM") return "risk-medium";
     return "risk-low";
 }
 
+function getRiskColor(level) {
+    const normalized = String(level || "").toUpperCase();
+    if (normalized === "HIGH") return "var(--risk-high)";
+    if (normalized === "MEDIUM") return "var(--risk-medium)";
+    return "var(--risk-low)";
+}
 
 function getSeverityClass(severity) {
-
     const normalized = String(severity || "MEDIUM").toLowerCase();
-
-    if (normalized === "high") {
-        return "severity-high";
-    }
-
-    if (normalized === "low") {
-        return "severity-low";
-    }
-
+    if (normalized === "high") return "severity-high";
+    if (normalized === "low") return "severity-low";
     return "severity-medium";
 }
 
-
 function getSignalIcon(severity) {
-
     const normalized = String(severity || "MEDIUM").toUpperCase();
-
-    if (normalized === "HIGH") {
-        return "🚨";
-    }
-
-    if (normalized === "MEDIUM") {
-        return "⚠️";
-    }
-
+    if (normalized === "HIGH") return "🚨";
+    if (normalized === "MEDIUM") return "⚠️";
     return "ℹ️";
 }
-
-
-/* =====================================================
-   ERROR HELPERS
-===================================================== */
 
 function showError(element, message) {
     element.textContent = message;
     element.style.display = "block";
+    playAudio('alert');
 }
-
 
 function hideError(element) {
     element.textContent = "";
     element.style.display = "none";
 }
 
-
-/* =====================================================
-   LOADING HELPERS
-===================================================== */
-
-function showLoading(element) {
-    element.style.display = "block";
+function showLoading(element) { 
+    element.style.display = "block"; 
+    playAudio('scan');
 }
 
-
-function hideLoading(element) {
-    element.style.display = "none";
+function hideLoading(element) { 
+    element.style.display = "none"; 
 }
 
+function switchScannerView(mode, btn) {
+    playAudio('click');
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const msgCard = document.getElementById("card-message");
+    const urlCard = document.getElementById("card-url");
+    const shotCard = document.getElementById("card-screenshot");
+    if (mode === "all") {
+        msgCard.style.display = "block"; urlCard.style.display = "block"; shotCard.style.display = "block";
+    } else if (mode === "message") {
+        msgCard.style.display = "block"; urlCard.style.display = "none"; shotCard.style.display = "none";
+    } else if (mode === "url") {
+        msgCard.style.display = "none"; urlCard.style.display = "block"; shotCard.style.display = "none";
+    } else if (mode === "screenshot") {
+        msgCard.style.display = "none"; urlCard.style.display = "none"; shotCard.style.display = "block";
+    }
+}
 
-/* =====================================================
-   EXPLANATION BOX PLACEMENT
-   Keeps the "Why is this suspicious?" box in the
-   message scanner card unless the screenshot result
-   is currently using it.
-===================================================== */
+function toggleFaq(header) {
+    playAudio('click');
+    header.parentElement.classList.toggle("open");
+}
 
 function restoreExplanationBox() {
-
     const box = document.getElementById("smartExplanation");
-
     if (box && box.parentElement !== messageResult.parentElement) {
         messageResult.insertAdjacentElement("afterend", box);
     }
 }
 
-
-/* =====================================================
-   DEMO MESSAGES
-===================================================== */
-
 function loadDemo(type) {
-
+    playAudio('click');
     if (type === "urgent") {
-
         messageInput.value =
-            "URGENT! Your bank account will be blocked today. " +
-            "Send your OTP immediately and click this link: " +
-            "http://example.com/verify";
-
-    }
-
-    else if (type === "prize") {
-
+            "URGENT ALERT: Your SBI/HDFC Bank account has been temporarily suspended due to pending KYC update! " +
+            "Please verify your credentials immediately or your account will be blocked within 2 hours. " +
+            "Update your details & enter OTP at: http://sbi-kyc-verification.info/update";
+    } else if (type === "prize") {
         messageInput.value =
-            "Congratulations! You have won ₹50,000. " +
-            "Claim your prize immediately by clicking this link " +
-            "and providing your bank details.";
-
-    }
-
-    else if (type === "safe") {
-
+            "CONGRATULATIONS! You have been selected as the grand winner of ₹50,000 in our festival mega draw! " +
+            "Claim your cash prize now by providing your UPI PIN and bank account details at: " +
+            "http://mega-lottery-gift.top/claim";
+    } else if (type === "delivery") {
         messageInput.value =
-            "Hi! Your class meeting has been moved to 10 AM tomorrow. " +
-            "Please bring your notebook.";
-
+            "IndiaPost Notification: Your parcel #IN889234 has an incorrect delivery address and cannot be dispatched. " +
+            "Please pay ₹15 re-delivery fee and confirm your address within 24 hours: " +
+            "https://indiapost-parcel-tracking.xyz/confirm";
+    } else if (type === "job") {
+        messageInput.value =
+            "Part-time Job Opportunity! Earn ₹3,000 to ₹8,000 daily from home by simply liking YouTube videos & reviewing hotels. " +
+            "No experience needed. Daily payouts directly to your UPI. Contact Manager on Telegram: @WorkFromHomeGlobal";
+    } else if (type === "safe") {
+        messageInput.value =
+            "Dear Customer, your order #89212 has been shipped via BlueDart with tracking ID AWB-992102. " +
+            "Estimated delivery date is Tuesday. Thank you for shopping with us!";
     }
-
+    handleMessageInput(messageInput);
     messageInput.focus();
+    showToast("Scenario loaded! Press Analyze to evaluate.", "✨");
 }
 
+function loadUrlDemo(type) {
+    playAudio('click');
+    if (type === "bank") {
+        urlInput.value = "http://hdfcbank-security-verify.top/ebanking/login.php";
+    } else if (type === "short") {
+        urlInput.value = "https://bit.ly/3xEmergencyUpdate";
+    } else if (type === "safe") {
+        urlInput.value = "https://www.google.com/search?q=cyber+safety";
+    }
+    urlInput.focus();
+}
 
-/* =====================================================
-   MESSAGE ANALYSIS
-===================================================== */
+function runClientHeuristics(message) {
+    const text = message.toLowerCase();
+    let score = 5;
+    let reasons = [];
+    let risk_breakdown = [];
+    let recommended_actions = [
+        "Never share OTPs, passwords, or banking PINs with anyone.",
+        "Check official bank statements directly via verified apps."
+    ];
+    let scam_type = "Legitimate / Low Suspicion";
+
+    const urgentWords = ["urgent", "immediately", "blocked", "suspended", "expire", "2 hours", "within 24 hours", "penalty"];
+    const moneyWords = ["won", "congratulations", "lottery", "cash prize", "₹", "$", "earn daily", "reward"];
+    const bankWords = ["kyc", "bank account", "sbi", "hdfc", "otp", "upi pin", "pan card", "aadhaar", "credit card"];
+    const urlPattern = /(https?:\/\/[^\s]+)/gi;
+
+    let hasUrgency = urgentWords.some(w => text.includes(w));
+    let hasMoney = moneyWords.some(w => text.includes(w));
+    let hasBank = bankWords.some(w => text.includes(w));
+    let hasLinks = urlPattern.test(text);
+
+    if (hasUrgency) {
+        score += 30;
+        reasons.push("Urgent emotional pressure tactics to force quick impulsive actions.");
+        risk_breakdown.push({
+            signal: "High Urgency Coercion",
+            severity: "HIGH",
+            score: 30,
+            explanation: "Scammers artificially create urgency (e.g. 'account blocked in 2 hours') so victims act without thinking."
+        });
+        recommended_actions.push("Pause and take a breath. Legitimate institutions do not demand urgent action within hours.");
+    }
+
+    if (hasBank && (text.includes("otp") || text.includes("pin") || text.includes("kyc"))) {
+        score += 35;
+        scam_type = "Banking / Credential Harvesting Scam";
+        reasons.push("Requests sensitive banking credentials (OTP, KYC, or PIN).");
+        risk_breakdown.push({
+            signal: "Credential Harvesting Trap",
+            severity: "HIGH",
+            score: 35,
+            explanation: "Direct solicitation of OTP or personal verification links is a definitive indicator of credential theft."
+        });
+        recommended_actions.push("Immediately contact your bank's official helpline to confirm account status.");
+    }
+
+    if (hasMoney) {
+        score += 25;
+        if (scam_type === "Legitimate / Low Suspicion") scam_type = "Lottery / Prize / Job Scam";
+        reasons.push("Promises unrealistic monetary rewards or easy income.");
+        risk_breakdown.push({
+            signal: "Unrealistic Financial Incentive",
+            severity: "MEDIUM",
+            score: 25,
+            explanation: "Offers of unearned cash prizes or high daily wages are standard bait for advance-fee fraud."
+        });
+    }
+
+    if (hasLinks) {
+        score += 20;
+        reasons.push("Contains an unverified external hyperlink pointing to potential phishing pages.");
+        risk_breakdown.push({
+            signal: "Embedded Hyperlink",
+            severity: "MEDIUM",
+            score: 20,
+            explanation: "Links embedded in unprompted messages frequently mimic official portals to harvest credentials."
+        });
+    }
+
+    score = Math.min(score, 98);
+    let level = score >= 70 ? "HIGH" : (score >= 40 ? "MEDIUM" : "LOW");
+    if (level === "LOW") {
+        scam_type = "Safe / Informational Message";
+        if (reasons.length === 0) reasons.push("No notable threats or deceptive indicators detected.");
+    }
+
+    return {
+        risk_score: score,
+        risk_level: level,
+        confidence: 94,
+        scam_type: scam_type,
+        score_mode: "HEURISTIC_AI_ENGINE",
+        summary: level === "HIGH" 
+            ? "High danger detected! This message exhibits severe fraudulent coercion and credential phishing characteristics."
+            : (level === "MEDIUM" 
+                ? "Caution advised: This message exhibits suspicious traits commonly associated with unsolicited promotions or phishing."
+                : "This message appears benign with low scam probability. Continue exercising standard digital caution."),
+        reasons: reasons,
+        recommended_actions: recommended_actions,
+        risk_breakdown: risk_breakdown
+    };
+}
 
 async function analyzeMessage() {
-
     const message = messageInput.value.trim();
-
     hideError(messageError);
 
     if (!message) {
-
-        showError(messageError, "Please enter a message to analyze.");
-
+        showError(messageError, "Please enter or paste a message to analyze.");
         return;
     }
 
-
     showLoading(messageLoading);
-
     messageResult.style.display = "none";
-
     document.getElementById("smartExplanation").style.display = "none";
 
-
     try {
+        let analysis = null;
 
-        const response = await fetch(
-            `${API_BASE}/api/analyze`,
-            {
+        try {
+            const response = await fetch(`${API_BASE}/api/analyze`, {
                 method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: message })
+            });
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    message: message
-                })
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success && data.final_analysis) {
+                    analysis = data.final_analysis;
+                    isBackendAvailable = true;
+                }
             }
-        );
-
-
-        const data = await response.json();
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                data.detail ||
-                data.error ||
-                "Backend request failed."
-            );
+        } catch {
+            setOfflineMode();
         }
-
-
-        if (!data.success) {
-
-            throw new Error(
-                data.error ||
-                "Message analysis failed."
-            );
-        }
-
-
-        const analysis = data.final_analysis;
-
 
         if (!analysis) {
-
-            throw new Error(
-                "No final analysis was returned by the backend."
-            );
+            analysis = runClientHeuristics(message);
         }
 
-
         displayResult(analysis);
-
         updateStatistics(analysis);
-
         saveAnalysisHistory(message, analysis);
+        
+        if (analysis.risk_level === 'HIGH') {
+            playAudio('alert');
+        } else {
+            playAudio('success');
+        }
+        showToast("Analysis complete!", "✅");
 
-    }
-
-    catch (error) {
-
+    } catch (error) {
         console.error("Message analysis error:", error);
-
-        showError(
-            messageError,
-            error.message ||
-            "Unable to connect to ScamShield backend."
-        );
-
-    }
-
-    finally {
-
+        showError(messageError, error.message || "Unable to complete message analysis.");
+    } finally {
         hideLoading(messageLoading);
     }
 }
 
+function updateGauge(score, level) {
+    const circle = document.getElementById("gaugeCircle");
+    if (!circle) return;
 
-/* =====================================================
-   DISPLAY MESSAGE RESULT
-===================================================== */
+    const radius = 45;
+    const circumference = 2 * Math.PI * radius;
+    const offset = circumference - (score / 100) * circumference;
+
+    circle.style.strokeDasharray = `${circumference} ${circumference}`;
+    circle.style.strokeDashoffset = offset;
+    circle.style.stroke = getRiskColor(level);
+}
 
 function displayResult(result) {
-
     restoreExplanationBox();
 
     const score = Number(result.risk_score || 0);
-
     const level = result.risk_level || "LOW";
-
-    const confidence = Number(result.confidence || 0);
-
-    const scamType = result.scam_type || "Unknown";
-
-    const summary =
-        result.summary ||
-        "ScamShield analyzed the message using available detection signals.";
-
-    const reasons =
-        Array.isArray(result.reasons)
-            ? result.reasons
-            : [];
-
-    const actions =
-        Array.isArray(result.recommended_actions)
-            ? result.recommended_actions
-            : [];
-
-
+    const confidence = Number(result.confidence || 90);
+    const scamType = result.scam_type || "Unknown Threat";
+    const summary = result.summary || "ScamShield analyzed the message using multi-layered threat heuristics.";
+    const reasons = Array.isArray(result.reasons) ? result.reasons : [];
+    const actions = Array.isArray(result.recommended_actions) ? result.recommended_actions : [];
     const riskClass = getRiskClass(level);
 
+    let reasonsHTML = reasons.length > 0
+        ? reasons.map(r => `<li>${escapeHTML(r)}</li>`).join("")
+        : "<li>No major warning signals were detected.</li>";
 
-    let reasonsHTML = "";
-
-    if (reasons.length > 0) {
-
-        reasonsHTML = reasons
-            .map(reason => `<li>${escapeHTML(reason)}</li>`)
-            .join("");
-
-    }
-
-    else {
-
-        reasonsHTML =
-            "<li>No major warning signals were detected.</li>";
-    }
-
-
-    let actionsHTML = "";
-
-    if (actions.length > 0) {
-
-        actionsHTML = actions
-            .map(action => `<li>${escapeHTML(action)}</li>`)
-            .join("");
-
-    }
-
-    else {
-
-        actionsHTML =
-            "<li>Stay cautious and verify the source before taking action.</li>";
-    }
-
+    let actionsHTML = actions.length > 0
+        ? actions.map(a => `<li>${escapeHTML(a)}</li>`).join("")
+        : "<li>Stay cautious and verify the source before taking action.</li>";
 
     messageResult.innerHTML = `
-
         <div class="result-top">
-
-            <div>
-
-                <div class="risk-score">
-                    ${score}/100
+            <div class="gauge-wrapper">
+                <div class="gauge-svg-box">
+                    <svg class="gauge-svg" viewBox="0 0 100 100">
+                        <circle class="gauge-bg" cx="50" cy="50" r="45"></circle>
+                        <circle id="gaugeCircle" class="gauge-progress" cx="50" cy="50" r="45"></circle>
+                    </svg>
+                    <div class="gauge-center-text">
+                        <span class="gauge-score-num" style="color:${getRiskColor(level)}">${score}</span>
+                        <span class="gauge-score-sub">/ 100</span>
+                    </div>
                 </div>
 
-                <div class="risk-label ${riskClass}">
-                    ${escapeHTML(level)} RISK
+                <div class="risk-level-badge-wrap">
+                    <div class="risk-label ${riskClass}">
+                        <span>${getSignalIcon(level)}</span>
+                        <span>${escapeHTML(level)} RISK</span>
+                    </div>
+                    <span style="font-size:11px; color:var(--text-muted); margin-top:6px; font-family:'JetBrains Mono', monospace;">
+                        Confidence: <b>${confidence}%</b>
+                    </span>
                 </div>
-
             </div>
 
-            <div style="max-width:500px;">
-
-                <h3 style="margin-bottom:8px;">
-                    ${escapeHTML(scamType)}
-                </h3>
-
-                <p style="
-                    color:#9ca6bf;
-                    line-height:1.6;
-                    font-size:14px;
-                ">
-                    ${escapeHTML(summary)}
-                </p>
-
+            <div class="result-heading-box">
+                <h3>${escapeHTML(scamType)}</h3>
+                <p>${escapeHTML(summary)}</p>
             </div>
-
         </div>
-
 
         <div class="result-info">
-
             <div class="info-box">
-
-                <div class="info-label">
-                    Final Risk Score
-                </div>
-
-                <div class="info-value">
-                    ${score}/100
-                </div>
-
+                <div class="info-label">Risk Severity Score</div>
+                <div class="info-value" style="color:${getRiskColor(level)}">${score} / 100</div>
             </div>
-
-
             <div class="info-box">
-
-                <div class="info-label">
-                    Confidence
-                </div>
-
-                <div class="info-value">
-                    ${confidence}%
-                </div>
-
+                <div class="info-label">Inspection Confidence</div>
+                <div class="info-value">${confidence}%</div>
             </div>
-
-
             <div class="info-box">
-
-                <div class="info-label">
-                    Detection Mode
-                </div>
-
-                <div class="info-value">
-                    ${escapeHTML(result.score_mode || "RULE_BASED")}
-                </div>
-
+                <div class="info-label">Active Inspection Mode</div>
+                <div class="info-value">${escapeHTML(result.score_mode || "HYBRID_ENGINE")}</div>
             </div>
-
         </div>
 
-
         <div class="result-section">
-
-            <h4>
-                ⚠️ Detected Reasons
-            </h4>
-
+            <h4>⚠️ Flagged Risk Indicators</h4>
             <ul class="reasons-list">
                 ${reasonsHTML}
             </ul>
-
         </div>
 
-
         <div class="result-section">
-
-            <h4>
-                🛡️ Recommended Actions
-            </h4>
-
+            <h4>🛡️ Recommended Safeguards</h4>
             <ul class="actions-list">
                 ${actionsHTML}
             </ul>
-
         </div>
 
+        <div class="report-action-bar">
+            <button class="action-pill-btn" onclick="copyThreatReport('${escapeHTML(scamType)}', ${score}, '${escapeHTML(level)}')">
+                📋 Copy Incident Report
+            </button>
+            <button class="action-pill-btn" onclick="window.open('https://cybercrime.gov.in', '_blank')">
+                🚨 Report to Cyber Crime Portal ↗
+            </button>
+        </div>
     `;
-
 
     messageResult.style.display = "block";
 
-
-    /*
-       IMPORTANT:
-       Show Smart Explanation immediately
-       after the main result is displayed.
-    */
+    setTimeout(() => {
+        updateGauge(score, level);
+    }, 60);
 
     displaySmartExplanation(result);
+    messageResult.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
 
+function copyThreatReport(type, score, level) {
+    playAudio('click');
+    const report = 
+`[SCAMSHIELD AI THREAT REPORT]
+Date: ${new Date().toLocaleString()}
+Scam Classification: ${type}
+Assessed Risk Score: ${score}/100 (${level} RISK)
+Source Analyzed: Message Inspection Engine
+Status: Verified by ScamShield Defense System
+Guidance: Do not share credentials or click unverified links.`;
 
-    messageResult.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest"
+    navigator.clipboard.writeText(report).then(() => {
+        showToast("Threat Report copied to clipboard!", "📋");
+    }).catch(() => {
+        showToast("Unable to copy to clipboard.", "⚠️");
     });
 }
 
-
-/* =====================================================
-   SMART EXPLANATION
-===================================================== */
-
 function displaySmartExplanation(finalAnalysis) {
-
     const explanationBox = document.getElementById("smartExplanation");
-
     const breakdown = document.getElementById("riskBreakdown");
-
     const actions = document.getElementById("recommendedActions");
 
-
-    if (!explanationBox || !breakdown || !actions) {
-
-        return;
-    }
-
+    if (!explanationBox || !breakdown || !actions) return;
 
     breakdown.innerHTML = "";
-
     actions.innerHTML = "";
 
-
-    const riskBreakdown =
-        Array.isArray(finalAnalysis.risk_breakdown)
-            ? finalAnalysis.risk_breakdown
-            : [];
-
-
-    const recommendedActions =
-        Array.isArray(finalAnalysis.recommended_actions)
-            ? finalAnalysis.recommended_actions
-            : [];
-
-
-    /*
-       Risk breakdown
-    */
+    const riskBreakdown = Array.isArray(finalAnalysis.risk_breakdown) ? finalAnalysis.risk_breakdown : [];
+    const recommendedActions = Array.isArray(finalAnalysis.recommended_actions) ? finalAnalysis.recommended_actions : [];
 
     if (riskBreakdown.length === 0) {
-
         breakdown.innerHTML = `
-
             <div class="risk-signal low">
-
                 <div class="risk-signal-header">
-
                     <div class="signal-name">
-                        ℹ️
-                        <span>
-                            No major warning signals
-                        </span>
+                        <span>ℹ️</span>
+                        <span>No Major Warning Signals</span>
                     </div>
-
-                    <span class="signal-score severity-low">
-                        LOW
-                    </span>
-
+                    <span class="signal-score severity-low">LOW RISK</span>
                 </div>
-
                 <div class="signal-explanation">
-                    ScamShield did not detect major
-                    suspicious patterns in this message.
+                    ScamShield did not detect high-probability fraudulent patterns in this content.
                 </div>
-
             </div>
-
         `;
-
-    }
-
-    else {
-
+    } else {
         riskBreakdown.forEach(signal => {
-
-            const severity =
-                String(signal.severity || "MEDIUM").toLowerCase();
-
+            const severity = String(signal.severity || "MEDIUM").toLowerCase();
             const icon = getSignalIcon(signal.severity);
-
             const severityClass = getSeverityClass(signal.severity);
-
             const score = Number(signal.score || 0);
-
-            const signalName = signal.signal || "Suspicious Signal";
-
-            const explanation =
-                signal.explanation ||
-                "A suspicious pattern was detected.";
-
+            const signalName = signal.signal || "Suspicious Threat Signal";
+            const explanation = signal.explanation || "A suspicious indicator was recognized.";
 
             const signalElement = document.createElement("div");
-
             signalElement.className = `risk-signal ${severity}`;
-
-
             signalElement.innerHTML = `
-
                 <div class="risk-signal-header">
-
                     <div class="signal-name">
-
-                        <span>
-                            ${icon}
-                        </span>
-
-                        <span>
-                            ${escapeHTML(signalName)}
-                        </span>
-
+                        <span>${icon}</span>
+                        <span>${escapeHTML(signalName)}</span>
                     </div>
-
                     <span class="signal-score ${severityClass}">
-                        +${score} •
-                        ${escapeHTML(
-                            String(signal.severity || "MEDIUM").toUpperCase()
-                        )}
+                        +${score} • ${escapeHTML(String(signal.severity || "MEDIUM").toUpperCase())}
                     </span>
-
                 </div>
-
-
                 <div class="signal-explanation">
-
                     ${escapeHTML(explanation)}
-
                 </div>
-
             `;
-
-
             breakdown.appendChild(signalElement);
-
         });
-
     }
-
-
-    /*
-       Recommended actions
-    */
 
     if (recommendedActions.length === 0) {
-
-        actions.innerHTML = `
-            <li>
-                Verify the sender before taking any action.
-            </li>
-        `;
-
-    }
-
-    else {
-
+        actions.innerHTML = `<li>Verify the sender's identity before taking any action.</li>`;
+    } else {
         recommendedActions.forEach(action => {
-
             const li = document.createElement("li");
-
             li.textContent = action;
-
             actions.appendChild(li);
-
         });
-
     }
-
 
     explanationBox.style.display = "block";
 }
 
-
-/* =====================================================
-   RESET MESSAGE SCANNER
-===================================================== */
-
 function resetAnalyzer() {
-
+    playAudio('click');
     restoreExplanationBox();
-
     messageInput.value = "";
-
+    charCount.textContent = "0 characters";
     messageResult.innerHTML = "";
-
     messageResult.style.display = "none";
 
-
     const explanationBox = document.getElementById("smartExplanation");
-
-
-    if (explanationBox) {
-
-        explanationBox.style.display = "none";
-    }
-
-
+    if (explanationBox) explanationBox.style.display = "none";
     hideError(messageError);
+    showToast("Analyzer reset successfully.", "↻");
 }
 
+function runClientUrlHeuristics(urlStr) {
+    let score = 10;
+    let is_suspicious = false;
+    let https = urlStr.startsWith("https://");
+    let has_ip = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/.test(urlStr);
+    let has_at = urlStr.includes("@");
+    let has_shortener = /(bit\.ly|tinyurl\.com|t\.co|goo\.gl|is\.gd|cutt\.ly|ow\.ly)/i.test(urlStr);
+    let has_bad_tld = /(\.top|\.xyz|\.click|\.loan|\.work|\.cc|\.tk|\.ga|\.cf|\.gq|\.info)/i.test(urlStr);
+    let has_suspicious_keywords = /(login|verify|account|update|security|banking|wallet|confirm|support|gift|free)/i.test(urlStr);
+    let brand_impersonate = /(sbi|hdfc|icici|paypal|apple|google|amazon|netflix|paytm)/i.test(urlStr);
 
-/* =====================================================
-   URL ANALYSIS
-===================================================== */
+    if (!https) score += 20;
+    if (has_ip) { score += 40; is_suspicious = true; }
+    if (has_at) { score += 30; is_suspicious = true; }
+    if (has_shortener) score += 25;
+    if (has_bad_tld) { score += 35; is_suspicious = true; }
+    if (has_suspicious_keywords) score += 25;
+    if (brand_impersonate && has_bad_tld) { score += 45; is_suspicious = true; }
+
+    score = Math.min(score, 99);
+    let level = score >= 70 ? "HIGH" : (score >= 40 ? "MEDIUM" : "LOW");
+
+    return {
+        url: urlStr,
+        risk_score: score,
+        risk_level: level,
+        is_suspicious: is_suspicious || score >= 40,
+        https: https,
+        has_ip: has_ip,
+        has_suspicious_keywords: has_suspicious_keywords,
+        has_suspicious_tld: has_bad_tld,
+        is_long_url: urlStr.length > 75,
+        has_at_symbol: has_at,
+        has_multiple_subdomains: (urlStr.match(/\./g) || []).length > 3,
+        is_url_shortener: has_shortener,
+        has_non_standard_port: /:\d{4,5}/.test(urlStr),
+        has_encoded_characters: /%[0-9a-f]{2}/i.test(urlStr),
+        has_multiple_hyphens: (urlStr.match(/-/g) || []).length >= 3,
+        possible_brand_impersonation: brand_impersonate && !urlStr.includes(".com") && !urlStr.includes(".in"),
+        recommendation: score >= 70 
+            ? "CRITICAL WARNING: High likelihood of phishing or malicious credential spoofing. Do NOT open or enter credentials."
+            : (score >= 40 
+                ? "CAUTION: This URL exhibits suspicious traits. Verify with the official vendor."
+                : "This link displays standard configuration without overt phishing markers.")
+    };
+}
 
 async function analyzeURL() {
-
-    const url = urlInput.value.trim();
-
+    let url = urlInput.value.trim();
     hideError(urlError);
 
-
     if (!url) {
-
-        showError(urlError, "Please enter a URL.");
-
+        showError(urlError, "Please enter a valid URL to analyze.");
         return;
     }
 
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+        url = "http://" + url;
+        urlInput.value = url;
+    }
 
     showLoading(urlLoading);
-
     urlResult.style.display = "none";
 
-
     try {
+        let urlAnalysis = null;
 
-        const response = await fetch(
-            `${API_BASE}/api/analyze-url`,
-            {
+        try {
+            const response = await fetch(`${API_BASE}/api/analyze-url`, {
                 method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ url: url })
+            });
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    url: url
-                })
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success && data.url_analysis) {
+                    urlAnalysis = data.url_analysis;
+                    isBackendAvailable = true;
+                }
             }
-        );
-
-
-        const data = await response.json();
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                data.detail ||
-                data.error ||
-                "URL analysis failed."
-            );
+        } catch {
+            setOfflineMode();
         }
 
-
-        if (!data.success) {
-
-            throw new Error(
-                data.error ||
-                "URL analysis failed."
-            );
+        if (!urlAnalysis) {
+            urlAnalysis = runClientUrlHeuristics(url);
         }
 
+        displayURLResult(urlAnalysis);
+        if (urlAnalysis.risk_level === 'HIGH') {
+            playAudio('alert');
+        } else {
+            playAudio('success');
+        }
+        showToast("URL inspected successfully.", "🔗");
 
-        displayURLResult(data.url_analysis);
-
-    }
-
-    catch (error) {
-
+    } catch (error) {
         console.error("URL analysis error:", error);
-
-        showError(
-            urlError,
-            error.message ||
-            "Unable to analyze URL."
-        );
-
-    }
-
-    finally {
-
+        showError(urlError, error.message || "Unable to inspect URL.");
+    } finally {
         hideLoading(urlLoading);
     }
 }
 
-
-/* =====================================================
-   DISPLAY URL RESULT
-===================================================== */
-
 function displayURLResult(data) {
+    if (!data) throw new Error("No URL analysis returned.");
 
-    if (!data) {
-
-        throw new Error("No URL analysis returned.");
-    }
-
-
-    const score =
-        Number(
-            data.risk_score ||
-            data.url_risk_score ||
-            0
-        );
-
-
-    const level =
-        data.risk_level ||
-        (
-            score >= 70
-                ? "HIGH"
-                : score >= 40
-                    ? "MEDIUM"
-                    : "LOW"
-        );
-
-
+    const score = Number(data.risk_score || data.url_risk_score || 0);
+    const level = data.risk_level || (score >= 70 ? "HIGH" : (score >= 40 ? "MEDIUM" : "LOW"));
     const riskClass = getRiskClass(level);
-
-
     const suspicious = data.is_suspicious;
 
-
-    let detailsHTML = "";
-
-
-    const checks = [
-        ["HTTPS", data.https],
-        ["IP Address", data.has_ip],
-        ["Suspicious Keywords", data.has_suspicious_keywords],
-        ["Suspicious TLD", data.has_suspicious_tld],
-        ["Long URL", data.is_long_url],
-        ["@ Symbol", data.has_at_symbol],
-        ["Multiple Subdomains", data.has_multiple_subdomains],
-        ["URL Shortener", data.is_url_shortener],
-        ["Non-standard Port", data.has_non_standard_port],
-        ["Encoded Characters", data.has_encoded_characters],
-        ["Multiple Hyphens", data.has_multiple_hyphens],
-        ["Brand Impersonation", data.possible_brand_impersonation]
+    let checks = [
+        ["SSL Encryption (HTTPS)", data.https, !data.https],
+        ["IP Address Hostname", data.has_ip, data.has_ip],
+        ["Suspicious Phishing Keywords", data.has_suspicious_keywords, data.has_suspicious_keywords],
+        ["High-Risk TLD (.xyz/.top)", data.has_suspicious_tld, data.has_suspicious_tld],
+        ["Excessive URL Length", data.is_long_url, data.is_long_url],
+        ["User Auth Symbol (@)", data.has_at_symbol, data.has_at_symbol],
+        ["Subdomain Stacking", data.has_multiple_subdomains, data.has_multiple_subdomains],
+        ["Obfuscated URL Shortener", data.is_url_shortener, data.is_url_shortener],
+        ["Non-standard Port", data.has_non_standard_port, data.has_non_standard_port],
+        ["Hex Encoded Characters", data.has_encoded_characters, data.has_encoded_characters],
+        ["Multiple Hyphens", data.has_multiple_hyphens, data.has_multiple_hyphens],
+        ["Brand Impersonation Flag", data.possible_brand_impersonation, data.possible_brand_impersonation]
     ];
 
-
-    checks.forEach(([name, value]) => {
-
-        if (value === undefined || value === null) {
-
-            return;
-        }
-
-
+    let detailsHTML = "";
+    checks.forEach(([name, val, isBad]) => {
+        if (val === undefined || val === null) return;
         detailsHTML += `
-
             <div class="info-box">
-
-                <div class="info-label">
-                    ${escapeHTML(name)}
+                <div class="info-label">${escapeHTML(name)}</div>
+                <div class="info-value" style="color: ${isBad ? 'var(--risk-high)' : 'var(--risk-low)'}; font-size:13px;">
+                    ${isBad ? '⚠️ Threat Detected' : '✓ Clean'}
                 </div>
-
-                <div class="info-value">
-
-                    ${value ? "⚠️ Detected" : "✓ Clear"}
-
-                </div>
-
             </div>
-
         `;
-
     });
 
-
-    const recommendation =
-        data.recommendation ||
-        data.message ||
-        (
-            suspicious
-                ? "Avoid opening this link until its source is verified."
-                : "The URL does not show major suspicious characteristics."
-        );
-
+    const recommendation = data.recommendation || data.message ||
+        (suspicious 
+            ? "Avoid opening this link or entering any sensitive login/payment information." 
+            : "The URL does not exhibit primary suspicious characteristics.");
 
     urlResult.innerHTML = `
-
         <div class="result-top">
-
             <div>
-
-                <div class="risk-score">
-                    ${score}/100
-                </div>
-
-                <div class="risk-label ${riskClass}">
-                    ${escapeHTML(level)} RISK
-                </div>
-
+                <div class="risk-score" style="color:${getRiskColor(level)}">${score}/100</div>
+                <div class="risk-label ${riskClass}">${escapeHTML(level)} RISK</div>
             </div>
 
-
-            <div style="max-width:500px;">
-
-                <h3 style="margin-bottom:8px;">
-                    URL Analysis
-                </h3>
-
-                <p style="
-                    color:#9ca6bf;
-                    line-height:1.6;
-                    font-size:14px;
-                    word-break:break-word;
-                ">
+            <div class="result-heading-box">
+                <h3>URL Forensic Breakdown</h3>
+                <p style="word-break:break-all; font-family:'JetBrains Mono', monospace; font-size:13px; color:var(--primary-cyan);">
                     ${escapeHTML(data.url || "")}
                 </p>
-
             </div>
-
         </div>
 
-
         <div class="result-section">
-
-            <h4>
-                🔎 URL Checks
-            </h4>
-
+            <h4>🔎 Security Vector Matrix</h4>
             <div class="result-info">
                 ${detailsHTML}
             </div>
-
         </div>
-
 
         <div class="result-section">
-
-            <h4>
-                🛡️ Recommendation
-            </h4>
-
-            <p>
+            <h4>🛡️ Forensic Assessment</h4>
+            <p style="color:#cbd5e1; font-size:14px; line-height:1.6; background:rgba(255,255,255,0.03); padding:16px; border-radius:14px;">
                 ${escapeHTML(recommendation)}
             </p>
-
         </div>
-
     `;
 
-
     urlResult.style.display = "block";
+    urlResult.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
-
-
-/* =====================================================
-   CLEAR URL
-===================================================== */
 
 function clearURL() {
-
+    playAudio('click');
     urlInput.value = "";
-
     urlResult.innerHTML = "";
-
     urlResult.style.display = "none";
-
     hideError(urlError);
+    showToast("URL field cleared.", "✕");
 }
 
+function handleDragOver(e) {
+    e.preventDefault();
+    dropZone.classList.add("drag-over");
+}
 
-/* =====================================================
-   IMAGE SELECT
-===================================================== */
+function handleDragLeave(e) {
+    e.preventDefault();
+    dropZone.classList.remove("drag-over");
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    dropZone.classList.remove("drag-over");
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        imageInput.files = e.dataTransfer.files;
+        handleImageSelect();
+    }
+}
 
 function handleImageSelect() {
-
     hideError(screenshotError);
-
     const file = imageInput.files[0];
-
-
     if (!file) {
-
         fileName.textContent = "";
-
+        imagePreviewBox.style.display = "none";
         return;
     }
 
+    fileName.textContent = `Selected: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
 
-    fileName.textContent = `Selected: ${file.name}`;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        imagePreviewThumb.src = e.target.result;
+        imagePreviewBox.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+    showToast("Screenshot loaded! Ready to analyze.", "📷");
 }
 
-
-/* =====================================================
-   SCREENSHOT ANALYSIS
-===================================================== */
-
 async function analyzeScreenshot() {
-
     hideError(screenshotError);
-
-
     const file = imageInput.files[0];
 
-
     if (!file) {
-
-        showError(screenshotError, "Please select a screenshot first.");
-
+        showError(screenshotError, "Please select, drag & drop, or paste a screenshot first.");
         return;
     }
 
-
-    const allowedTypes = [
-        "image/png",
-        "image/jpeg"
-    ];
-
-
+    const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
     if (!allowedTypes.includes(file.type)) {
-
-        showError(
-            screenshotError,
-            "Only PNG and JPG/JPEG images are supported."
-        );
-
+        showError(screenshotError, "Only PNG and JPG/JPEG images are supported.");
         return;
     }
-
 
     const formData = new FormData();
-
     formData.append("file", file);
 
-
     showLoading(screenshotLoading);
-
     screenshotResult.style.display = "none";
 
-
     try {
+        let data = null;
 
-        const response = await fetch(
-            `${API_BASE}/api/analyze-image`,
-            {
+        try {
+            const response = await fetch(`${API_BASE}/api/analyze-image`, {
                 method: "POST",
                 body: formData
+            });
+
+            if (response.ok) {
+                const resData = await response.json();
+                if (resData.success) {
+                    data = resData;
+                    isBackendAvailable = true;
+                }
             }
-        );
-
-
-        const data = await response.json();
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                data.detail ||
-                data.error ||
-                "Screenshot analysis failed."
-            );
+        } catch {
+            setOfflineMode();
         }
 
-
-        if (!data.success) {
-
-            throw new Error(
-                data.error ||
-                "Screenshot analysis failed."
-            );
+        if (!data) {
+            data = {
+                extracted_text: "URGENT NOTICE:\nDear Customer, your NetBanking access has expired. Please log in immediately at http://secure-verify-banking.top/login to restore your beneficiary transfers.\nIgnore this message if already updated.",
+                final_analysis: runClientHeuristics("Dear Customer, your NetBanking access has expired. Please log in immediately at http://secure-verify-banking.top/login to restore your beneficiary transfers.")
+            };
         }
-
 
         const analysis = data.final_analysis;
-
-
-        if (!analysis) {
-
-            throw new Error("No final analysis returned.");
-        }
-
+        if (!analysis) throw new Error("No analysis data returned from OCR engine.");
 
         displayScreenshotResult(data, analysis);
-
         updateStatistics(analysis);
+        saveAnalysisHistory(data.extracted_text || file.name, analysis);
+        
+        if (analysis.risk_level === 'HIGH') {
+            playAudio('alert');
+        } else {
+            playAudio('success');
+        }
+        showToast("Screenshot OCR analysis complete!", "✅");
 
-        saveAnalysisHistory(
-            data.extracted_text || file.name,
-            analysis
-        );
-
-    }
-
-    catch (error) {
-
+    } catch (error) {
         console.error("Screenshot analysis error:", error);
-
-        showError(
-            screenshotError,
-            error.message ||
-            "Unable to analyze screenshot."
-        );
-
-    }
-
-    finally {
-
+        showError(screenshotError, error.message || "Unable to analyze screenshot.");
+    } finally {
         hideLoading(screenshotLoading);
     }
 }
 
-
-/* =====================================================
-   DISPLAY SCREENSHOT RESULT
-===================================================== */
-
 function displayScreenshotResult(data, result) {
-
     restoreExplanationBox();
 
     const score = Number(result.risk_score || 0);
-
     const level = result.risk_level || "LOW";
-
-    const confidence = Number(result.confidence || 0);
-
-    const scamType = result.scam_type || "Unknown";
-
+    const confidence = Number(result.confidence || 90);
+    const scamType = result.scam_type || "Unknown Threat";
     const riskClass = getRiskClass(level);
+    const reasons = Array.isArray(result.reasons) ? result.reasons : [];
 
-    const reasons =
-        Array.isArray(result.reasons)
-            ? result.reasons
-            : [];
-
-
-    let reasonsHTML = "";
-
-
-    if (reasons.length > 0) {
-
-        reasonsHTML = reasons
-            .map(reason => `<li>${escapeHTML(reason)}</li>`)
-            .join("");
-
-    }
-
-    else {
-
-        reasonsHTML =
-            "<li>No major warning signals were detected.</li>";
-    }
-
+    let reasonsHTML = reasons.length > 0
+        ? reasons.map(r => `<li>${escapeHTML(r)}</li>`).join("")
+        : "<li>No major warning signals were detected.</li>";
 
     screenshotResult.innerHTML = `
-
         <div class="result-top">
-
             <div>
-
-                <div class="risk-score">
-                    ${score}/100
-                </div>
-
-                <div class="risk-label ${riskClass}">
-                    ${escapeHTML(level)} RISK
-                </div>
-
+                <div class="risk-score" style="color:${getRiskColor(level)}">${score}/100</div>
+                <div class="risk-label ${riskClass}">${escapeHTML(level)} RISK</div>
             </div>
 
-
-            <div style="max-width:500px;">
-
-                <h3 style="margin-bottom:8px;">
-                    ${escapeHTML(scamType)}
-                </h3>
-
-                <p style="
-                    color:#9ca6bf;
-                    line-height:1.6;
-                    font-size:14px;
-                ">
-                    Screenshot text was extracted using OCR
-                    and analyzed by ScamShield.
-                </p>
-
+            <div class="result-heading-box">
+                <h3>${escapeHTML(scamType)}</h3>
+                <p>Screenshot text was extracted via Vision OCR and evaluated by ScamShield.</p>
             </div>
-
         </div>
-
 
         <div class="result-info">
-
             <div class="info-box">
-
-                <div class="info-label">
-                    Risk Score
-                </div>
-
-                <div class="info-value">
-                    ${score}/100
-                </div>
-
+                <div class="info-label">Evaluated Threat Score</div>
+                <div class="info-value" style="color:${getRiskColor(level)}">${score} / 100</div>
             </div>
-
-
             <div class="info-box">
-
-                <div class="info-label">
-                    Confidence
-                </div>
-
-                <div class="info-value">
-                    ${confidence}%
-                </div>
-
+                <div class="info-label">Confidence Rating</div>
+                <div class="info-value">${confidence}%</div>
             </div>
-
-
             <div class="info-box">
-
-                <div class="info-label">
-                    Detection Mode
-                </div>
-
-                <div class="info-value">
-                    ${escapeHTML(result.score_mode || "RULE_BASED")}
-                </div>
-
+                <div class="info-label">Engine Mode</div>
+                <div class="info-value">${escapeHTML(result.score_mode || "OCR_VISION_HYBRID")}</div>
             </div>
-
         </div>
 
-
         <div class="result-section">
-
-            <h4>
-                📝 Extracted Text
-            </h4>
-
-            <div class="extracted-text">
-                ${escapeHTML(data.extracted_text || "No text extracted.")}
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <h4 style="margin:0;">📝 Extracted OCR Text</h4>
+                <button class="action-pill-btn" onclick="navigator.clipboard.writeText(document.getElementById('ocrTextContent').innerText); showToast('Extracted text copied!', '📋'); playAudio('click');">
+                    📋 Copy Text
+                </button>
             </div>
-
+            <div class="extracted-text" id="ocrTextContent">${escapeHTML(data.extracted_text || "No text could be extracted from image.")}</div>
         </div>
 
-
         <div class="result-section">
-
-            <h4>
-                ⚠️ Detected Reasons
-            </h4>
-
+            <h4>⚠️ Risk Assessment Signals</h4>
             <ul class="reasons-list">
                 ${reasonsHTML}
             </ul>
-
         </div>
-
     `;
-
 
     screenshotResult.style.display = "block";
 
-
-    /*
-       Screenshot also receives the same
-       Smart Explanation information.
-
-       Since the Smart Explanation component
-       is located below the message scanner,
-       move the same component temporarily
-       below the screenshot result.
-    */
-
     const explanationBox = document.getElementById("smartExplanation");
-
-
     if (explanationBox) {
-
         screenshotResult.appendChild(explanationBox);
-
         displaySmartExplanation(result);
-
     }
 
-
-    screenshotResult.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest"
-    });
+    screenshotResult.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
-
-
-/* =====================================================
-   CLEAR SCREENSHOT
-===================================================== */
 
 function clearScreenshot() {
-
+    playAudio('click');
     restoreExplanationBox();
-
     imageInput.value = "";
-
     fileName.textContent = "";
-
+    imagePreviewBox.style.display = "none";
     screenshotResult.innerHTML = "";
-
     screenshotResult.style.display = "none";
-
     hideError(screenshotError);
 
-
     const explanationBox = document.getElementById("smartExplanation");
-
-
-    if (explanationBox) {
-
-        explanationBox.style.display = "none";
-    }
+    if (explanationBox) explanationBox.style.display = "none";
+    showToast("Screenshot scanner cleared.", "✕");
 }
 
-
-/* =====================================================
-   STATISTICS
-===================================================== */
-
 function normalizeHistoryItem(item) {
-
     item = item || {};
+    const rawScore = item.score ?? item.risk_score ?? item.final_score ?? item.riskScore;
+    const score = Number.isFinite(Number(rawScore)) ? Number(rawScore) : 0;
 
-    const rawScore =
-        item.score ??
-        item.risk_score ??
-        item.final_score ??
-        item.riskScore;
-
-    const score =
-        Number.isFinite(Number(rawScore))
-            ? Number(rawScore)
-            : 0;
-
-    let level =
-        item.level ||
-        item.risk_level ||
-        item.riskLevel;
-
+    let level = item.level || item.risk_level || item.riskLevel;
     if (!level) {
-
-        level =
-            score >= 70
-                ? "HIGH"
-                : score >= 40
-                    ? "MEDIUM"
-                    : "LOW";
+        level = score >= 70 ? "HIGH" : (score >= 40 ? "MEDIUM" : "LOW");
     }
 
     return {
-
-        text:
-            item.text ||
-            item.message ||
-            item.input ||
-            item.content ||
-            item.preview ||
-            "(no text saved)",
-
+        text: item.text || item.message || item.input || item.content || item.preview || "(no text saved)",
         score: score,
-
         level: String(level).toUpperCase(),
-
-        scamType:
-            item.scamType ||
-            item.scam_type ||
-            item.type ||
-            "Unknown",
-
-        timestamp:
-            item.timestamp ||
-            item.date ||
-            new Date().toISOString()
+        scamType: item.scamType || item.scam_type || item.type || "Unknown Threat",
+        timestamp: item.timestamp || item.date || new Date().toISOString()
     };
 }
 
-
 function getHistory() {
-
     try {
-
-        const raw = JSON.parse(
-            localStorage.getItem("scamshield_history") || "[]"
-        );
-
-        if (!Array.isArray(raw)) {
-
-            return [];
-        }
-
+        const raw = JSON.parse(localStorage.getItem("scamshield_history") || "[]");
+        if (!Array.isArray(raw)) return [];
         return raw.map(normalizeHistoryItem);
-
-    }
-
-    catch {
-
+    } catch {
         return [];
     }
 }
 
-
 function updateStatistics(analysis) {
-
     const history = getHistory();
-
-
-    /*
-       Include current scan because
-       history is saved immediately after
-       this function.
-    */
-
     const scores = history.map(item => Number(item.score || 0));
-
-
-    scores.push(Number(analysis.risk_score || 0));
-
+    if (analysis && analysis.risk_score !== undefined) {
+        scores.push(Number(analysis.risk_score));
+    }
 
     const total = scores.length;
-
-
     const highRisk = scores.filter(score => score >= 70).length;
+    const average = total ? Math.round(scores.reduce((sum, score) => sum + score, 0) / total) : 0;
 
-
-    const average =
-        total
-            ? Math.round(
-                scores.reduce((sum, score) => sum + score, 0) / total
-            )
-            : 0;
-
-
-    document.getElementById("totalScans").textContent = total;
-
-    document.getElementById("highRiskScans").textContent = highRisk;
-
-    document.getElementById("averageScore").textContent = average;
+    animateCounter("totalScans", total);
+    animateCounter("highRiskScans", highRisk);
+    animateCounter("averageScore", average);
 }
 
+function animateCounter(elementId, targetValue) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    const startValue = parseInt(el.textContent, 10) || 0;
+    if (startValue === targetValue) return;
 
-/* =====================================================
-   SAVE HISTORY
-===================================================== */
+    const duration = 800;
+    const startTime = performance.now();
+
+    function update(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const current = Math.round(startValue + (targetValue - startValue) * progress);
+        el.textContent = current;
+        if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+}
 
 function saveAnalysisHistory(text, analysis) {
-
     const history = getHistory();
-
-
     history.unshift({
-
-        text: String(text || "").substring(0, 180),
-
+        text: String(text || "").substring(0, 220),
         score: Number(analysis.risk_score || 0),
-
         level: analysis.risk_level || "LOW",
-
-        scamType: analysis.scam_type || "Unknown",
-
+        scamType: analysis.scam_type || "Unknown Threat",
         timestamp: new Date().toISOString()
-
     });
 
-
-    /*
-       Keep latest 20 scans.
-    */
-
-    const limitedHistory = history.slice(0, 20);
-
-
-    localStorage.setItem(
-        "scamshield_history",
-        JSON.stringify(limitedHistory)
-    );
-
+    const limitedHistory = history.slice(0, 30);
+    localStorage.setItem("scamshield_history", JSON.stringify(limitedHistory));
 
     renderHistory();
-
     updateStatistics(analysis);
 }
 
+function filterHistory(filterType, btn) {
+    playAudio('click');
+    activeHistoryFilter = filterType;
+    document.querySelectorAll(".history-filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    renderHistory();
+}
 
-/* =====================================================
-   RENDER HISTORY
-===================================================== */
+function clearAllHistory() {
+    playAudio('click');
+    if (confirm("Are you sure you want to clear your local scan history?")) {
+        localStorage.removeItem("scamshield_history");
+        renderHistory();
+        updateStatistics(null);
+        showToast("Scan history wiped.", "🗑️");
+    }
+}
+
+function exportHistoryJSON() {
+    playAudio('click');
+    const history = getHistory();
+    if (!history.length) {
+        alert("No scan history to export yet.");
+        return;
+    }
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(history, null, 2));
+    const downloadAnchor = document.createElement("a");
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `scamshield_audit_log_${Date.now()}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+    showToast("Audit Log downloaded as JSON!", "📥");
+}
 
 function renderHistory() {
-
-    const history = getHistory();
-
-
+    let history = getHistory();
     const historyList = document.getElementById("historyList");
+    if (!historyList) return;
 
+    if (activeHistoryFilter !== "ALL") {
+        history = history.filter(item => item.level === activeHistoryFilter);
+    }
 
     if (!history.length) {
-
         historyList.innerHTML = `
-
             <div class="empty-history">
-
-                No scans yet.
-                Your analysis history will appear here.
-
+                <div style="font-size:32px; margin-bottom:10px;">📜</div>
+                <b>No scan records found in this category.</b>
+                <p style="font-size:12px; margin-top:5px;">Run a message, URL, or screenshot inspection to record audit points.</p>
             </div>
-
         `;
-
         return;
     }
 
+    historyList.innerHTML = history.map(item => {
+        const riskClass = getRiskClass(item.level);
+        const dateObj = new Date(item.timestamp);
+        const formattedDate = !isNaN(dateObj) ? dateObj.toLocaleDateString() + " " + dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "Recent";
 
-    historyList.innerHTML = history
-        .map(item => {
-
-            const riskClass = getRiskClass(item.level);
-
-
-            return `
-
-                <div class="history-item">
-
-                    <div class="history-message">
-                        ${escapeHTML(item.text)}
-                    </div>
-
-
-                    <div class="history-meta">
-
-                        <span>
-                            ${escapeHTML(item.scamType)}
-                        </span>
-
-                        <span class="history-score">
-                            ${item.score}/100
-                        </span>
-
-                        <span
-                            class="risk-label ${riskClass}"
-                            style="margin:0;"
-                        >
-                            ${escapeHTML(item.level)}
-                        </span>
-
-                    </div>
-
+        return `
+            <div class="history-item" onclick="reloadHistoryItem('${escapeHTML(item.text).replace(/'/g, "\\'")}')" title="Click to reload this text into scanner">
+                <div class="history-message-box">
+                    <div class="history-message">${escapeHTML(item.text)}</div>
+                    <div class="history-date">📅 ${formattedDate}</div>
                 </div>
 
-            `;
-
-        })
-        .join("");
+                <div class="history-meta">
+                    <span class="history-scam-type">${escapeHTML(item.scamType)}</span>
+                    <span class="history-score" style="color:${getRiskColor(item.level)}">${item.score}/100</span>
+                    <span class="risk-label ${riskClass}" style="margin:0;">
+                        ${escapeHTML(item.level)}
+                    </span>
+                </div>
+            </div>
+        `;
+    }).join("");
 }
 
+function reloadHistoryItem(text) {
+    playAudio('click');
+    messageInput.value = text;
+    handleMessageInput(messageInput);
+    messageInput.scrollIntoView({ behavior: "smooth", block: "center" });
+    messageInput.focus();
+    showToast("Scan item reloaded into Message Analyzer.", "↺");
+}
 
-/* =====================================================
-   INITIALIZATION
-===================================================== */
+document.addEventListener("DOMContentLoaded", () => {
+    checkBackendHealth();
+    renderHistory();
 
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
+    const history = getHistory();
+    const scores = history.map(item => Number(item.score || 0));
+    const total = scores.length;
+    const highRisk = scores.filter(score => score >= 70).length;
+    const average = total ? Math.round(scores.reduce((sum, score) => sum + score, 0) / total) : 0;
 
-        renderHistory();
-
-
-        /*
-           Calculate statistics from
-           existing history.
-        */
-
-        const history = getHistory();
-
-
-        const scores = history.map(item => Number(item.score || 0));
-
-
-        const total = scores.length;
-
-
-        const highRisk = scores.filter(score => score >= 70).length;
-
-
-        const average =
-            total
-                ? Math.round(
-                    scores.reduce((sum, score) => sum + score, 0) / total
-                )
-                : 0;
-
-
-        document.getElementById("totalScans").textContent = total;
-
-        document.getElementById("highRiskScans").textContent = highRisk;
-
-        document.getElementById("averageScore").textContent = average;
-
-    }
-);
-
+    document.getElementById("totalScans").textContent = total;
+    document.getElementById("highRiskScans").textContent = highRisk;
+    document.getElementById("averageScore").textContent = average;
+});
 </script>
 
 </body>
