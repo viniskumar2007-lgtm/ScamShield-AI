@@ -130,15 +130,20 @@ function renderMessageResult(data) {
     ? actions.map(a => `<div class="reason-item">${esc(a)}</div>`).join("")
     : "";
 
+  const fallbackSummary = summary ||
+    (level === "HIGH"   ? "⚠️ This message shows strong indicators of fraud. Do not click any links or share personal information." :
+     level === "MEDIUM" ? "⚠️ This message has some suspicious characteristics. Verify the sender before taking any action." :
+                          "✅ No obvious scam patterns detected. Stay cautious with unknown senders.");
+
   msgResult.innerHTML = `
     <div class="score-row">
-      <div class="score-circle" style="color:${riskColor(level)}">${score}</div>
+      <div class="score-circle" style="color:${riskColor(level)}">${score}<span style="font-size:13px;font-weight:400;opacity:0.55">/100</span></div>
       <div>
         <div class="risk-badge risk-${level}">${level} RISK</div>
         <div class="scam-type" style="margin-top:4px;">${esc(scamType)}</div>
       </div>
     </div>
-    ${summary ? `<div class="result-section"><h4>🧠 AI Summary</h4><p>${esc(summary)}</p></div>` : ""}
+    <div class="result-section"><h4>🧠 AI Assessment</h4><p>${esc(fallbackSummary)}</p></div>
     <div class="result-section"><h4>⚠️ Risk Signals</h4>${reasonsHTML}</div>
     ${actionsHTML ? `<div class="result-section"><h4>✅ Recommended Actions</h4>${actionsHTML}</div>` : ""}
   `;
@@ -251,17 +256,39 @@ function renderURLResult(data, inputUrl) {
       }).join("")}</div>`
     : `<div class="result-section"><h4 style="color:#4ade80;">✅ No Threats Found</h4><p>All checks passed for this URL.</p></div>`;
 
+  // Always show assessment — fallback by risk level
+  const assessment = rec ||
+    (level === "HIGH"   ? "⚠️ This URL shows high-risk indicators. Avoid entering personal or payment information." :
+     level === "MEDIUM" ? "⚠️ This URL has some suspicious characteristics. Proceed with caution." :
+                          "✅ No suspicious patterns detected. Exercise standard caution when sharing personal data.");
+
+  // Extract domain from inputUrl if backend didn't return one
+  const domain = data.domain || (() => {
+    try { return new URL(inputUrl).hostname; } catch { return ""; }
+  })();
+
+  const displayUrl = data.url || inputUrl || "";
+
   urlResult.innerHTML = `
+    <div style="margin-bottom:12px;">
+      <div style="font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Analyzed URL</div>
+      <div style="font-size:11px;color:#00d4ff;word-break:break-all;font-family:monospace;background:rgba(0,212,255,0.05);padding:6px 10px;border-radius:8px;border:1px solid rgba(0,212,255,0.1);">${esc(displayUrl)}</div>
+    </div>
     <div class="score-row">
-      <div class="score-circle" style="color:${riskColor(level)}">${score}</div>
+      <div>
+        <div class="score-circle" style="color:${riskColor(level)}">${score}<span style="font-size:13px;font-weight:400;opacity:0.55">/100</span></div>
+      </div>
       <div>
         <div class="risk-badge risk-${level}">${level} RISK</div>
-        ${data.domain ? `<div style="font-size:11px;color:#94a3b8;margin-top:3px;">${esc(data.domain)}</div>` : ""}
+        ${domain ? `<div style="font-size:11px;color:#94a3b8;margin-top:4px;">🌐 ${esc(domain)}</div>` : ""}
       </div>
     </div>
     <div class="result-section"><h4>🔎 Security Matrix</h4>${checksHTML}</div>
     ${indsHTML}
-    ${rec ? `<div class="result-section"><h4>🛡️ Assessment</h4><p>${esc(rec)}</p></div>` : ""}
+    <div class="result-section">
+      <h4>🛡️ Forensic Assessment</h4>
+      <p>${esc(assessment)}</p>
+    </div>
   `;
   urlResult.style.display = "block";
 }
