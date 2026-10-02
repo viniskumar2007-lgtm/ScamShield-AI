@@ -99,12 +99,14 @@ async function scanMessage() {
   msgResult.style.display = "none";
 
   try {
-    const res = await fetch(`${API}/analyze/message`, {
+    const res = await fetch(`${API}/api/analyze`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text })
+      body: JSON.stringify({ message: text })   // backend expects "message" not "text"
     });
-    const data = await res.json();
+    const resp = await res.json();
+    // Backend wraps result inside "final_analysis" — unwrap it
+    const data = resp.final_analysis || resp;
     renderMessageResult(data);
     saveHistory({ type: "message", text: text.slice(0, 80), data, ts: Date.now() });
   } catch (e) {
@@ -171,12 +173,14 @@ async function scanURL() {
   urlResult.style.display = "none";
 
   try {
-    const res = await fetch(`${API}/analyze/url`, {
+    const res = await fetch(`${API}/api/analyze-url`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ url })
     });
-    const data = await res.json();
+    const resp = await res.json();
+    // Backend wraps result inside "url_analysis" — unwrap it
+    const data = resp.url_analysis || resp;
     renderURLResult(data, url);
     saveHistory({ type: "url", text: url.slice(0, 80), data, ts: Date.now() });
   } catch (e) {
@@ -333,8 +337,10 @@ async function scanImage() {
     const formData = new FormData();
     formData.append("file", selectedFile);
 
-    const res = await fetch(`${API}/analyze/image`, { method: "POST", body: formData });
-    const data = await res.json();
+    const res = await fetch(`${API}/api/analyze-image`, { method: "POST", body: formData });
+    const resp = await res.json();
+    // Backend wraps result inside "final_analysis" — unwrap it
+    const data = resp.final_analysis || resp;
     renderMessageResult_toEl(data, imgResult);
     saveHistory({ type: "image", text: "Screenshot scan", data, ts: Date.now() });
   } catch (e) {
