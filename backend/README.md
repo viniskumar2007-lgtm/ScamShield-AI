@@ -22,8 +22,8 @@ Analyze suspicious:
 
 ScamShield checks the message using:
 
-* 🤖 AI analysis
-* 🧠 Security rule engine
+* 🤖 AI analysis with deterministic rule checks
+* 🧠 Local fallback when Gemini is not configured or unavailable
 * 🔐 Sensitive-information detection
 * ⚠️ Urgency/threat detection
 * 🔗 Suspicious URL detection
@@ -48,6 +48,7 @@ Users can submit a URL and ScamShield analyzes it for suspicious characteristics
 The URL scanner checks indicators such as:
 
 * Suspicious domain patterns
+* Internationalized (Unicode/punycode) domains and common lookalike characters
 * Phishing-related characteristics
 * Suspicious TLDs
 * URL structure
@@ -79,6 +80,9 @@ Users can upload a screenshot of a suspicious message.
 ScamShield uses **OCR (Optical Character Recognition)** to extract text from the image.
 
 The extracted text is then analyzed using the same hybrid scam-detection system.
+If the image has no readable text, the API returns a clear error instead of
+reporting an empty screenshot as safe. Screenshot uploads are bounded by
+`MAX_UPLOAD_BYTES` and `MAX_IMAGE_PIXELS`.
 
 Pipeline:
 
@@ -330,6 +334,12 @@ Request:
 ```
 
 The response contains the URL risk score, risk level, domain and detected indicators.
+The dashboard displays these indicators with short explanations, including both the
+Unicode domain and its punycode form when an internationalized domain is detected.
+When Gemini is configured, its contextual URL assessment is blended with
+deterministic URL signals at 30% AI / 70% rules, with a deterministic-risk floor
+so AI cannot downgrade an existing rule-based warning. Otherwise the deterministic
+assessment remains available and the response reports its analysis mode.
 
 ---
 
@@ -382,6 +392,10 @@ If the AI provider is unavailable, the response explicitly reports
 `score_mode: "RULE_FALLBACK"` and uses an 85% rule / 15% fallback weighting.
 This keeps the result bounded and makes the source of the score visible to
 callers.
+
+Messages sent to Gemini are treated as untrusted evidence, not instructions.
+Responses with invalid fields or a risk level inconsistent with the returned
+score are rejected and analyzed with the local rules instead.
 
 The resulting score is used to determine the final risk level.
 
@@ -503,6 +517,10 @@ Add your Gemini API key:
 
 ```env
 GEMINI_API_KEY=your_api_key_here
+GEMINI_MODEL=gemini-3.6-flash
+MAX_UPLOAD_BYTES=10485760
+MAX_IMAGE_PIXELS=20000000
+OCR_LANGUAGES=eng
 ```
 
 Additional deployment settings are documented in `backend/.env.example`,

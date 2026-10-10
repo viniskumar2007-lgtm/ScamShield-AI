@@ -92,10 +92,12 @@ SERVICES_AVAILABLE = {
 
 try:
     from services.ai_detector import analyze_with_ai as ext_analyze_with_ai
+    from services.ai_detector import analyze_url_with_ai as ext_analyze_url_with_ai
     SERVICES_AVAILABLE["ai_detector"] = True
     logger.info("✓ Module 'services.ai_detector' successfully loaded.")
 except ImportError:
     ext_analyze_with_ai = None
+    ext_analyze_url_with_ai = None
 
 try:
     from services.rule_engine import calculate_rule_score as ext_calculate_rule_score
@@ -614,13 +616,45 @@ async def analyze_url_endpoint(payload: UrlRequest, request: Request):
     if not url_analysis:
         url_analysis = builtin_url_analyzer(url)
 
-    if url_analysis:
-        score_val = url_analysis.get("score", url_analysis.get("risk_score", 0))
-        url_analysis["score"] = score_val
-        url_analysis["risk_score"] = score_val
+    rule_score = int(url_analysis.get("score", url_analysis.get("risk_score", 0)))
+    ai_analysis = None
+    if SERVICES_AVAILABLE["ai_detector"] and ext_analyze_url_with_ai:
+        try:
+            ai_analysis = ext_analyze_url_with_ai(url, url_analysis)
+        except Exception as e:
+            logger.warning(f"AI URL analysis failed; retaining deterministic result: {e}")
+
+    if ai_analysis:
+        ai_score = int(ai_analysis["ai_risk_score"])
+        blended_score = round(rule_score * 0.7 + ai_score * 0.3)
+        score_val = max(rule_score, blended_score)
+        url_analysis["score_mode"] = "HYBRID_URL_AI"
+        url_analysis["ai_analysis"] = ai_analysis
+        url_analysis["ai_score"] = ai_score
+        url_analysis["ai_confidence"] = ai_analysis["confidence"]
+        url_analysis["summary"] = ai_analysis["summary"]
+        url_analysis["ai_reasons"] = ai_analysis["reasons"]
+        url_analysis["recommended_actions"] = ai_analysis["recommended_actions"]
+    else:
+        score_val = rule_score
+        url_analysis["score_mode"] = "RULE_URL"
+        url_analysis["ai_analysis"] = {}
+
+    url_analysis["rule_score"] = rule_score
+    url_analysis["score"] = score_val
+    url_analysis["risk_score"] = score_val
+    url_analysis["risk_level"] = (
+        "HIGH" if score_val >= 60 else "MEDIUM" if score_val >= 30 else "LOW"
+    )
+    url_analysis["is_suspicious"] = score_val >= 30 or url_analysis.get("is_suspicious", False)
 
     elapsed_ms = round((time.perf_counter() - start_time) * 1000, 2)
-    return {"success": True, "url_analysis": url_analysis, "execution_time_ms": elapsed_ms}
+    return {
+        "success": True,
+        "url_analysis": url_analysis,
+        "ai_analysis": ai_analysis or {},
+        "execution_time_ms": elapsed_ms,
+    }
 
 
 @app.post("/api/analyze-image", summary="OCR Vision Screenshot Scam Analysis")
@@ -632,12 +666,40 @@ async def analyze_image_endpoint(file: UploadFile = File(...), request: Request 
 
     logger.info(f"OCR image analysis: {file.filename} ({file.content_type})")
     suffix = os.path.splitext(file.filename or "image.png")[1] or ".png"
+    max_upload_bytes = int(os.getenv("MAX_UPLOAD_BYTES", str(10 * 1024 * 1024)))
     temp_dir = tempfile.mkdtemp()
     temp_path = os.path.join(temp_dir, f"scamshield_upload{suffix}")
 
     try:
+        bytes_written = 0
         with open(temp_path, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
+            while chunk := file.file.read(64 * 1024):
+                bytes_written += len(chunk)
+                if bytes_written > max_upload_bytes:
+                    raise HTTPException(
+                        status_code=413,
+                        detail=f"Image exceeds the {max_upload_bytes // (1024 * 1024)} MB upload limit.",
+                    )
+                buffer.write(chunk)
+
+        from PIL import Image, UnidentifiedImageError
+
+        max_image_pixels = int(os.getenv("MAX_IMAGE_PIXELS", str(20_000_000)))
+        try:
+            with Image.open(temp_path) as uploaded_image:
+                if uploaded_image.format not in {"PNG", "JPEG", "WEBP"}:
+                    raise HTTPException(
+                        status_code=400,
+                        detail="Unsupported image format. Upload a PNG, JPEG, or WebP screenshot.",
+                    )
+                if uploaded_image.width * uploaded_image.height > max_image_pixels:
+                    raise HTTPException(
+                        status_code=413,
+                        detail="Image dimensions exceed the configured pixel limit.",
+                    )
+                uploaded_image.verify()
+        except UnidentifiedImageError as e:
+            raise HTTPException(status_code=400, detail="The uploaded file is not a valid image.") from e
 
         extracted_text = ""
         if SERVICES_AVAILABLE["ocr_service"] and ext_extract_text_from_image:
@@ -659,14 +721,17 @@ async def analyze_image_endpoint(file: UploadFile = File(...), request: Request 
 
         extracted_text = str(extracted_text).strip()
         if not extracted_text:
-            extracted_text = "(No readable text detected in image)"
+            raise HTTPException(
+                status_code=422,
+                detail="No readable text was found. Try a clearer screenshot with larger, higher-contrast text.",
+            )
 
         rule_analysis = None
         if SERVICES_AVAILABLE["rule_engine"] and ext_calculate_rule_score:
             try:
                 rule_analysis = ext_calculate_rule_score(extracted_text)
-            except Exception:
-                pass
+            except Exception as e:
+                logger.warning(f"Rule analysis on OCR text failed: {e}")
         if not rule_analysis:
             rule_analysis = builtin_rule_engine(extracted_text)
 
@@ -685,7 +750,9 @@ async def analyze_image_endpoint(file: UploadFile = File(...), request: Request 
                 logger.warning(f"External risk_engine OCR error: {e}")
         if not final_analysis:
             final_analysis = builtin_hybrid_engine(extracted_text, ai_result=ai_analysis, rule_result=rule_analysis)
-        final_analysis["score_mode"] = "OCR_VISION_HYBRID"
+        final_analysis["score_mode"] = (
+            "OCR_VISION_HYBRID" if ai_analysis else "OCR_VISION_RULE_FALLBACK"
+        )
         elapsed_ms = round((time.perf_counter() - start_time) * 1000, 2)
         return {
             "success": True,
