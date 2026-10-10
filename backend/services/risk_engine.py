@@ -138,21 +138,13 @@ def calculate_hybrid_score(rule_result, ai_result):
 
     risk_level = get_risk_level(final_score)
 
-    reasons = rule_result.get("reasons", [])
-
-    if not reasons:
-        reasons = ai_result.get("reasons", [])
-
-    recommended_actions = rule_result.get(
-        "recommended_actions",
-        []
-    )
-
-    if not recommended_actions:
-        recommended_actions = ai_result.get(
-            "recommended_actions",
-            []
-        )
+    reasons = list(dict.fromkeys(
+        rule_result.get("reasons", []) + ai_result.get("reasons", [])
+    ))[:8]
+    recommended_actions = list(dict.fromkeys(
+        rule_result.get("recommended_actions", [])
+        + ai_result.get("recommended_actions", [])
+    ))[:8]
 
     scam_type = ai_result.get(
         "scam_type",

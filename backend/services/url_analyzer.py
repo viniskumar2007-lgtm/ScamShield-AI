@@ -110,6 +110,19 @@ OFFICIAL_BRAND_DOMAINS = {
     "paytm": {"paytm.com"},
 }
 
+IDN_CONFUSABLES = str.maketrans({
+    "а": "a", "ɑ": "a", "α": "a",
+    "Ь": "b", "в": "b", "ϲ": "c", "с": "c",
+    "ԁ": "d", "е": "e", "ε": "e",
+    "һ": "h", "і": "i", "ι": "i", "ј": "j",
+    "κ": "k", "ӏ": "l", "ⅼ": "l",
+    "м": "m", "ո": "n", "п": "n",
+    "о": "o", "ο": "o", "р": "p", "ρ": "p",
+    "ԛ": "q", "г": "r",
+    "ѕ": "s", "т": "t", "υ": "u",
+    "ν": "v", "х": "x", "у": "y", "զ": "z",
+})
+
 
 # ============================================================
 # HELPERS
@@ -172,6 +185,15 @@ def analyze_url(url):
                 "is_suspicious": False, "indicators": [{"indicator": "Invalid URL", "status": "error", "score": 0}],
                 "recommendation": "Enter a valid URL."}
     domain = domain.lower()
+    try:
+        ascii_domain = domain.encode("idna").decode("ascii").lower()
+        unicode_domain = ascii_domain.encode("ascii").decode("idna").lower()
+    except UnicodeError:
+        return {"url": url, "domain": "", "score": 0, "risk_level": "LOW",
+                "is_suspicious": False, "indicators": [{"indicator": "Invalid URL", "status": "error", "score": 0}],
+                "recommendation": "Enter a valid URL."}
+    has_idn = any(label.startswith("xn--") for label in ascii_domain.split(".")) or ascii_domain != domain
+    brand_scan_domain = unicode_domain.translate(IDN_CONFUSABLES)
 
     score = 0
     indicators = []
@@ -217,6 +239,17 @@ def analyze_url(url):
             "IP address used instead of domain",
             "warning",
             25
+        )
+
+    if has_idn:
+        score += 15
+        add_indicator(
+            indicators,
+            "Internationalized domain name",
+            "warning",
+            15,
+            domain=unicode_domain,
+            ascii_domain=ascii_domain
         )
 
     # ========================================================
@@ -392,7 +425,7 @@ def analyze_url(url):
 
     for brand in BRAND_KEYWORDS:
 
-        if re.search(r"(?<![a-z0-9])" + re.escape(brand) + r"(?![a-z0-9])", domain):
+        if re.search(r"(?<![a-z0-9])" + re.escape(brand) + r"(?![a-z0-9])", brand_scan_domain):
 
             matched_brands.append(brand)
 
@@ -402,7 +435,7 @@ def analyze_url(url):
         # We increase the score only when combined with
         # suspicious URL characteristics.
 
-        labels = domain.split(".")
+        labels = ascii_domain.split(".")
         registrable_domain = ".".join(labels[-2:]) if len(labels) >= 2 else domain
         official_domain = any(
             registrable_domain == allowed

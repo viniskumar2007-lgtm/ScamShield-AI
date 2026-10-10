@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ScamShield AI — Next-Gen Threat Detection & Fraud Prevention</title>
-<meta name="description" content="Intelligent AI and heuristic scam detection platform for SMS, URLs, emails, and screenshots with cybernetic real-time telemetry.">
+<title>ScamShield AI — Scam & Phishing Protection</title>
+<meta name="description" content="Understand suspicious messages, links, and screenshots with ScamShield AI's explainable scam analysis.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1061,6 +1061,39 @@ button {
     gap: 8px;
 }
 .reasons-list, .actions-list { list-style: none; }
+.url-indicator-list { list-style: none; display: grid; gap: 9px; }
+.url-indicator {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-subtle);
+    color: #cbd5e1;
+    font-size: 13px;
+}
+.url-indicator.warning { border-color: var(--risk-medium-border); }
+.url-indicator.warning > span:first-child { color: var(--risk-medium); }
+.url-indicator.clear > span:first-child { color: var(--risk-low); }
+.url-indicator > span:nth-child(2) { flex: 1; min-width: 0; }
+.url-indicator small { display: block; margin-top: 4px; color: var(--text-muted); overflow-wrap: anywhere; }
+.url-indicator > b { color: var(--risk-medium); font-family: 'JetBrains Mono', monospace; }
+.score-components {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0 0 22px;
+}
+.score-component {
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-subtle);
+}
+.score-component span { display: block; color: var(--text-muted); font-size: 11px; text-transform: uppercase; font-weight: 800; }
+.score-component strong { display: block; margin-top: 4px; font: 700 18px 'JetBrains Mono', monospace; }
+.score-component small { display: block; margin-top: 3px; color: var(--text-muted); font-size: 11px; }
 .reasons-list li, .actions-list li {
     padding: 13px 18px;
     margin-bottom: 10px;
@@ -1322,6 +1355,18 @@ button {
     font-weight: 900;
     font-family: 'JetBrains Mono', monospace;
 }
+.history-scan-type {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 7px;
+    color: var(--primary-cyan);
+    background: rgba(0, 245, 200, 0.08);
+    border: 1px solid rgba(0, 245, 200, 0.2);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+}
 .history-meta .risk-label { min-width: 72px; padding: 4px 11px; font-size: 11px; text-align: center; }
 .empty-history {
     text-align: center;
@@ -1480,6 +1525,1084 @@ footer strong { color: var(--primary-cyan); }
     .scanner-card { padding: 22px 18px; }
     .button-row button { width: 100%; }
     .result-top { flex-direction: column; align-items: flex-start; }
+    .score-components { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Calm, high-contrast security dashboard theme */
+:root {
+    --bg-main: #08111f;
+    --bg-card: #101c2c;
+    --bg-card-hover: #142337;
+    --bg-card-inner: #0b1625;
+    --border-subtle: rgba(171, 193, 220, 0.12);
+    --border-glow: rgba(83, 208, 185, 0.28);
+    --border-card: rgba(171, 193, 220, 0.15);
+    --primary-cyan: #62d7be;
+    --primary-blue: #75b9ff;
+    --primary-purple: #a99bff;
+    --primary-gradient: linear-gradient(110deg, #62d7be, #75b9ff);
+    --primary-btn-gradient: linear-gradient(110deg, #70dec4, #83c9ff);
+    --risk-high: #ff7185;
+    --risk-high-glow: rgba(255, 113, 133, 0.16);
+    --risk-high-bg: rgba(255, 113, 133, 0.1);
+    --risk-high-border: rgba(255, 113, 133, 0.28);
+    --risk-medium: #f5bd65;
+    --risk-medium-glow: rgba(245, 189, 101, 0.14);
+    --risk-medium-bg: rgba(245, 189, 101, 0.09);
+    --risk-medium-border: rgba(245, 189, 101, 0.26);
+    --risk-low: #62d7be;
+    --risk-low-glow: rgba(98, 215, 190, 0.13);
+    --risk-low-bg: rgba(98, 215, 190, 0.08);
+    --risk-low-border: rgba(98, 215, 190, 0.24);
+    --text-primary: #edf3fa;
+    --text-secondary: #aab8ca;
+    --text-muted: #8494a9;
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 18px;
+    --radius-xl: 22px;
+    --shadow-md: 0 18px 44px rgba(0, 0, 0, 0.2);
+    --shadow-glow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+body {
+    background:
+        radial-gradient(ellipse at 50% -25%, rgba(71, 117, 157, 0.18), transparent 58%),
+        var(--bg-main);
+    color: var(--text-primary);
+}
+#cyberCanvas, .scanline-overlay { display: none; }
+.light-orb { filter: blur(150px); opacity: 0.12; animation: none; }
+.light-orb-cyan { background: radial-gradient(circle, rgba(98, 215, 190, 0.2), transparent 70%); }
+.light-orb-purple, .light-orb-blue { opacity: 0.07; }
+.threat-ticker {
+    min-height: 42px;
+    padding: 7px max(5%, calc((100% - 1240px) / 2));
+    background: rgba(9, 19, 32, 0.96);
+    border-bottom-color: var(--border-subtle);
+    color: var(--text-secondary);
+}
+.ticker-label { color: var(--primary-cyan); text-shadow: none; letter-spacing: 0.07em; }
+.sonar-dot { background: var(--primary-cyan); box-shadow: none; }
+.sonar-ring { border-color: var(--primary-cyan); }
+.ticker-content { animation-duration: 55s; color: var(--text-secondary); }
+.ticker-item b { color: var(--text-primary); }
+.audio-toggle-btn, .api-status-badge {
+    border-color: var(--border-subtle);
+    box-shadow: none;
+}
+nav {
+    padding: 14px max(5%, calc((100% - 1240px) / 2));
+    background: rgba(8, 17, 31, 0.92);
+    border-bottom-color: var(--border-subtle);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+}
+.nav-scrolled {
+    background: rgba(8, 17, 31, 0.98);
+    border-bottom-color: var(--border-subtle);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+}
+.logo { font-size: 20px; }
+.logo-icon-glow { display: none; }
+.logo-icon {
+    background: linear-gradient(140deg, #70dec4, #83c9ff);
+    border-radius: 12px;
+}
+.logo-badge {
+    background: rgba(98, 215, 190, 0.08);
+    border-color: var(--risk-low-border);
+    color: var(--primary-cyan);
+}
+.nav-links a { color: var(--text-secondary); }
+.nav-links a:hover { color: var(--text-primary); background: rgba(171, 193, 220, 0.08); transform: none; }
+.nav-cta-btn {
+    background: rgba(98, 215, 190, 0.09);
+    border-color: rgba(98, 215, 190, 0.3) !important;
+    color: var(--primary-cyan) !important;
+}
+.nav-cta-btn:hover {
+    background: rgba(98, 215, 190, 0.16) !important;
+    color: #c9fff0 !important;
+    box-shadow: none;
+    transform: none;
+}
+.hero { padding: 82px 5% 48px; }
+.hero-badge {
+    background: rgba(98, 215, 190, 0.07);
+    border-color: rgba(98, 215, 190, 0.22);
+    color: #8ce4d0;
+    box-shadow: none;
+    backdrop-filter: none;
+}
+.hero-hologram-wrap { width: 94px; height: 94px; margin-bottom: 24px; }
+.ring-outer, .ring-mid, .ring-inner { border-style: solid; opacity: 0.4; }
+.ring-outer { border-color: rgba(98, 215, 190, 0.24); }
+.ring-mid { inset: 12px; border-color: rgba(117, 185, 255, 0.22); border-left-color: transparent; border-right-color: transparent; }
+.ring-inner { inset: 24px; border-color: rgba(98, 215, 190, 0.18); }
+.hologram-core {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: #132a37;
+    border-color: rgba(98, 215, 190, 0.36);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.24);
+    animation: none;
+}
+.hero h1 { font-size: clamp(42px, 6vw, 68px); letter-spacing: -0.045em; }
+.gradient-text {
+    background: linear-gradient(100deg, #88e4d0, #91caff);
+    background-size: auto;
+    animation: none;
+    filter: none;
+}
+.hero p { max-width: 660px; color: var(--text-secondary); font-size: 17px; }
+.hero-btn { border-radius: 12px; }
+.hero-btn-primary {
+    background: var(--primary-btn-gradient);
+    box-shadow: 0 8px 20px rgba(74, 169, 157, 0.17);
+}
+.hero-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(74, 169, 157, 0.22); }
+.hero-btn-secondary { background: rgba(171, 193, 220, 0.05); color: var(--text-primary); border-color: var(--border-card); }
+.hero-btn-secondary:hover { background: rgba(171, 193, 220, 0.1); border-color: rgba(98, 215, 190, 0.3); transform: translateY(-2px); }
+.stats { max-width: 1120px; gap: 18px; margin-bottom: 78px; }
+.spotlight-card, .feature-card, .faq-card, .scanner-card, .history-item {
+    background: linear-gradient(145deg, rgba(17, 30, 47, 0.97), rgba(13, 25, 40, 0.98));
+    border-color: var(--border-card);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+.spotlight-card {
+    padding: 25px 22px;
+    border-radius: 18px;
+    text-align: left;
+}
+.spotlight-card::before, .feature-card::before { display: none; }
+.spotlight-card:hover, .feature-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(98, 215, 190, 0.26);
+    box-shadow: var(--shadow-md);
+}
+.stat-icon { filter: none; font-size: 21px; }
+.stat-number {
+    color: var(--text-primary);
+    font-size: 36px;
+    text-shadow: none;
+}
+.stat-label { color: var(--text-muted); font-size: 11px; letter-spacing: 0.06em; }
+.container { max-width: 1160px; }
+.section-title { margin-bottom: 36px; }
+.section-pill {
+    color: #8ce4d0;
+    background: rgba(98, 215, 190, 0.07);
+    border-color: rgba(98, 215, 190, 0.2);
+    letter-spacing: 0.07em;
+}
+.section-title h2 { font-size: clamp(30px, 4vw, 38px); }
+.section-title p { color: var(--text-secondary); }
+.scanner-nav-tabs {
+    background: #0d1929;
+    border-color: var(--border-card);
+    border-radius: 14px;
+    box-shadow: none;
+}
+.tab-btn { color: var(--text-secondary); border: 1px solid transparent; }
+.tab-btn.active {
+    color: #9ce8d6;
+    background: rgba(98, 215, 190, 0.09);
+    border-color: rgba(98, 215, 190, 0.2);
+    box-shadow: none;
+}
+.tab-btn:hover:not(.active) { color: var(--text-primary); background: rgba(171, 193, 220, 0.06); }
+.scanner-grid { gap: 22px; }
+.scanner-card {
+    padding: 30px;
+    border-radius: 19px;
+    box-shadow: var(--shadow-md);
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.scanner-card:hover {
+    border-color: rgba(98, 215, 190, 0.24);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+.scanner-icon, .feature-card-icon {
+    background: rgba(98, 215, 190, 0.08);
+    border-color: rgba(98, 215, 190, 0.18);
+    box-shadow: none;
+}
+.scanner-card:hover .scanner-icon, .feature-card:hover .feature-card-icon {
+    transform: none;
+    border-color: rgba(98, 215, 190, 0.3);
+}
+.scanner-header h3, .feature-card h3 { color: var(--text-primary); }
+.scanner-header p, .feature-card p { color: var(--text-secondary); }
+.scanner-badge {
+    background: rgba(171, 193, 220, 0.05);
+    color: var(--text-secondary);
+    border-color: var(--border-subtle);
+    letter-spacing: 0.03em;
+}
+textarea, input[type="text"] {
+    background: #0a1523;
+    border-color: rgba(171, 193, 220, 0.17);
+    border-radius: 13px;
+    color: var(--text-primary);
+}
+textarea:focus, input[type="text"]:focus {
+    border-color: rgba(98, 215, 190, 0.58);
+    box-shadow: 0 0 0 3px rgba(98, 215, 190, 0.1);
+    background: #0a1523;
+}
+.demo-btn {
+    background: rgba(171, 193, 220, 0.04);
+    color: var(--text-secondary);
+    border-color: var(--border-subtle);
+}
+.demo-btn:hover {
+    color: #a3ead9;
+    background: rgba(98, 215, 190, 0.08);
+    border-color: rgba(98, 215, 190, 0.26);
+    transform: translateY(-1px);
+    box-shadow: none;
+}
+.primary-btn {
+    background: var(--primary-btn-gradient);
+    background-size: auto;
+    color: #09202a;
+    box-shadow: 0 6px 18px rgba(74, 169, 157, 0.16);
+}
+.primary-btn:hover { transform: translateY(-1px); box-shadow: 0 9px 22px rgba(74, 169, 157, 0.22); background-position: center; }
+.secondary-btn {
+    background: rgba(171, 193, 220, 0.05);
+    color: var(--text-primary);
+    border-color: var(--border-card);
+}
+.secondary-btn:hover { background: rgba(171, 193, 220, 0.1); border-color: rgba(171, 193, 220, 0.25); transform: translateY(-1px); }
+.loading { background: rgba(98, 215, 190, 0.04); border-color: rgba(98, 215, 190, 0.22); color: var(--primary-cyan); }
+.laser-beam { display: none; }
+.spinner { border-color: rgba(98, 215, 190, 0.15); border-top-color: var(--primary-cyan); box-shadow: none; }
+.loading-text { font-family: inherit; text-shadow: none; color: var(--text-secondary); }
+.result {
+    background: #0b1625;
+    border-color: var(--border-card);
+    box-shadow: none;
+}
+.result::before { height: 2px; box-shadow: none; }
+.gauge-svg { filter: none; }
+.risk-low, .risk-medium, .risk-high { box-shadow: none; }
+.risk-high { animation: none; }
+.result-heading-box h3 { color: var(--text-primary); }
+.result-heading-box p { color: var(--text-secondary); }
+.info-box, .score-component {
+    background: rgba(171, 193, 220, 0.035);
+    border-color: var(--border-subtle);
+}
+.info-box:hover { background: rgba(171, 193, 220, 0.06); border-color: rgba(98, 215, 190, 0.22); transform: none; }
+.history-filter-btn { background: rgba(171, 193, 220, 0.04); }
+.history-filter-btn.active, .history-filter-btn:hover {
+    color: #a3ead9;
+    background: rgba(98, 215, 190, 0.08);
+    border-color: rgba(98, 215, 190, 0.24);
+    box-shadow: none;
+}
+.history-item:hover {
+    background: #142337;
+    border-color: rgba(98, 215, 190, 0.24);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+.history-message { color: var(--text-primary); }
+.history-scam-type { color: var(--text-secondary); }
+.history-scan-type { color: #9ce8d6; background: rgba(98, 215, 190, 0.07); border-color: rgba(98, 215, 190, 0.18); }
+.feature-card { border-radius: 18px; }
+.feature-card:hover { box-shadow: var(--shadow-md); }
+.faq-card { border-radius: 14px; }
+.faq-card:hover { border-color: rgba(98, 215, 190, 0.22); }
+.faq-header { color: var(--text-primary); }
+.faq-header:hover { color: #9ce8d6; }
+footer { background: #07101c; }
+footer strong, .footer-links a:hover { color: var(--primary-cyan); }
+.toast {
+    background: #132238;
+    border-color: rgba(98, 215, 190, 0.24);
+    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.32);
+}
+button:focus-visible, a:focus-visible, .history-item:focus-visible {
+    outline: 2px solid #82dfcb;
+    outline-offset: 3px;
+}
+.hero-shield-art { width: 38px; height: 43px; overflow: visible; }
+.shield-outline { fill: rgba(98, 215, 190, 0.1); stroke: url(#heroShieldGradient); stroke-width: 2; }
+.shield-inner { fill: rgba(98, 215, 190, 0.07); stroke: rgba(141, 202, 255, 0.45); stroke-width: 1; }
+.shield-check { fill: none; stroke: #a1f3dd; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.shield-scan-line { stroke: #b3fff0; stroke-width: 2; stroke-dasharray: 7 5; opacity: 0.78; }
+.shield-spark { fill: #a1f3dd; animation: shield-sparkle 2.4s ease-in-out infinite; }
+.shield-spark-alt { animation-delay: 1.1s; }
+.ring-outer { animation: orbit-spin 22s linear infinite; }
+.ring-mid { animation: orbit-spin 15s linear infinite reverse; }
+.ring-inner { animation: orbit-spin 11s linear infinite; }
+.hologram-core { animation: shield-float 4s ease-in-out infinite; }
+.shield-scan-line { animation: shield-scan 3.6s ease-in-out infinite; }
+.workflow {
+    max-width: 1160px;
+    margin: 10px auto 80px;
+    padding: 0 24px;
+}
+.workflow-heading { max-width: 650px; margin: 0 auto 30px; text-align: center; }
+.workflow-heading h2 { margin: 12px 0 9px; color: var(--text-primary); font-size: clamp(25px, 3vw, 34px); letter-spacing: -0.04em; }
+.workflow-heading p { color: var(--text-secondary); line-height: 1.7; }
+.section-pill {
+    display: inline-flex;
+    padding: 6px 11px;
+    border: 1px solid rgba(98, 215, 190, 0.22);
+    border-radius: 999px;
+    background: rgba(98, 215, 190, 0.06);
+    color: #9ce8d6;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+.workflow-track { display: grid; grid-template-columns: 1fr 52px 1fr 52px 1fr; align-items: center; }
+.workflow-step {
+    position: relative;
+    display: flex;
+    min-height: 168px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 23px;
+    border: 1px solid var(--border-card);
+    border-radius: 18px;
+    background: linear-gradient(145deg, rgba(18, 35, 54, 0.92), rgba(11, 23, 37, 0.9));
+    box-shadow: var(--shadow-sm);
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: border-color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+}
+a.workflow-step:hover { transform: translateY(-4px); border-color: rgba(98, 215, 190, 0.36); box-shadow: var(--shadow-md); }
+.workflow-step-number { position: absolute; top: 17px; right: 18px; color: #71839a; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; }
+.workflow-icon {
+    display: grid;
+    width: 38px;
+    height: 38px;
+    margin-bottom: 15px;
+    place-items: center;
+    border: 1px solid rgba(98, 215, 190, 0.22);
+    border-radius: 12px;
+    background: rgba(98, 215, 190, 0.08);
+    color: #9ce8d6;
+    font-size: 18px;
+}
+.workflow-step strong { margin-bottom: 6px; font-size: 14px; }
+.workflow-step small { color: var(--text-secondary); font-size: 12px; line-height: 1.5; }
+.workflow-connector { height: 1px; overflow: hidden; background: rgba(130, 158, 185, 0.2); }
+.workflow-connector span { display: block; width: 38%; height: 100%; background: linear-gradient(90deg, transparent, #8de2cf, transparent); animation: connector-travel 2.8s ease-in-out infinite; }
+.workflow-connector:nth-of-type(4) span { animation-delay: 1.4s; }
+.result { animation: result-arrive 360ms cubic-bezier(.2,.7,.25,1) both; }
+@keyframes orbit-spin { to { transform: rotate(360deg); } }
+@keyframes shield-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+@keyframes shield-scan { 0%, 100% { transform: translateY(-15px); opacity: 0; } 20%, 80% { opacity: 0.8; } 50% { transform: translateY(17px); opacity: 0.9; } }
+@keyframes shield-sparkle { 0%, 100% { opacity: 0.32; transform: scale(.8); } 50% { opacity: 1; transform: scale(1.25); } }
+@keyframes connector-travel { 0% { transform: translateX(-110%); } 100% { transform: translateX(290%); } }
+@keyframes result-arrive { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
+.motion-ready .reveal { opacity: 0; transform: translateY(14px); transition: opacity 520ms ease, transform 520ms ease; }
+.motion-ready .reveal.is-visible { opacity: 1; transform: translateY(0); }
+@media (max-width: 768px) {
+    nav { padding: 12px 5%; }
+    .hero { padding-top: 60px; }
+    .stats { gap: 12px; }
+    .spotlight-card { text-align: center; }
+    .scanner-card { padding: 24px; }
+    .workflow { margin-bottom: 58px; padding: 0 5%; }
+    .workflow-track { grid-template-columns: 1fr; gap: 12px; }
+    .workflow-step { min-height: 138px; }
+    .workflow-connector { width: 1px; height: 24px; justify-self: center; }
+    .workflow-connector span { width: 100%; height: 38%; animation-name: connector-travel-vertical; }
+    @keyframes connector-travel-vertical { 0% { transform: translateY(-110%); } 100% { transform: translateY(290%); } }
+}
+@media (prefers-reduced-motion: reduce) {
+    .ring-outer, .ring-mid, .ring-inner, .hologram-core, .shield-scan-line, .shield-spark, .workflow-connector span { animation: none !important; }
+    .motion-ready .reveal { opacity: 1; transform: none; transition: none; }
+    a.workflow-step:hover { transform: none; }
+}
+
+/* Bright, readable theme */
+:root {
+    --bg-main: #f3f6fb;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f8fbff;
+    --bg-card-inner: #f6f8fc;
+    --border-subtle: rgba(39, 61, 88, 0.12);
+    --border-glow: rgba(17, 137, 125, 0.28);
+    --border-card: rgba(39, 61, 88, 0.14);
+    --primary-cyan: #087f72;
+    --primary-blue: #397bb8;
+    --primary-purple: #7654a5;
+    --primary-gradient: linear-gradient(110deg, #087f72, #397bb8 60%, #7654a5);
+    --primary-btn-gradient: linear-gradient(110deg, #087f72, #176f9c);
+    --risk-high: #c93652;
+    --risk-high-glow: rgba(201, 54, 82, 0.14);
+    --risk-high-bg: rgba(201, 54, 82, 0.08);
+    --risk-high-border: rgba(201, 54, 82, 0.26);
+    --risk-medium: #a76500;
+    --risk-medium-glow: rgba(167, 101, 0, 0.12);
+    --risk-medium-bg: rgba(167, 101, 0, 0.08);
+    --risk-medium-border: rgba(167, 101, 0, 0.25);
+    --risk-low: #087f72;
+    --risk-low-glow: rgba(8, 127, 114, 0.12);
+    --risk-low-bg: rgba(8, 127, 114, 0.07);
+    --risk-low-border: rgba(8, 127, 114, 0.24);
+    --text-primary: #18283d;
+    --text-secondary: #52647a;
+    --text-muted: #718197;
+    --shadow-md: 0 14px 36px rgba(40, 63, 91, 0.1);
+    --shadow-glow: 0 8px 24px rgba(40, 63, 91, 0.08);
+}
+body {
+    background:
+        radial-gradient(ellipse at 50% -25%, rgba(100, 172, 204, 0.16), transparent 58%),
+        var(--bg-main);
+    color: var(--text-primary);
+}
+#cyberCanvas, .scanline-overlay { display: none; }
+.ambient-lights { opacity: 0.45; }
+.light-orb { filter: blur(150px); opacity: 0.1; animation: none; }
+.light-orb-cyan { background: radial-gradient(circle, rgba(46, 177, 157, 0.22), transparent 70%); }
+.light-orb-purple, .light-orb-blue { opacity: 0.06; }
+.threat-ticker, nav, .nav-scrolled {
+    background: rgba(255, 255, 255, 0.94);
+    border-color: var(--border-subtle);
+    color: var(--text-secondary);
+    box-shadow: 0 4px 18px rgba(40, 63, 91, 0.05);
+}
+.ticker-label, .footer-links a:hover { color: var(--primary-cyan); }
+.ticker-item b { color: var(--text-primary); }
+.sonar-dot { background: var(--primary-cyan); }
+.sonar-ring { border-color: var(--primary-cyan); }
+.audio-toggle-btn, .api-status-badge {
+    color: var(--text-secondary);
+    background: #f6f8fc;
+    border-color: var(--border-card);
+}
+.logo { color: var(--text-primary); }
+.logo-icon { color: #fff; }
+.logo-badge, .hero-badge, .section-pill {
+    color: #08776c;
+    background: #e8f6f3;
+    border-color: #cce9e3;
+}
+.nav-links a { color: var(--text-secondary); }
+.nav-links a:hover { color: var(--text-primary); background: #edf2f8; }
+.nav-cta-btn {
+    color: #08776c !important;
+    background: #e8f6f3;
+    border-color: #c3e6df !important;
+}
+.nav-cta-btn:hover { color: #075f57 !important; background: #dff2ee !important; }
+.hero-badge { box-shadow: 0 4px 14px rgba(8, 127, 114, 0.06); }
+.hero h1 { color: var(--text-primary); }
+.gradient-text {
+    background: linear-gradient(100deg, #087f72 0%, #397bb8 55%, #7654a5 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: #087f72;
+    filter: none;
+    animation: none;
+}
+@supports not (-webkit-background-clip: text) {
+    .gradient-text { background: none; color: #087f72; -webkit-text-fill-color: currentColor; }
+}
+.hero p, .section-title p, .workflow-heading p { color: var(--text-secondary); }
+.hero-btn-primary, .primary-btn {
+    color: #fff;
+    background: var(--primary-btn-gradient);
+    box-shadow: 0 7px 18px rgba(8, 127, 114, 0.18);
+}
+.hero-btn-primary:hover, .primary-btn:hover { box-shadow: 0 10px 22px rgba(8, 127, 114, 0.22); }
+.hero-btn-secondary, .secondary-btn {
+    color: var(--text-primary);
+    background: #fff;
+    border-color: var(--border-card);
+}
+.hero-btn-secondary:hover, .secondary-btn:hover { background: #f5f8fc; border-color: rgba(8, 127, 114, 0.28); }
+.spotlight-card, .feature-card, .faq-card, .scanner-card, .history-item {
+    color: var(--text-primary);
+    background: #fff;
+    border-color: var(--border-card);
+    box-shadow: 0 8px 24px rgba(40, 63, 91, 0.06);
+}
+.spotlight-card:hover, .feature-card:hover {
+    border-color: rgba(8, 127, 114, 0.28);
+    box-shadow: var(--shadow-md);
+}
+.stat-number, .feature-card h3, .faq-header, .footer-logo { color: var(--text-primary); }
+.stat-label, .feature-card p, .faq-body, footer { color: var(--text-secondary); }
+.stat-icon { filter: none; }
+.workflow-step {
+    color: var(--text-primary);
+    background: linear-gradient(145deg, #fff, #f8fbff);
+    border-color: var(--border-card);
+    box-shadow: 0 8px 22px rgba(40, 63, 91, 0.06);
+}
+.workflow-step-number { color: var(--text-muted); }
+.workflow-step small { color: var(--text-secondary); }
+.workflow-icon, .scanner-icon, .feature-card-icon {
+    color: #08776c;
+    background: #e9f6f3;
+    border-color: #cce9e3;
+}
+.workflow-connector { background: rgba(57, 87, 119, 0.2); }
+.workflow-connector span { background: linear-gradient(90deg, transparent, #168b85, transparent); }
+.scanner-nav-tabs { background: #e9eef5; border-color: var(--border-card); }
+.tab-btn { color: var(--text-secondary); }
+.tab-btn.active { color: #08776c; background: #fff; border-color: rgba(8, 127, 114, 0.18); }
+.tab-btn:hover:not(.active) { color: var(--text-primary); background: rgba(255, 255, 255, 0.7); }
+.scanner-header h3, .result-heading-box h3, .workflow-heading h2 { color: var(--text-primary); }
+.scanner-header p, .result-heading-box p { color: var(--text-secondary); }
+.scanner-badge { color: var(--text-secondary); background: #f2f5f9; border-color: var(--border-subtle); }
+textarea, input[type="text"] {
+    color: var(--text-primary);
+    background: #fbfcfe;
+    border-color: rgba(39, 61, 88, 0.18);
+}
+textarea::placeholder, input[type="text"]::placeholder { color: #8593a5; }
+textarea:focus, input[type="text"]:focus {
+    background: #fff;
+    border-color: rgba(8, 127, 114, 0.5);
+    box-shadow: 0 0 0 3px rgba(8, 127, 114, 0.09);
+}
+.demo-btn, .history-filter-btn {
+    color: var(--text-secondary);
+    background: #f7f9fc;
+    border-color: var(--border-card);
+}
+.demo-btn:hover, .history-filter-btn.active, .history-filter-btn:hover {
+    color: #08776c;
+    background: #e8f6f3;
+    border-color: rgba(8, 127, 114, 0.24);
+}
+.loading { color: #08776c; background: #eff8f6; border-color: #cce9e3; }
+.spinner { border-color: rgba(8, 127, 114, 0.16); border-top-color: var(--primary-cyan); }
+.loading-text { color: var(--text-secondary); }
+.result { color: var(--text-primary); background: #fff; border-color: var(--border-card); }
+.info-box, .score-component { background: #f5f8fc; border-color: var(--border-subtle); }
+.info-box:hover { background: #eff5fa; border-color: rgba(8, 127, 114, 0.22); }
+.history-item:hover { background: #f7fafc; border-color: rgba(8, 127, 114, 0.24); }
+.history-message { color: var(--text-primary); }
+.history-scam-type, .faq-body { color: var(--text-secondary); }
+.history-scan-type { color: #08776c; background: #e8f6f3; border-color: #cce9e3; }
+.faq-card:hover { border-color: rgba(8, 127, 114, 0.24); }
+.faq-header:hover { color: #08776c; }
+.faq-toggle-icon { color: var(--text-muted); }
+.faq-card.open .faq-toggle-icon { color: var(--primary-cyan); }
+.empty-history { background: #fbfcfe; }
+footer { background: #eaf0f6; border-color: var(--border-subtle); }
+footer .footer-logo { color: var(--text-primary); }
+.toast { color: var(--text-primary); background: #fff; border-color: rgba(8, 127, 114, 0.24); box-shadow: var(--shadow-md); }
+.emoji {
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+    font-style: normal;
+    line-height: 1;
+    -webkit-text-fill-color: initial;
+}
+.faq-question { display: inline-flex; align-items: center; gap: 10px; min-width: 0; }
+.faq-question .emoji { flex: 0 0 auto; font-size: 19px; }
+@media (max-width: 768px) {
+    .workflow-step { background: #fff; }
+    .faq-header { padding: 17px 18px; }
+    .faq-body { padding: 0 18px 20px; }
+}
+
+/* Larger, comfortable type and gentle motion polish */
+body { font-size: 16px; }
+.threat-ticker { font-size: 13px; }
+.ticker-label, .ticker-right-tools { font-size: 12px; }
+.ticker-content { font-size: 13px; }
+.logo { font-size: 21px; }
+.logo-badge, .hero-badge { font-size: 12px; }
+.nav-links a { font-size: 14px; }
+.hero h1 { font-size: clamp(48px, 7vw, 78px); line-height: 1.08; }
+.hero p { font-size: clamp(17px, 1.5vw, 19px); }
+.hero-btn { font-size: 15px; }
+.stat-number { font-size: 40px; }
+.stat-label { font-size: 12px; }
+.section-title h2, .workflow-heading h2 { font-size: clamp(34px, 4.4vw, 44px); }
+.section-title p, .workflow-heading p { font-size: 17px; }
+.section-pill { font-size: 12px; }
+.workflow-step strong { font-size: 16px; }
+.workflow-step small { font-size: 14px; }
+.workflow-step-number { font-size: 12px; }
+.tab-btn { font-size: 15px; }
+.scanner-header h3, .result-heading-box h3 { font-size: 21px; }
+.scanner-header p, .result-heading-box p { font-size: 15px; }
+.scanner-badge { font-size: 12px; }
+textarea, input[type="text"] { font-size: 16px; }
+.demo-btn, .primary-btn, .secondary-btn, .button-row button { font-size: 15px; }
+.loading-text { font-size: 15px; }
+.result { font-size: 15px; }
+.score-component span, .score-component small, .signal-explanation { font-size: 13px; }
+.explanation-header p, .actions-title p, .feature-card p, .faq-body { font-size: 15px; }
+.feature-card h3 { font-size: 21px; }
+.faq-header { font-size: 16px; }
+.faq-toggle-icon { font-size: 16px; }
+.history-message { font-size: 15px; }
+.history-date, .history-meta, .history-scam-type, .history-meta .risk-label { font-size: 13px; }
+.history-filter-btn, .toast, .footer-links a { font-size: 14px; }
+.footer-links { gap: 26px; }
+.gradient-text { background-size: 180% auto; animation: gradientFlow 12s ease-in-out infinite; }
+.light-orb-cyan { animation: orbFloat 30s ease-in-out infinite alternate; }
+.light-orb-purple { animation: orbFloat 36s ease-in-out -12s infinite alternate-reverse; }
+.light-orb-blue { animation: orbFloat 34s ease-in-out -20s infinite alternate; }
+.spotlight-card, .feature-card, .faq-card, .scanner-card, .history-item, .workflow-step {
+    transition-duration: 280ms;
+}
+.hero-btn-primary, .primary-btn { position: relative; overflow: hidden; }
+.hero-btn-primary::after, .primary-btn::after {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 25%, rgba(255, 255, 255, 0.2) 48%, transparent 70%);
+    content: "";
+    transform: translateX(-120%);
+    transition: transform 650ms ease;
+    pointer-events: none;
+}
+.hero-btn-primary:hover::after, .primary-btn:hover::after { transform: translateX(120%); }
+.hero-badge { animation: badge-arrive 700ms ease-out both; }
+.hero h1 { animation: hero-copy-arrive 750ms 80ms ease-out both; }
+.hero p { animation: hero-copy-arrive 750ms 160ms ease-out both; }
+.hero-quick-actions { animation: hero-copy-arrive 750ms 240ms ease-out both; }
+@keyframes badge-arrive { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes hero-copy-arrive { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 768px) {
+    body { font-size: 16px; }
+    .threat-ticker { font-size: 12px; }
+    .ticker-content { font-size: 12px; }
+    .hero h1 { font-size: clamp(42px, 9vw, 58px); }
+    .hero p { font-size: 17px; }
+    .section-title h2, .workflow-heading h2 { font-size: clamp(32px, 7vw, 39px); }
+    .section-title p, .workflow-heading p { font-size: 16px; }
+    .scanner-card { padding: 25px 22px; }
+    .workflow-step strong { font-size: 16px; }
+    .workflow-step small { font-size: 14px; }
+    .faq-header { font-size: 15px; }
+}
+@media (max-width: 480px) {
+    .hero h1 { font-size: clamp(38px, 10vw, 46px); }
+    .hero p { font-size: 17px; }
+    .section-title h2, .workflow-heading h2 { font-size: 31px; }
+    .scanner-header h3, .result-heading-box h3 { font-size: 19px; }
+    .faq-header { font-size: 16px; }
+    .history-message, .faq-body, .feature-card p { font-size: 15px; }
+    .history-date, .history-meta, .history-scam-type { font-size: 13px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .gradient-text, .light-orb-cyan, .light-orb-purple, .light-orb-blue,
+    .hero-badge, .hero h1, .hero p, .hero-quick-actions { animation: none !important; }
+    .hero-btn-primary::after, .primary-btn::after { display: none; }
+}
+
+/* Soft animated color washes and a low-contrast background grid */
+body {
+    background-color: #f3f6fb;
+    background-image:
+        radial-gradient(ellipse at 12% 8%, rgba(40, 176, 151, 0.17), transparent 36%),
+        radial-gradient(ellipse at 88% 18%, rgba(93, 151, 213, 0.15), transparent 34%),
+        radial-gradient(ellipse at 76% 82%, rgba(151, 124, 196, 0.12), transparent 38%),
+        radial-gradient(ellipse at 14% 72%, rgba(76, 157, 190, 0.1), transparent 34%),
+        linear-gradient(rgba(57, 92, 128, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(57, 92, 128, 0.025) 1px, transparent 1px),
+        linear-gradient(145deg, #f7f9fd, #edf3f9);
+    background-size: 150% 150%, 150% 150%, 160% 160%, 150% 150%, 46px 46px, 46px 46px, 100% 100%;
+    background-position: 0% 0%, 100% 0%, 100% 100%, 0% 100%, 0 0, 0 0, 0 0;
+    background-attachment: fixed;
+    animation: background-aurora-drift 36s ease-in-out infinite alternate;
+}
+.scroll-progress {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 200;
+    height: 3px;
+    pointer-events: none;
+}
+.scroll-progress span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #087f72, #397bb8 58%, #7654a5);
+    box-shadow: 0 0 12px rgba(57, 123, 184, 0.3);
+    transform: scaleX(0);
+    transform-origin: left center;
+    will-change: transform;
+}
+.spotlight-card::before, .feature-card::before {
+    display: block;
+    background: radial-gradient(circle, rgba(39, 153, 151, 0.12), transparent 70%);
+}
+.spotlight-card:hover::before, .feature-card:hover::before { opacity: 1; }
+.spotlight-card:hover, .feature-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(8, 127, 114, 0.28);
+    box-shadow: 0 16px 34px rgba(40, 63, 91, 0.12);
+}
+.scanner-card::before {
+    position: absolute;
+    top: var(--mouse-y, 50%);
+    left: var(--mouse-x, 50%);
+    width: 340px;
+    height: 340px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(39, 153, 151, 0.09), transparent 70%);
+    content: "";
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: opacity 240ms ease;
+}
+.scanner-card:hover::before { opacity: 1; }
+.scanner-icon, .feature-card-icon, .stat-icon { animation: icon-float 4.8s ease-in-out infinite; }
+.feature-card:nth-child(2n) .feature-card-icon { animation-delay: -1.6s; }
+.feature-card:nth-child(3n) .feature-card-icon { animation-delay: -3.2s; }
+@keyframes icon-float { 50% { translate: 0 -4px; } }
+.motion-ready .motion-reveal {
+    opacity: 0;
+    translate: 0 20px;
+    transition: opacity 650ms cubic-bezier(.16, 1, .3, 1), translate 650ms cubic-bezier(.16, 1, .3, 1);
+}
+.motion-ready .motion-reveal.is-visible { opacity: 1; translate: none; }
+@keyframes background-aurora-drift {
+    0% { background-position: 0% 0%, 100% 0%, 100% 100%, 0% 100%, 0 0, 0 0, 0 0; }
+    100% { background-position: 14% 8%, 86% 12%, 88% 90%, 10% 84%, 0 0, 0 0, 0 0; }
+}
+@media (max-width: 768px) {
+    body {
+        background-size: 190% 160%, 190% 160%, 180% 160%, 180% 160%, 54px 54px, 54px 54px, 100% 100%;
+        animation-duration: 48s;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    body { animation: none !important; }
+    .scanner-icon, .feature-card-icon, .stat-icon { animation: none !important; }
+    .motion-ready .motion-reveal { opacity: 1; translate: none; transition: none; }
+    .scroll-progress span { will-change: auto; }
+}
+/* More expressive hero and scam-pattern motion, adapted from the supplied reference */
+.hero {
+    isolation: isolate;
+    overflow: clip;
+}
+.hero::before {
+    position: absolute;
+    z-index: -1;
+    top: 7%;
+    left: 50%;
+    width: min(720px, 92vw);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(81, 179, 190, 0.13), rgba(126, 144, 210, 0.055) 42%, transparent 70%);
+    content: "";
+    transform: translateX(-50%);
+    animation: hero-aura-breathe 8s ease-in-out infinite;
+}
+.hero-float-shape {
+    position: absolute;
+    z-index: -1;
+    display: block;
+    width: 54px;
+    height: 54px;
+    border: 1px solid rgba(8, 127, 114, 0.19);
+    border-radius: 16px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.42), rgba(84, 173, 188, 0.09));
+    box-shadow: 0 10px 32px rgba(47, 96, 131, 0.07), inset 0 1px rgba(255, 255, 255, 0.7);
+    pointer-events: none;
+    animation: hero-shape-drift 11s ease-in-out infinite alternate;
+}
+.hero-float-shape-one { top: 27%; left: max(7%, calc((100% - 1180px) / 2)); transform: rotate(18deg); }
+.hero-float-shape-two { top: 32%; right: max(9%, calc((100% - 1150px) / 2)); width: 76px; height: 76px; border-radius: 50%; animation-delay: -3.5s; }
+.hero-float-shape-three { right: 19%; bottom: 9%; width: 34px; height: 34px; border-radius: 11px; animation-delay: -7s; }
+.hero-badge { position: relative; overflow: hidden; }
+.hero-badge::after {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.8) 50%, transparent 70%);
+    content: "";
+    transform: translateX(-130%);
+    animation: badge-sheen 6s ease-in-out 1.5s infinite;
+    pointer-events: none;
+}
+#heroTagline { display: inline-block; transition: opacity 220ms ease, transform 220ms ease; }
+#heroTagline.is-changing { opacity: 0; transform: translateY(5px); }
+.hero-hologram-wrap { filter: drop-shadow(0 16px 24px rgba(44, 111, 139, 0.12)); }
+.hologram-core {
+    background: radial-gradient(circle, #e9fbf6 0%, #d6f2ef 58%, #f5f9ff 100%);
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.64), 0 10px 28px rgba(32, 121, 132, 0.18);
+}
+.ring-outer { border-color: rgba(8, 127, 114, 0.36); }
+.ring-mid { border-color: rgba(57, 123, 184, 0.4); border-left-color: transparent; border-right-color: transparent; }
+.ring-inner { border-color: rgba(118, 84, 165, 0.38); }
+.pattern-marquee {
+    position: relative;
+    width: min(100% - 32px, 1240px);
+    margin: -34px auto 68px;
+    overflow: hidden;
+    border: 1px solid rgba(39, 61, 88, 0.1);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.52);
+    box-shadow: 0 8px 28px rgba(40, 63, 91, 0.045);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+.pattern-marquee-track {
+    display: flex;
+    width: max-content;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    animation: pattern-marquee-scroll 34s linear infinite;
+}
+.pattern-marquee:hover .pattern-marquee-track { animation-play-state: paused; }
+.pattern-marquee-track span {
+    display: inline-flex;
+    min-height: 38px;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 15px;
+    border: 1px solid rgba(39, 61, 88, 0.11);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.86);
+    color: #40546b;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+    transition: transform 200ms ease, border-color 200ms ease, color 200ms ease;
+}
+.pattern-marquee-track span:hover {
+    transform: translateY(-2px);
+    border-color: rgba(8, 127, 114, 0.3);
+    color: #08776c;
+}
+@keyframes hero-aura-breathe { 50% { opacity: 0.62; transform: translateX(-50%) scale(1.08); } }
+@keyframes hero-shape-drift { to { translate: 0 -22px; rotate: 14deg; } }
+@keyframes badge-sheen { 0%, 74%, 100% { transform: translateX(-130%); } 88% { transform: translateX(130%); } }
+@keyframes pattern-marquee-scroll { to { transform: translateX(-50%); } }
+@media (max-width: 768px) {
+    .hero-float-shape-one { left: 3%; top: 30%; width: 38px; height: 38px; }
+    .hero-float-shape-two { right: 2%; top: 33%; width: 48px; height: 48px; }
+    .hero-float-shape-three { right: 12%; bottom: 5%; }
+    .pattern-marquee { width: calc(100% - 20px); margin: -18px auto 48px; }
+    .pattern-marquee-track { gap: 9px; padding: 9px; animation-duration: 42s; }
+    .pattern-marquee-track span { min-height: 36px; padding: 6px 12px; font-size: 13px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .hero::before, .hero-float-shape, .hero-badge::after, .pattern-marquee-track { animation: none !important; }
+    .hero-float-shape { opacity: 0.5; }
+    .pattern-marquee { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+    .pattern-marquee-track { width: auto; flex-wrap: wrap; justify-content: center; }
+    .pattern-marquee-track span:nth-child(n+7) { display: none; }
+    #heroTagline { transition: none; }
+}
+
+/* Deep navy theme with the current motion and readability improvements */
+:root {
+    --bg-main: #07111f;
+    --bg-card: #101d2e;
+    --bg-card-hover: #15243a;
+    --bg-card-inner: #0b1726;
+    --border-subtle: rgba(183, 204, 228, 0.13);
+    --border-glow: rgba(91, 219, 196, 0.3);
+    --border-card: rgba(183, 204, 228, 0.16);
+    --primary-cyan: #72dfc7;
+    --primary-blue: #83c5ff;
+    --primary-purple: #b7a2ff;
+    --primary-gradient: linear-gradient(110deg, #72dfc7, #83c5ff 58%, #b7a2ff);
+    --primary-btn-gradient: linear-gradient(110deg, #56cbb4, #5599d2);
+    --risk-high: #ff8195;
+    --risk-high-glow: rgba(255, 129, 149, 0.17);
+    --risk-high-bg: rgba(255, 129, 149, 0.1);
+    --risk-high-border: rgba(255, 129, 149, 0.3);
+    --risk-medium: #f3c26c;
+    --risk-medium-glow: rgba(243, 194, 108, 0.15);
+    --risk-medium-bg: rgba(243, 194, 108, 0.09);
+    --risk-medium-border: rgba(243, 194, 108, 0.27);
+    --risk-low: #72dfc7;
+    --risk-low-glow: rgba(114, 223, 199, 0.14);
+    --risk-low-bg: rgba(114, 223, 199, 0.08);
+    --risk-low-border: rgba(114, 223, 199, 0.25);
+    --text-primary: #eff5fc;
+    --text-secondary: #b4c2d3;
+    --text-muted: #91a2b6;
+    --shadow-md: 0 16px 42px rgba(0, 0, 0, 0.24);
+    --shadow-glow: 0 8px 26px rgba(0, 0, 0, 0.2);
+}
+body {
+    color: var(--text-primary);
+    background-color: #07111f;
+    background-image:
+        radial-gradient(ellipse at 12% 8%, rgba(25, 142, 128, 0.2), transparent 36%),
+        radial-gradient(ellipse at 88% 18%, rgba(49, 106, 166, 0.2), transparent 34%),
+        radial-gradient(ellipse at 76% 82%, rgba(104, 77, 151, 0.16), transparent 38%),
+        radial-gradient(ellipse at 14% 72%, rgba(33, 105, 139, 0.14), transparent 34%),
+        linear-gradient(rgba(173, 209, 233, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(173, 209, 233, 0.025) 1px, transparent 1px),
+        linear-gradient(145deg, #0b1727, #07111f);
+}
+.threat-ticker, nav, .nav-scrolled {
+    color: var(--text-secondary);
+    background: rgba(8, 19, 33, 0.94);
+    border-color: var(--border-subtle);
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.16);
+}
+.ticker-item b, .logo, .nav-links a:hover { color: var(--text-primary); }
+.audio-toggle-btn, .api-status-badge {
+    color: var(--text-secondary);
+    background: rgba(20, 36, 55, 0.9);
+    border-color: var(--border-card);
+}
+.logo-badge, .hero-badge, .section-pill {
+    color: #a7f0df;
+    background: rgba(88, 202, 180, 0.1);
+    border-color: rgba(114, 223, 199, 0.24);
+}
+.nav-links a { color: var(--text-secondary); }
+.nav-links a:hover { background: rgba(168, 196, 224, 0.08); }
+.nav-cta-btn {
+    color: #a7f0df !important;
+    background: rgba(88, 202, 180, 0.1);
+    border-color: rgba(114, 223, 199, 0.3) !important;
+}
+.nav-cta-btn:hover { color: #d8fff5 !important; background: rgba(88, 202, 180, 0.17) !important; }
+.hero h1, .section-title h2, .workflow-heading h2 { color: var(--text-primary); }
+.gradient-text {
+    background-image: linear-gradient(100deg, #83e8d2 0%, #91caff 55%, #c1adff 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: #83e8d2;
+    filter: none;
+}
+.hero p, .section-title p, .workflow-heading p { color: var(--text-secondary); }
+.hero-badge::after { background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.22) 50%, transparent 70%); }
+.hero-float-shape {
+    border-color: rgba(114, 223, 199, 0.23);
+    background: linear-gradient(145deg, rgba(29, 56, 75, 0.58), rgba(32, 42, 76, 0.34));
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18), inset 0 1px rgba(220, 243, 255, 0.12);
+}
+.hero::before {
+    background: radial-gradient(circle, rgba(49, 164, 153, 0.2), rgba(86, 107, 176, 0.1) 42%, transparent 70%);
+}
+.hologram-core {
+    background: radial-gradient(circle, #20464b 0%, #142b3b 58%, #1d2340 100%);
+    box-shadow: 0 0 0 8px rgba(16, 33, 51, 0.68), 0 12px 32px rgba(0, 0, 0, 0.3);
+}
+.ring-outer { border-color: rgba(114, 223, 199, 0.38); }
+.ring-mid { border-color: rgba(131, 197, 255, 0.4); border-left-color: transparent; border-right-color: transparent; }
+.ring-inner { border-color: rgba(183, 162, 255, 0.4); }
+.hero-shape { border-color: rgba(114, 223, 199, 0.2); background: linear-gradient(135deg, rgba(114, 223, 199, 0.06), rgba(183, 162, 255, 0.07)); }
+.stat-number { color: var(--text-primary); }
+.stat-label, .workflow-step-number { color: var(--text-muted); }
+.spotlight-card, .feature-card, .faq-card, .scanner-card, .history-item {
+    color: var(--text-primary);
+    background: linear-gradient(145deg, rgba(17, 32, 50, 0.97), rgba(12, 25, 41, 0.98));
+    border-color: var(--border-card);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+.spotlight-card:hover, .feature-card:hover {
+    border-color: rgba(114, 223, 199, 0.3);
+    box-shadow: var(--shadow-md);
+}
+.spotlight-card::before, .feature-card::before {
+    background: radial-gradient(circle, rgba(114, 223, 199, 0.12), transparent 70%);
+}
+.stat-number, .feature-card h3, .faq-header, .footer-logo { color: var(--text-primary); }
+.stat-label, .feature-card p, .faq-body, footer { color: var(--text-secondary); }
+.workflow-step {
+    color: var(--text-primary);
+    background: linear-gradient(145deg, rgba(19, 38, 58, 0.96), rgba(12, 26, 43, 0.96));
+    border-color: var(--border-card);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+}
+.workflow-step small { color: var(--text-secondary); }
+.workflow-icon, .scanner-icon, .feature-card-icon {
+    color: #a7f0df;
+    background: rgba(89, 198, 177, 0.1);
+    border-color: rgba(114, 223, 199, 0.22);
+}
+.workflow-connector { background: rgba(166, 193, 220, 0.2); }
+.workflow-connector span { background: linear-gradient(90deg, transparent, #8ce6d2, transparent); }
+.scanner-nav-tabs { background: #0d1b2c; border-color: var(--border-card); }
+.tab-btn { color: var(--text-secondary); }
+.tab-btn.active { color: #a7f0df; background: #172a40; border-color: rgba(114, 223, 199, 0.22); }
+.tab-btn:hover:not(.active) { color: var(--text-primary); background: rgba(183, 204, 228, 0.07); }
+.scanner-header h3, .result-heading-box h3 { color: var(--text-primary); }
+.scanner-header p, .result-heading-box p { color: var(--text-secondary); }
+.scanner-badge { color: var(--text-secondary); background: rgba(183, 204, 228, 0.06); border-color: var(--border-subtle); }
+textarea, input[type="text"] {
+    color: var(--text-primary);
+    background: #0a1727;
+    border-color: rgba(183, 204, 228, 0.2);
+}
+textarea::placeholder, input[type="text"]::placeholder { color: #8497ac; }
+textarea:focus, input[type="text"]:focus {
+    color: #f3f8ff;
+    background: #0a1727;
+    border-color: rgba(114, 223, 199, 0.56);
+    box-shadow: 0 0 0 3px rgba(114, 223, 199, 0.1);
+}
+.demo-btn, .history-filter-btn, .secondary-btn, .hero-btn-secondary {
+    color: var(--text-secondary);
+    background: rgba(183, 204, 228, 0.055);
+    border-color: var(--border-card);
+}
+.demo-btn:hover, .history-filter-btn.active, .history-filter-btn:hover {
+    color: #b5f5e8;
+    background: rgba(114, 223, 199, 0.1);
+    border-color: rgba(114, 223, 199, 0.28);
+}
+.primary-btn, .hero-btn-primary { color: #06201f; background: var(--primary-btn-gradient); }
+.loading { color: #a7f0df; background: rgba(114, 223, 199, 0.055); border-color: rgba(114, 223, 199, 0.23); }
+.spinner { border-color: rgba(114, 223, 199, 0.16); border-top-color: var(--primary-cyan); }
+.loading-text { color: var(--text-secondary); }
+.result { color: var(--text-primary); background: linear-gradient(145deg, #101e2e, #0b1726); border-color: var(--border-card); }
+.info-box, .score-component { color: var(--text-primary); background: rgba(183, 204, 228, 0.045); border-color: var(--border-subtle); }
+.info-box:hover { background: rgba(183, 204, 228, 0.075); border-color: rgba(114, 223, 199, 0.23); }
+.result .signal-explanation, .result .info-value, .result .risk-breakdown p, .result .recommended-actions li { color: var(--text-secondary); }
+.history-item:hover { background: #172a40; border-color: rgba(114, 223, 199, 0.25); }
+.history-message { color: var(--text-primary); }
+.history-scam-type { color: var(--text-secondary); }
+.history-scan-type { color: #a7f0df; background: rgba(114, 223, 199, 0.08); border-color: rgba(114, 223, 199, 0.2); }
+.faq-card:hover { border-color: rgba(114, 223, 199, 0.24); }
+.faq-header { color: var(--text-primary); }
+.faq-header:hover { color: #a7f0df; }
+.faq-body { color: var(--text-secondary); }
+.faq-toggle-icon { color: var(--text-muted); }
+.faq-card.open .faq-toggle-icon { color: var(--primary-cyan); }
+.empty-history { color: var(--text-muted); background: rgba(183, 204, 228, 0.035); }
+.pattern-marquee {
+    background: rgba(10, 25, 41, 0.68);
+    border-color: rgba(183, 204, 228, 0.13);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+.pattern-marquee-track span {
+    color: var(--text-secondary);
+    background: rgba(21, 39, 59, 0.92);
+    border-color: rgba(183, 204, 228, 0.15);
+}
+.pattern-marquee-track span:hover { color: #b5f5e8; border-color: rgba(114, 223, 199, 0.32); }
+footer { color: var(--text-secondary); background: rgba(6, 15, 27, 0.9); border-color: var(--border-subtle); }
+footer .footer-logo { color: var(--text-primary); }
+.toast { color: var(--text-primary); background: #13253a; border-color: rgba(114, 223, 199, 0.25); box-shadow: var(--shadow-md); }
+.scroll-progress span { background: linear-gradient(90deg, #72dfc7, #83c5ff 58%, #b7a2ff); box-shadow: 0 0 14px rgba(114, 223, 199, 0.4); }
+button:focus-visible, a:focus-visible, .history-item:focus-visible { outline-color: #9aead9; }
+@media (prefers-reduced-motion: reduce) {
+    body { background-attachment: scroll; }
 }
 </style>
 </head>
@@ -1487,6 +2610,7 @@ footer strong { color: var(--primary-cyan); }
 <body>
 
 <canvas id="cyberCanvas"></canvas>
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"><span></span></div>
 
 <div class="ambient-lights">
     <div class="light-orb light-orb-cyan"></div>
@@ -1502,14 +2626,14 @@ footer strong { color: var(--primary-cyan); }
             <div class="sonar-ring"></div>
             <div class="sonar-dot"></div>
         </div>
-        <span>LIVE TELEMETRY</span>
+        <span>SCANNER STATUS</span>
     </div>
 
     <div class="ticker-content" id="tickerStream">
-        <span class="ticker-item">🚨 <b>Active Threat Surge:</b> Fake State Bank &amp; Indian Post KYC APK phishing campaigns</span>
-        <span class="ticker-item">⚡ <b>Heuristic Pipeline:</b> NLP Deconstruction + Deep Link Analysis Online</span>
-        <span class="ticker-item">⚠️ <b>Warning:</b> Scammers spoofing electricity disconnection notices with urgency triggers</span>
-        <span class="ticker-item">🛡️ <b>Defense Core:</b> Gemini AI + Hybrid Rule Matrix Active</span>
+        <span class="ticker-item">🛡️ <b>Messages:</b> urgency, impersonation, and credential-risk signals</span>
+        <span class="ticker-item">🔗 <b>Links:</b> domain patterns, redirects, and Unicode lookalikes</span>
+        <span class="ticker-item">📷 <b>Screenshots:</b> OCR extraction followed by scam analysis</span>
+        <span class="ticker-item">🤖 <b>Analysis:</b> AI-assisted when configured, with rule-based fallback</span>
     </div>
 
     <div class="ticker-right-tools">
@@ -1532,7 +2656,7 @@ footer strong { color: var(--primary-cyan); }
             <div class="logo-icon">🛡️</div>
         </div>
         <span>ScamShield <span style="color:var(--primary-cyan);">AI</span></span>
-        <span class="logo-badge">v2.5 PRO</span>
+        <span class="logo-badge">AI + RULES</span>
     </a>
 
     <div class="nav-links">
@@ -1564,10 +2688,13 @@ footer strong { color: var(--primary-cyan); }
 </nav>
 
 <section class="hero">
+    <span class="hero-float-shape hero-float-shape-one" aria-hidden="true"></span>
+    <span class="hero-float-shape hero-float-shape-two" aria-hidden="true"></span>
+    <span class="hero-float-shape hero-float-shape-three" aria-hidden="true"></span>
     <div class="hero-badge-wrap">
         <div class="hero-badge">
             <span>🛡️</span>
-            <span>Next-Gen Autonomous Threat Intelligence</span>
+            <span id="heroTagline">Explainable AI-assisted protection</span>
         </div>
     </div>
 
@@ -1575,7 +2702,27 @@ footer strong { color: var(--primary-cyan); }
         <div class="hologram-ring ring-outer"></div>
         <div class="hologram-ring ring-mid"></div>
         <div class="hologram-ring ring-inner"></div>
-        <div class="hologram-core">🛡️</div>
+        <div class="hologram-core">
+            <svg class="hero-shield-art" viewBox="0 0 64 72" role="img" aria-label="Animated ScamShield protection shield">
+                <defs>
+                    <linearGradient id="heroShieldGradient" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stop-color="#a1f3dd"/>
+                        <stop offset="100%" stop-color="#8dcaff"/>
+                    </linearGradient>
+                    <clipPath id="heroShieldClip">
+                        <path d="M32 4 55 13v19c0 16-10 27-23 36C19 59 9 48 9 32V13L32 4Z"/>
+                    </clipPath>
+                </defs>
+                <path class="shield-outline" d="M32 4 55 13v19c0 16-10 27-23 36C19 59 9 48 9 32V13L32 4Z"/>
+                <path class="shield-inner" d="M32 10 49 17v15c0 12-7 21-17 28-10-7-17-16-17-28V17l17-7Z"/>
+                <g clip-path="url(#heroShieldClip)">
+                    <path class="shield-scan-line" d="M5 29h54"/>
+                </g>
+                <path class="shield-check" d="m23 34 6 6 13-14"/>
+                <circle class="shield-spark" cx="49" cy="18" r="2"/>
+                <circle class="shield-spark shield-spark-alt" cx="14" cy="42" r="1.5"/>
+            </svg>
+        </div>
     </div>
 
     <h1>
@@ -1584,8 +2731,8 @@ footer strong { color: var(--primary-cyan); }
     </h1>
 
     <p>
-        ScamShield AI inspects suspicious SMS, WhatsApp forwards, phishing URLs,
-        and mobile screenshots using intelligent hybrid risk engines, OCR, and Gemini AI.
+        Check suspicious messages, links, and screenshots with AI-assisted analysis
+        and clear explanations of the risk signals found.
     </p>
 
     <div class="hero-quick-actions">
@@ -1618,12 +2765,59 @@ footer strong { color: var(--primary-cyan); }
     </div>
 </div>
 
+<div class="pattern-marquee" role="group" aria-label="Scam patterns ScamShield can help you review">
+    <div class="pattern-marquee-track">
+        <span>🎣 Phishing links</span>
+        <span>📱 SMS scams</span>
+        <span>🔐 Credential requests</span>
+        <span>🌐 Unicode lookalikes</span>
+        <span>📦 Delivery messages</span>
+        <span>🎁 Prize claims</span>
+        <span aria-hidden="true">🎣 Phishing links</span>
+        <span aria-hidden="true">📱 SMS scams</span>
+        <span aria-hidden="true">🔐 Credential requests</span>
+        <span aria-hidden="true">🌐 Unicode lookalikes</span>
+        <span aria-hidden="true">📦 Delivery messages</span>
+        <span aria-hidden="true">🎁 Prize claims</span>
+    </div>
+</div>
+
+<section class="workflow container" aria-labelledby="workflowTitle">
+    <div class="workflow-heading">
+        <span class="section-pill">How protection works</span>
+        <h2 id="workflowTitle">One scan. <span class="gradient-text">A clearer next step.</span></h2>
+        <p>ScamShield combines the content you submit with explainable signals, then gives you practical guidance.</p>
+    </div>
+    <div class="workflow-track">
+        <a class="workflow-step reveal" href="#scanner" onclick="selectScannerFromWorkflow('message')">
+            <span class="workflow-step-number">01</span>
+            <span class="workflow-icon">✉</span>
+            <strong>Check the content</strong>
+            <small>Message, link, or screenshot</small>
+        </a>
+        <div class="workflow-connector" aria-hidden="true"><span></span></div>
+        <div class="workflow-step workflow-step-engine reveal">
+            <span class="workflow-step-number">02</span>
+            <span class="workflow-icon">✳</span>
+            <strong>Compare signals</strong>
+            <small>AI context + deterministic rules</small>
+        </div>
+        <div class="workflow-connector" aria-hidden="true"><span></span></div>
+        <a class="workflow-step reveal" href="#scanner">
+            <span class="workflow-step-number">03</span>
+            <span class="workflow-icon">✓</span>
+            <strong>Choose a safer action</strong>
+            <small>Understand the risk and what to do</small>
+        </a>
+    </div>
+</section>
+
 <section id="scanner" class="container">
 
     <div class="section-title">
         <span class="section-pill">Unified Intelligence Hub</span>
         <h2><span class="gradient-text">Multi-Vector Scam Scanner</span></h2>
-        <p>Choose an analysis engine below or drop files directly to diagnose threats in real-time.</p>
+        <p>Choose what you want to check. Each scan explains the signals behind its result.</p>
     </div>
 
     <div class="scanner-nav-tabs">
@@ -1660,6 +2854,7 @@ footer strong { color: var(--primary-cyan); }
             <div class="input-wrap">
                 <textarea 
                     id="messageInput" 
+                    aria-label="Message to analyze"
                     placeholder="Paste a suspicious message, SMS, email text, or chat forward here (e.g. 'Your account will be suspended! Click http://...')..."
                     oninput="handleMessageInput(this)"
                 ></textarea>
@@ -1734,6 +2929,7 @@ footer strong { color: var(--primary-cyan); }
                 <input 
                     type="text" 
                     id="urlInput" 
+                    aria-label="URL to inspect"
                     placeholder="https://secure-bank-login.xyz/verify-kyc" 
                     onkeydown="if(event.key === 'Enter') analyzeURL()"
                 />
@@ -1742,6 +2938,7 @@ footer strong { color: var(--primary-cyan); }
             <div class="demo-buttons" style="margin-top:14px; margin-bottom:14px;">
                 <button class="demo-btn" onclick="loadUrlDemo('bank')">⚠️ Fake Bank Link</button>
                 <button class="demo-btn" onclick="loadUrlDemo('short')">🔀 Obfuscated Shortener</button>
+                <button class="demo-btn" onclick="loadUrlDemo('idn')">🌐 Unicode Lookalike</button>
                 <button class="demo-btn" onclick="loadUrlDemo('safe')">✅ Legitimate Domain</button>
             </div>
 
@@ -1757,11 +2954,11 @@ footer strong { color: var(--primary-cyan); }
             <div id="urlLoading" class="loading">
                 <div class="laser-beam"></div>
                 <div class="spinner"></div>
-                <div class="loading-text">RESOLVING DNS RECORDS, TLD REPUTATION &amp; SSL STACK...</div>
+                <div class="loading-text">CHECKING DOMAIN PATTERNS &amp; URL RISK SIGNALS...</div>
             </div>
 
             <div id="urlError" class="error-box"></div>
-            <div id="urlResult" class="result"></div>
+            <div id="urlResult" class="result" aria-live="polite"></div>
 
         </div>
 
@@ -1795,6 +2992,7 @@ footer strong { color: var(--primary-cyan); }
                 <input
                     type="file"
                     id="imageInput"
+                    aria-label="Screenshot image to analyze"
                     accept=".png,.jpg,.jpeg,image/png,image/jpeg"
                     onchange="handleImageSelect()"
                 />
@@ -1908,14 +3106,14 @@ footer strong { color: var(--primary-cyan); }
 <!-- FAQ -->
 <section id="faq" class="container faq-section">
     <div class="section-title">
-        <span class="section-pill">Safety Knowledgebase</span>
-        <h2>Frequently Asked <span class="gradient-text">Questions</span></h2>
+        <span class="section-pill"><span class="emoji" aria-hidden="true">🛡️</span>&nbsp; Safety Knowledgebase</span>
+        <h2><span class="emoji" aria-hidden="true">💬</span> Frequently Asked <span class="gradient-text">Questions</span></h2>
         <p>Essential cyber safety rules every digital citizen must know.</p>
     </div>
 
     <div class="faq-card open">
         <div class="faq-header" onclick="toggleFaq(this)">
-            <span>How does ScamShield AI differentiate between real and scam alerts?</span>
+            <span class="faq-question"><span class="emoji" aria-hidden="true">🧐</span>How does ScamShield AI differentiate between real and scam alerts?</span>
             <span class="faq-toggle-icon">▼</span>
         </div>
         <div class="faq-body">
@@ -1925,7 +3123,7 @@ footer strong { color: var(--primary-cyan); }
 
     <div class="faq-card">
         <div class="faq-header" onclick="toggleFaq(this)">
-            <span>Can I paste screenshots from WhatsApp or Telegram?</span>
+            <span class="faq-question"><span class="emoji" aria-hidden="true">📸</span>Can I paste screenshots from WhatsApp or Telegram?</span>
             <span class="faq-toggle-icon">▼</span>
         </div>
         <div class="faq-body">
@@ -1935,7 +3133,7 @@ footer strong { color: var(--primary-cyan); }
 
     <div class="faq-card">
         <div class="faq-header" onclick="toggleFaq(this)">
-            <span>What should I do if a message returns a HIGH RISK score?</span>
+            <span class="faq-question"><span class="emoji" aria-hidden="true">🚨</span>What should I do if a message returns a HIGH RISK score?</span>
             <span class="faq-toggle-icon">▼</span>
         </div>
         <div class="faq-body">
@@ -2119,7 +3317,7 @@ resizeCanvas();
 window.addEventListener('mousemove', (e) => {
     mouse.x = e.clientX;
     mouse.y = e.clientY;
-    document.querySelectorAll('.spotlight-card, .feature-card').forEach(card => {
+    document.querySelectorAll('.spotlight-card, .feature-card, .scanner-card').forEach(card => {
         const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
@@ -2368,6 +3566,12 @@ function switchScannerView(mode, btn) {
     }
 }
 
+function selectScannerFromWorkflow(mode) {
+    const tab = Array.from(document.querySelectorAll(".tab-btn"))
+        .find(button => button.getAttribute("onclick")?.includes(`'${mode}'`));
+    if (tab) switchScannerView(mode, tab);
+}
+
 function toggleFaq(header) {
     playAudio('click');
     header.parentElement.classList.toggle("open");
@@ -2417,6 +3621,8 @@ function loadUrlDemo(type) {
         urlInput.value = "http://hdfcbank-security-verify.top/ebanking/login.php";
     } else if (type === "short") {
         urlInput.value = "https://bit.ly/3xEmergencyUpdate";
+    } else if (type === "idn") {
+        urlInput.value = "https://раypal.com/login";
     } else if (type === "safe") {
         urlInput.value = "https://www.google.com/search?q=cyber+safety";
     }
@@ -2555,8 +3761,7 @@ async function analyzeMessage() {
         }
 
         displayResult(analysis);
-        updateStatistics(analysis);
-        saveAnalysisHistory(message, analysis);
+        saveAnalysisHistory(message, analysis, "message");
         
         if (analysis.risk_level === 'HIGH') {
             playAudio('alert');
@@ -2597,6 +3802,15 @@ function displayResult(result) {
     const reasons = Array.isArray(result.reasons) ? result.reasons : [];
     const actions = Array.isArray(result.recommended_actions) ? result.recommended_actions : [];
     const riskClass = getRiskClass(level);
+    const scoreComponents = result.score_mode === "HYBRID"
+        && Number.isFinite(Number(result.rule_score))
+        && Number.isFinite(Number(result.ai_score))
+        ? `
+        <div class="score-components" aria-label="Risk score components">
+            <div class="score-component"><span>Rule engine contribution</span><strong>${Number(result.rule_score)}/100</strong></div>
+            <div class="score-component"><span>Gemini AI contribution</span><strong>${Number(result.ai_score)}/100</strong></div>
+        </div>`
+        : "";
 
     let reasonsHTML = reasons.length > 0
         ? reasons.map(r => `<li>${escapeHTML(r)}</li>`).join("")
@@ -2651,6 +3865,8 @@ function displayResult(result) {
                 <div class="info-value">${escapeHTML(result.score_mode || "HYBRID_ENGINE")}</div>
             </div>
         </div>
+
+        ${scoreComponents}
 
         <div class="result-section">
             <h4>⚠️ Flagged Risk Indicators</h4>
@@ -2878,6 +4094,11 @@ async function analyzeURL() {
         }
 
         displayURLResult(urlAnalysis);
+        saveAnalysisHistory(url, {
+            risk_score: urlAnalysis.risk_score ?? urlAnalysis.score,
+            risk_level: urlAnalysis.risk_level,
+            scam_type: urlAnalysis.scam_type || urlAnalysis.summary || "URL inspection"
+        }, "url");
         if (urlAnalysis.risk_level === 'HIGH') {
             playAudio('alert');
         } else {
@@ -2929,6 +4150,37 @@ function displayURLResult(data) {
         `;
     });
 
+    const indicators = Array.isArray(data.indicators) ? data.indicators : [];
+    const indicatorsHTML = indicators.length
+        ? indicators.map(item => {
+            const label = item.indicator || "Security indicator";
+            const detail = item.ascii_domain
+                ? `Unicode domain: ${item.domain} · Browser form: ${item.ascii_domain}`
+                : (Array.isArray(item.keywords) && item.keywords.length
+                    ? `Matched terms: ${item.keywords.join(", ")}`
+                    : "");
+            const warning = item.status === "warning" || item.status === "error";
+            return `
+                <li class="url-indicator ${warning ? "warning" : "clear"}">
+                    <span>${warning ? "⚠" : "✓"}</span>
+                    <span><strong>${escapeHTML(label)}</strong>
+                    ${detail ? `<small>${escapeHTML(detail)}</small>` : ""}</span>
+                    <b>${Number(item.score || 0) > 0 ? `+${Number(item.score)}` : ""}</b>
+                </li>
+            `;
+        }).join("")
+        : "";
+    const aiReasonsHTML = Array.isArray(data.ai_reasons) && data.ai_reasons.length
+        ? data.ai_reasons.map(reason => `<li>${escapeHTML(reason)}</li>`).join("")
+        : "";
+    const scoreComponents = data.score_mode === "HYBRID_URL_AI"
+        ? `
+        <div class="score-components" aria-label="URL score components">
+            <div class="score-component"><span>Deterministic URL signals (70%)</span><strong>${Number(data.rule_score)}/100</strong></div>
+            <div class="score-component"><span>Gemini context (30%)</span><strong>${Number(data.ai_score)}/100</strong><small>${Number(data.ai_confidence || 0)}% model confidence</small></div>
+        </div>`
+        : `<p class="scanner-badge">Rule-based assessment · AI unavailable</p>`;
+
     const recommendation = data.recommendation || data.message ||
         (suspicious 
             ? "Avoid opening this link or entering any sensitive login/payment information." 
@@ -2940,6 +4192,8 @@ function displayURLResult(data) {
                 <div class="risk-score" style="color:${getRiskColor(level)}">${score}/100</div>
                 <div class="risk-label ${riskClass}">${escapeHTML(level)} RISK</div>
             </div>
+
+            ${scoreComponents}
 
             <div class="result-heading-box">
                 <h3>URL Forensic Breakdown</h3>
@@ -2956,12 +4210,25 @@ function displayURLResult(data) {
             </div>
         </div>
 
+        ${indicatorsHTML ? `
+        <div class="result-section">
+            <h4>🧭 Why this URL received its score</h4>
+            <ul class="url-indicator-list">${indicatorsHTML}</ul>
+        </div>` : ""}
+
         <div class="result-section">
             <h4>🛡️ Forensic Assessment</h4>
             <p style="color:#cbd5e1; font-size:14px; line-height:1.6; background:rgba(255,255,255,0.03); padding:16px; border-radius:14px;">
                 ${escapeHTML(recommendation)}
             </p>
         </div>
+
+        ${data.summary ? `
+        <div class="result-section">
+            <h4>🤖 AI context (${escapeHTML(data.score_mode || "deterministic")})</h4>
+            <p style="color:#cbd5e1; font-size:14px; line-height:1.6;">${escapeHTML(data.summary)}</p>
+            ${aiReasonsHTML ? `<ul class="reasons-list">${aiReasonsHTML}</ul>` : ""}
+        </div>` : ""}
     `;
 
     urlResult.style.display = "block";
@@ -3077,8 +4344,7 @@ async function analyzeScreenshot() {
         if (!analysis) throw new Error("No analysis data returned from OCR engine.");
 
         displayScreenshotResult(data, analysis);
-        updateStatistics(analysis);
-        saveAnalysisHistory(data.extracted_text || file.name, analysis);
+        saveAnalysisHistory(data.extracted_text || file.name, analysis, "screenshot");
         
         if (analysis.risk_level === 'HIGH') {
             playAudio('alert');
@@ -3104,6 +4370,15 @@ function displayScreenshotResult(data, result) {
     const scamType = result.scam_type || "Unknown Threat";
     const riskClass = getRiskClass(level);
     const reasons = Array.isArray(result.reasons) ? result.reasons : [];
+    const scoreComponents = ["HYBRID", "OCR_VISION_HYBRID"].includes(result.score_mode)
+        && Number.isFinite(Number(result.rule_score))
+        && Number.isFinite(Number(result.ai_score))
+        ? `
+        <div class="score-components" aria-label="Screenshot score components">
+            <div class="score-component"><span>Rule engine contribution</span><strong>${Number(result.rule_score)}/100</strong></div>
+            <div class="score-component"><span>Gemini AI contribution</span><strong>${Number(result.ai_score)}/100</strong></div>
+        </div>`
+        : "";
 
     let reasonsHTML = reasons.length > 0
         ? reasons.map(r => `<li>${escapeHTML(r)}</li>`).join("")
@@ -3118,9 +4393,11 @@ function displayScreenshotResult(data, result) {
 
             <div class="result-heading-box">
                 <h3>${escapeHTML(scamType)}</h3>
-                <p>Screenshot text was extracted via Vision OCR and evaluated by ScamShield.</p>
+                <p>${escapeHTML(result.summary || "Screenshot text was extracted via OCR and evaluated with ScamShield's available analysis engines.")}</p>
             </div>
         </div>
+
+        ${scoreComponents}
 
         <div class="result-info">
             <div class="info-box">
@@ -3196,6 +4473,9 @@ function normalizeHistoryItem(item) {
         score: score,
         level: String(level).toUpperCase(),
         scamType: item.scamType || item.scam_type || item.type || "Unknown Threat",
+        scanType: ["message", "url", "screenshot"].includes(item.scanType || item.scan_type)
+            ? (item.scanType || item.scan_type)
+            : "message",
         timestamp: item.timestamp || item.date || new Date().toISOString()
     };
 }
@@ -3210,15 +4490,12 @@ function getHistory() {
     }
 }
 
-function updateStatistics(analysis) {
+function updateStatistics() {
     const history = getHistory();
     const scores = history.map(item => Number(item.score || 0));
-    if (analysis && analysis.risk_score !== undefined) {
-        scores.push(Number(analysis.risk_score));
-    }
 
     const total = scores.length;
-    const highRisk = scores.filter(score => score >= 70).length;
+    const highRisk = history.filter(item => item.level === "HIGH").length;
     const average = total ? Math.round(scores.reduce((sum, score) => sum + score, 0) / total) : 0;
 
     animateCounter("totalScans", total);
@@ -3245,13 +4522,14 @@ function animateCounter(elementId, targetValue) {
     requestAnimationFrame(update);
 }
 
-function saveAnalysisHistory(text, analysis) {
+function saveAnalysisHistory(text, analysis, scanType = "message") {
     const history = getHistory();
     history.unshift({
-        text: String(text || "").substring(0, 220),
-        score: Number(analysis.risk_score || 0),
-        level: analysis.risk_level || "LOW",
-        scamType: analysis.scam_type || "Unknown Threat",
+        text: String(text || "").substring(0, scanType === "url" ? 2048 : 220),
+        score: Number(analysis.risk_score ?? analysis.score ?? 0),
+        level: analysis.risk_level || analysis.level || "LOW",
+        scamType: analysis.scam_type || analysis.scamType || "Unknown Threat",
+        scanType: ["message", "url", "screenshot"].includes(scanType) ? scanType : "message",
         timestamp: new Date().toISOString()
     });
 
@@ -3259,7 +4537,7 @@ function saveAnalysisHistory(text, analysis) {
     localStorage.setItem("scamshield_history", JSON.stringify(limitedHistory));
 
     renderHistory();
-    updateStatistics(analysis);
+    updateStatistics();
 }
 
 function filterHistory(filterType, btn) {
@@ -3275,7 +4553,7 @@ function clearAllHistory() {
     if (confirm("Are you sure you want to clear your local scan history?")) {
         localStorage.removeItem("scamshield_history");
         renderHistory();
-        updateStatistics(null);
+        updateStatistics();
         showToast("Scan history wiped.", "🗑️");
     }
 }
@@ -3299,6 +4577,7 @@ function exportHistoryJSON() {
 
 function renderHistory() {
     let history = getHistory();
+    const allHistory = history;
     const historyList = document.getElementById("historyList");
     if (!historyList) return;
 
@@ -3319,17 +4598,19 @@ function renderHistory() {
 
     historyList.innerHTML = history.map(item => {
         const riskClass = getRiskClass(item.level);
+        const historyIndex = allHistory.indexOf(item);
         const dateObj = new Date(item.timestamp);
         const formattedDate = !isNaN(dateObj) ? dateObj.toLocaleDateString() + " " + dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "Recent";
 
         return `
-            <div class="history-item" onclick="reloadHistoryItem('${escapeHTML(item.text).replace(/'/g, "\\'")}')" title="Click to reload this text into scanner">
+            <div class="history-item" onclick="reloadHistoryEntry(${historyIndex})" title="Click to reload this ${item.scanType} scan">
                 <div class="history-message-box">
                     <div class="history-message">${escapeHTML(item.text)}</div>
                     <div class="history-date">📅 ${formattedDate}</div>
                 </div>
 
                 <div class="history-meta">
+                    <span class="history-scan-type">${escapeHTML(item.scanType.toUpperCase())}</span>
                     <span class="history-scam-type">${escapeHTML(item.scamType)}</span>
                     <span class="history-score" style="color:${getRiskColor(item.level)}">${item.score}/100</span>
                     <span class="risk-label ${riskClass}" style="margin:0;">
@@ -3341,30 +4622,113 @@ function renderHistory() {
     }).join("");
 }
 
-function reloadHistoryItem(text) {
+function reloadHistoryEntry(index) {
+    const item = getHistory()[index];
+    if (!item) return;
+    reloadHistoryItem(item.text, item.scanType);
+}
+
+function reloadHistoryItem(text, scanType = "message") {
     playAudio('click');
-    messageInput.value = text;
-    handleMessageInput(messageInput);
-    messageInput.scrollIntoView({ behavior: "smooth", block: "center" });
-    messageInput.focus();
-    showToast("Scan item reloaded into Message Analyzer.", "↺");
+    if (scanType === "url") {
+        urlInput.value = text;
+        switchScannerView("url", document.querySelector(".tab-btn[onclick*=\"'url'\"]"));
+        urlInput.scrollIntoView({ behavior: "smooth", block: "center" });
+        urlInput.focus();
+        showToast("URL scan reloaded into URL Inspector.", "↺");
+    } else if (scanType === "screenshot") {
+        switchScannerView("screenshot", document.querySelector(".tab-btn[onclick*=\"'screenshot'\"]"));
+        showToast("Screenshot scan selected. Choose the image again to rescan it.", "↺");
+        document.getElementById("card-screenshot").scrollIntoView({ behavior: "smooth", block: "center" });
+    } else {
+        messageInput.value = text;
+        handleMessageInput(messageInput);
+        messageInput.scrollIntoView({ behavior: "smooth", block: "center" });
+        messageInput.focus();
+        showToast("Scan item reloaded into Message Analyzer.", "↺");
+    }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     setupUserProfileUI();
     checkBackendHealth();
     renderHistory();
+    initializeMotionEffects();
+    initializeHeroTagline();
 
     const history = getHistory();
     const scores = history.map(item => Number(item.score || 0));
     const total = scores.length;
-    const highRisk = scores.filter(score => score >= 70).length;
+    const highRisk = history.filter(item => item.level === "HIGH").length;
     const average = total ? Math.round(scores.reduce((sum, score) => sum + score, 0) / total) : 0;
 
     document.getElementById("totalScans").textContent = total;
     document.getElementById("highRiskScans").textContent = highRisk;
     document.getElementById("averageScore").textContent = average;
 });
+
+function initializeHeroTagline() {
+    const tagline = document.getElementById("heroTagline");
+    if (!tagline || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const messages = [
+        "Explainable AI-assisted protection",
+        "Messages, links & screenshots",
+        "Rules-first fallback when AI is unavailable",
+        "Clear risk signals. Safer next steps."
+    ];
+    let index = 0;
+    window.setInterval(() => {
+        if (document.hidden) return;
+        tagline.classList.add("is-changing");
+        window.setTimeout(() => {
+            index = (index + 1) % messages.length;
+            tagline.textContent = messages[index];
+            tagline.classList.remove("is-changing");
+        }, 240);
+    }, 4200);
+}
+
+function initializeMotionEffects() {
+    const revealItems = document.querySelectorAll(
+        ".reveal, .section-title, .spotlight-card, .scanner-card, .feature-card, .faq-card, .history-item"
+    );
+    const progressBar = document.querySelector("#scrollProgress span");
+    let progressFrame = 0;
+    const updateProgress = () => {
+        progressFrame = 0;
+        const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = scrollableHeight > 0 ? Math.min(window.scrollY / scrollableHeight, 1) : 0;
+        progressBar.style.transform = `scaleX(${progress})`;
+    };
+    const scheduleProgressUpdate = () => {
+        if (!progressFrame) progressFrame = window.requestAnimationFrame(updateProgress);
+    };
+    window.addEventListener("scroll", scheduleProgressUpdate, { passive: true });
+    window.addEventListener("resize", scheduleProgressUpdate, { passive: true });
+    updateProgress();
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) {
+        revealItems.forEach(item => item.classList.add("is-visible"));
+        return;
+    }
+
+    revealItems.forEach((item, index) => {
+        item.classList.add("motion-reveal");
+        item.style.setProperty("--reveal-delay", `${(index % 4) * 75}ms`);
+    });
+    document.body.classList.add("motion-ready");
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                entry.target.style.transitionDelay = entry.target.style.getPropertyValue("--reveal-delay");
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+    revealItems.forEach(item => observer.observe(item));
+}
 </script>
 
 </body>
